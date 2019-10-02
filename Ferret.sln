@@ -1,0 +1,58 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "vendor", "vendor", "{F362B69B-5DC3-4D37-A9AD-CCF0FD64741F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FNA", "vendor\FNA\FNA.csproj", "{35253CE1-C864-4CD3-8249-4D1319748E8F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ImGui.NET", "vendor\ImGui.NET\src\ImGui.NET\ImGui.NET.csproj", "{7467A6F8-F2AD-4A39-B5FE-625F5F493363}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FerretEngine", "FerretEngine\FerretEngine.csproj", "{06147BDE-E62C-467C-9B35-001CB6FF8665}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FerretEngine.Sandbox", "FerretEngine.Sandbox\FerretEngine.Sandbox.csproj", "{A32A03CC-7F7E-4E1E-92F0-E96AFD76ADB5}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Release|x86 = Release|x86
+		Release|x64 = Release|x64
+		Debug|x86 = Debug|x86
+		Debug|x64 = Debug|x64
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{35253CE1-C864-4CD3-8249-4D1319748E8F} = {F362B69B-5DC3-4D37-A9AD-CCF0FD64741F}
+		{7467A6F8-F2AD-4A39-B5FE-625F5F493363} = {F362B69B-5DC3-4D37-A9AD-CCF0FD64741F}
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{06147BDE-E62C-467C-9B35-001CB6FF8665}.Release|x86.ActiveCfg = Release|x86
+		{06147BDE-E62C-467C-9B35-001CB6FF8665}.Release|x86.Build.0 = Release|x86
+		{06147BDE-E62C-467C-9B35-001CB6FF8665}.Debug|x86.ActiveCfg = Debug|x86
+		{06147BDE-E62C-467C-9B35-001CB6FF8665}.Debug|x86.Build.0 = Debug|x86
+		{06147BDE-E62C-467C-9B35-001CB6FF8665}.Debug|x64.ActiveCfg = Debug|x64
+		{06147BDE-E62C-467C-9B35-001CB6FF8665}.Debug|x64.Build.0 = Debug|x64
+		{06147BDE-E62C-467C-9B35-001CB6FF8665}.Release|x64.ActiveCfg = Release|x64
+		{06147BDE-E62C-467C-9B35-001CB6FF8665}.Release|x64.Build.0 = Release|x64
+		{A32A03CC-7F7E-4E1E-92F0-E96AFD76ADB5}.Release|x86.ActiveCfg = Release|x86
+		{A32A03CC-7F7E-4E1E-92F0-E96AFD76ADB5}.Release|x86.Build.0 = Release|x86
+		{A32A03CC-7F7E-4E1E-92F0-E96AFD76ADB5}.Debug|x86.ActiveCfg = Debug|x86
+		{A32A03CC-7F7E-4E1E-92F0-E96AFD76ADB5}.Debug|x86.Build.0 = Debug|x86
+		{A32A03CC-7F7E-4E1E-92F0-E96AFD76ADB5}.Debug|x64.ActiveCfg = Debug|x64
+		{A32A03CC-7F7E-4E1E-92F0-E96AFD76ADB5}.Debug|x64.Build.0 = Debug|x64
+		{A32A03CC-7F7E-4E1E-92F0-E96AFD76ADB5}.Release|x64.ActiveCfg = Release|x64
+		{A32A03CC-7F7E-4E1E-92F0-E96AFD76ADB5}.Release|x64.Build.0 = Release|x64
+		{35253CE1-C864-4CD3-8249-4D1319748E8F}.Release|x86.ActiveCfg = Release|x86
+		{35253CE1-C864-4CD3-8249-4D1319748E8F}.Release|x86.Build.0 = Release|x86
+		{35253CE1-C864-4CD3-8249-4D1319748E8F}.Debug|x86.ActiveCfg = Debug|x86
+		{35253CE1-C864-4CD3-8249-4D1319748E8F}.Debug|x86.Build.0 = Debug|x86
+		{35253CE1-C864-4CD3-8249-4D1319748E8F}.Debug|x64.ActiveCfg = Debug|x64
+		{35253CE1-C864-4CD3-8249-4D1319748E8F}.Debug|x64.Build.0 = Debug|x64
+		{35253CE1-C864-4CD3-8249-4D1319748E8F}.Release|x64.ActiveCfg = Release|x64
+		{35253CE1-C864-4CD3-8249-4D1319748E8F}.Release|x64.Build.0 = Release|x64
+		{7467A6F8-F2AD-4A39-B5FE-625F5F493363}.Release|x86.ActiveCfg = Release|x86
+		{7467A6F8-F2AD-4A39-B5FE-625F5F493363}.Release|x86.Build.0 = Release|x86
+		{7467A6F8-F2AD-4A39-B5FE-625F5F493363}.Debug|x86.ActiveCfg = Debug|x86
+		{7467A6F8-F2AD-4A39-B5FE-625F5F493363}.Debug|x86.Build.0 = Debug|x86
+		{7467A6F8-F2AD-4A39-B5FE-625F5F493363}.Debug|x64.ActiveCfg = Debug|x64
+		{7467A6F8-F2AD-4A39-B5FE-625F5F493363}.Debug|x64.Build.0 = Debug|x64
+		{7467A6F8-F2AD-4A39-B5FE-625F5F493363}.Release|x64.ActiveCfg = Release|x64
+		{7467A6F8-F2AD-4A39-B5FE-625F5F493363}.Release|x64.Build.0 = Release|x64
+	EndGlobalSection
+EndGlobal
