@@ -1,6 +1,3 @@
 [submodule "vendor/FNA"]
 	path = vendor/FNA
 	url = git://github.com/FNA-XNA/FNA.git
-[submodule "vendor/ImGui.NET"]
-	path = vendor/ImGui.NET
-	url = https://github.com/mellinoe/ImGui.NET.git

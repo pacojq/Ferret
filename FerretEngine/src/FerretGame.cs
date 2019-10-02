@@ -40,7 +40,6 @@ namespace FerretEngine
 		
 		
 		
-		
 		// Variables used for FPS count //
 		public int FPS { get; private set; }
 		private int _fpsCounter = 0;
@@ -97,7 +96,7 @@ namespace FerretEngine
         /// </summary>
         protected override void Initialize()
         {
-            base.Initialize();
+	        base.Initialize();
         }
 
 		
@@ -107,6 +106,18 @@ namespace FerretEngine
         /// </summary>
         protected override void LoadContent()
         {
+	        /*
+	        // First, load the texture as a Texture2D (can also be done using the XNA/FNA content pipeline)
+	        _xnaTexture = CreateTexture(GraphicsDevice, 300, 150, pixel =>
+	        {
+		        var red = (pixel % 300) / 2;
+		        return new Color(red, 1, 1);
+	        });
+
+	        // Then, bind it to an ImGui-friendly pointer, that we can use during regular ImGui.** calls (see below)
+	        _imGuiTexture = _imGuiRenderer.BindTexture(_xnaTexture);
+	        */
+	        
             base.LoadContent();
             
             // Create a new SpriteBatch, which can be used to draw textures.
@@ -152,7 +163,6 @@ namespace FerretEngine
         protected override void Draw(GameTime gameTime)
         {
             // TODO Render();
-            GraphicsDevice.Clear(Color.CornflowerBlue);
             
             base.Draw(gameTime);
             
@@ -171,5 +181,10 @@ namespace FerretEngine
             }
             
         }
+        
+        
+        
+        
+        
 	}
 }
