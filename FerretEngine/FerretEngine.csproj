@@ -57,7 +57,12 @@
     </ItemGroup>
     <ItemGroup>
         <Compile Include="Properties\AssemblyInfo.cs" />
+        <Compile Include="src\Core\Component.cs" />
+        <Compile Include="src\Core\Entity.cs" />
+        <Compile Include="src\Core\Scene.cs" />
         <Compile Include="src\FerretGame.cs" />
+        <Compile Include="src\Input\KeyboardInput.cs" />
+        <Compile Include="src\Input\FerretInput.cs" />
         <Compile Include="src\Logging\ConsoleLogger.cs" />
         <Compile Include="src\Logging\ILogger.cs" />
     </ItemGroup>

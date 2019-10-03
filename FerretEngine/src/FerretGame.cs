@@ -9,16 +9,9 @@ namespace FerretEngine
 {
 	public class FerretGame : Game
 	{
-		protected GraphicsDeviceManager Graphics { get; }
-		protected SpriteBatch SpriteBatch { get; private set; }
 		
-		
-		public string Title;
-		
-		public static int Width { get; private set; }
-		public static int Height { get; private set; }
-
-		
+		public static float DeltaTime { get; private set; }
+		public static float RawDeltaTime { get; private set; }
 		
 		
 		public static string ContentDirectory
@@ -35,9 +28,21 @@ namespace FerretEngine
 		}
 		
 		
+		
+		
+		public string Title { get; }
+		
+		public static int Width { get; private set; }
+		public static int Height { get; private set; }
+
+		
+		
 		public ILogger Logger { get; }
 		
 		
+		protected GraphicsDeviceManager Graphics { get; }
+		protected SpriteBatch SpriteBatch { get; private set; }
+
 		
 		
 		// Variables used for FPS count //
