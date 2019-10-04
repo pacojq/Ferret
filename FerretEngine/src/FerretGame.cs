@@ -4,6 +4,8 @@ using System.Reflection;
 using FerretEngine.Logging;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Myra;
+using Myra.Graphics2D.UI;
 
 namespace FerretEngine
 {
@@ -53,7 +55,7 @@ namespace FerretEngine
 		
 		
 		
-		
+		private Desktop _desktop;
 		
 		
 		
@@ -111,17 +113,75 @@ namespace FerretEngine
         /// </summary>
         protected override void LoadContent()
         {
-	        /*
-	        // First, load the texture as a Texture2D (can also be done using the XNA/FNA content pipeline)
-	        _xnaTexture = CreateTexture(GraphicsDevice, 300, 150, pixel =>
-	        {
-		        var red = (pixel % 300) / 2;
-		        return new Color(red, 1, 1);
-	        });
+	        MyraEnvironment.Game = this;
 
-	        // Then, bind it to an ImGui-friendly pointer, that we can use during regular ImGui.** calls (see below)
-	        _imGuiTexture = _imGuiRenderer.BindTexture(_xnaTexture);
-	        */
+	        var grid = new Grid
+	        {
+		        RowSpacing = 8,
+		        ColumnSpacing = 8
+	        };
+
+	        grid.ColumnsProportions.Add(new Proportion(ProportionType.Auto));
+	        grid.ColumnsProportions.Add(new Proportion(ProportionType.Auto));
+	        grid.RowsProportions.Add(new Proportion(ProportionType.Auto));
+	        grid.RowsProportions.Add(new Proportion(ProportionType.Auto));
+
+// TextBlock
+	        var helloWorld = new TextBlock
+	        {
+		        Id = "label",
+		        Text = "Hello, World!"
+	        };
+	        grid.Widgets.Add(helloWorld);
+
+// ComboBox
+	        var combo = new ComboBox
+	        {
+		        GridColumn = 1,
+		        GridRow = 0
+	        };
+
+	        combo.Items.Add(new ListItem("Red", Color.Red));
+	        combo.Items.Add(new ListItem("Green", Color.Green));
+	        combo.Items.Add(new ListItem("Blue", Color.Blue));
+	        grid.Widgets.Add(combo);
+
+// Button
+	        var button = new TextButton
+	        {
+		        GridColumn = 0,
+		        GridRow = 1,
+		        Text = "Show"
+	        };
+
+	        button.Click += (s, a) =>
+	        {
+		        var messageBox = Dialog.CreateMessageBox("Message", "Some message!");
+		        messageBox.ShowModal(_desktop);
+	        };
+
+	        grid.Widgets.Add(button);
+
+// Spin button
+	        var spinButton = new SpinButton
+	        {
+		        GridColumn = 1,
+		        GridRow = 1,
+		        Width = 100,
+		        Nullable = true
+	        };
+	        grid.Widgets.Add(spinButton);
+
+// Add it to the desktop
+	        _desktop = new Desktop();
+	        _desktop.Widgets.Add(grid);
+	        
+	        
+	        
+	        
+	        
+	        
+	        
 	        
             base.LoadContent();
             
@@ -169,6 +229,8 @@ namespace FerretEngine
         {
 	        GraphicsDevice.Clear(Color.CornflowerBlue);
 
+	        _desktop.Render();
+	        
             // TODO Render();
             
             

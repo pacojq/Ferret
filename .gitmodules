@@ -1,3 +1,9 @@
 [submodule "vendor/FNA"]
 	path = vendor/FNA
 	url = git://github.com/FNA-XNA/FNA.git
+[submodule "vendor/Myra"]
+	path = vendor/Myra
+	url = https://github.com/rds1983/Myra.git
+[submodule "vendor/fnalibs"]
+	path = vendor/fnalibs
+	url = https://github.com/pacojq/fnalibs.git

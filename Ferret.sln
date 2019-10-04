@@ -8,6 +8,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FerretEngine", "FerretEngin
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FerretEngine.Sandbox", "FerretEngine.Sandbox\FerretEngine.Sandbox.csproj", "{A32A03CC-7F7E-4E1E-92F0-E96AFD76ADB5}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Myra", "vendor\Myra\src\Myra\Myra.csproj", "{9FDEFC37-FE31-4FDE-84B7-F1723E8A2D45}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Release|x86 = Release|x86
@@ -17,6 +19,7 @@ Global
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{35253CE1-C864-4CD3-8249-4D1319748E8F} = {F362B69B-5DC3-4D37-A9AD-CCF0FD64741F}
+		{9FDEFC37-FE31-4FDE-84B7-F1723E8A2D45} = {F362B69B-5DC3-4D37-A9AD-CCF0FD64741F}
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{06147BDE-E62C-467C-9B35-001CB6FF8665}.Release|x86.ActiveCfg = Release|x86
@@ -43,5 +46,13 @@ Global
 		{35253CE1-C864-4CD3-8249-4D1319748E8F}.Debug|x64.Build.0 = Debug|x64
 		{35253CE1-C864-4CD3-8249-4D1319748E8F}.Release|x64.ActiveCfg = Release|x64
 		{35253CE1-C864-4CD3-8249-4D1319748E8F}.Release|x64.Build.0 = Release|x64
+		{9FDEFC37-FE31-4FDE-84B7-F1723E8A2D45}.Release|x86.ActiveCfg = Release|Any CPU
+		{9FDEFC37-FE31-4FDE-84B7-F1723E8A2D45}.Release|x86.Build.0 = Release|Any CPU
+		{9FDEFC37-FE31-4FDE-84B7-F1723E8A2D45}.Release|x64.ActiveCfg = Release|Any CPU
+		{9FDEFC37-FE31-4FDE-84B7-F1723E8A2D45}.Release|x64.Build.0 = Release|Any CPU
+		{9FDEFC37-FE31-4FDE-84B7-F1723E8A2D45}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{9FDEFC37-FE31-4FDE-84B7-F1723E8A2D45}.Debug|x86.Build.0 = Debug|Any CPU
+		{9FDEFC37-FE31-4FDE-84B7-F1723E8A2D45}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{9FDEFC37-FE31-4FDE-84B7-F1723E8A2D45}.Debug|x64.Build.0 = Debug|Any CPU
 	EndGlobalSection
 EndGlobal

@@ -71,6 +71,10 @@
         <Project>{35253ce1-c864-4cd3-8249-4d1319748e8f}</Project>
         <Name>FNA</Name>
       </ProjectReference>
+      <ProjectReference Include="..\vendor\Myra\src\Myra\Myra.csproj">
+        <Project>{9fdefc37-fe31-4fde-84b7-f1723e8a2d45}</Project>
+        <Name>Myra</Name>
+      </ProjectReference>
     </ItemGroup>
     <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
     <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
