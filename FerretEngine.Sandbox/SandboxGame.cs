@@ -5,8 +5,8 @@ namespace FerretEngine.Sandbox
 		public const int ScreenWidth = 480;
 		public const int ScreenHeight = 320;
         
-		public SandboxGame() :
-			base(ScreenWidth, ScreenHeight, ScreenWidth, ScreenHeight, "Ferret Sandbox", false)
+		public SandboxGame() : base(ScreenWidth, ScreenHeight, ScreenWidth, ScreenHeight, 
+				"Ferret Sandbox", false, @"Content")
 		{
             
 		}

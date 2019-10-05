@@ -1,16 +1,34 @@
 ﻿using System;
 using System.IO;
 using System.Reflection;
+using FerretEngine.Core;
+using FerretEngine.Graphics;
+using FerretEngine.Input;
 using FerretEngine.Logging;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using Myra;
-using Myra.Graphics2D.UI;
+using Microsoft.Xna.Framework.Input;
 
 namespace FerretEngine
 {
 	public class FerretGame : Game
 	{
+
+		public static FerretGame Instance { get; private set; }
+		
+		
+		
+		
+		public static bool ExitOnEscapeKeypress = true;
+
+		public static bool PauseOnFocusLost = true;
+
+		public static bool DebugRenderEnabled = false;
+
+		
+		
+		
+		
 		
 		public static float DeltaTime { get; private set; }
 		public static float RawDeltaTime { get; private set; }
@@ -42,7 +60,10 @@ namespace FerretEngine
 		public ILogger Logger { get; }
 		
 		
-		protected GraphicsDeviceManager Graphics { get; }
+		public Scene Scene { get; private set; }
+		
+		
+		protected GraphicsDeviceManager GraphicsManager { get; }
 		protected SpriteBatch SpriteBatch { get; private set; }
 
 		
@@ -52,45 +73,62 @@ namespace FerretEngine
 		private int _fpsCounter = 0;
 		private TimeSpan _counterElapsed = TimeSpan.Zero;
 
-		
-		
-		
-		private Desktop _desktop;
+
+
+
+
+	
 		
 		
 		
 
-		public FerretGame(int width, int height, int windowWidth, int windowHeight, string windowTitle, bool fullscreen)
+		public FerretGame(int width, int height, int windowWidth, int windowHeight, string windowTitle, 
+				bool fullscreen, string contentRootDirectory)
 		{
+			Instance = this;
+			
 			Title = Window.Title = windowTitle;
 			Width = width;
 			Height = height;
             
 			Logger = new ConsoleLogger();
+
+			GraphicsManager = new GraphicsDeviceManager(this)
+			{
+				PreferredBackBufferWidth = windowWidth,
+				PreferredBackBufferHeight = windowHeight,
+				IsFullScreen = fullscreen,
+				SynchronizeWithVerticalRetrace = true
+			};
+			//GraphicsManager.DeviceReset += OnGraphicsReset;
+			//GraphicsManager.DeviceCreated += OnGraphicsCreate;
             
-			Graphics = new GraphicsDeviceManager(this);
-			//_graphics.DeviceReset += OnGraphicsReset;
-			//_graphics.DeviceCreated += OnGraphicsCreate;
-            
-			Window.AllowUserResizing = true;
+			Window.AllowUserResizing = false;
 			//Window.ClientSizeChanged += OnClientSizeChanged;
 
+			Screen.Initialize(GraphicsManager);
+			/*
 			if (fullscreen)
 			{
-				Graphics.PreferredBackBufferWidth = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width;
-				Graphics.PreferredBackBufferHeight = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height;
-				Graphics.IsFullScreen = true;
+				GraphicsManager.PreferredBackBufferWidth = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width;
+				GraphicsManager.PreferredBackBufferHeight = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height;
+				GraphicsManager.IsFullScreen = true;
 			}
 			else
 			{
-				Graphics.PreferredBackBufferWidth = windowWidth;
-				Graphics.PreferredBackBufferHeight = windowHeight;
-				Graphics.IsFullScreen = false;
+				GraphicsManager.PreferredBackBufferWidth = windowWidth;
+				GraphicsManager.PreferredBackBufferHeight = windowHeight;
+				GraphicsManager.IsFullScreen = false;
 			}
-			Graphics.ApplyChanges();
+			GraphicsManager.ApplyChanges();
+            */
             
-            
-			Content.RootDirectory = @"Content";
+			Content.RootDirectory = contentRootDirectory;
+			
+			IsMouseVisible = true;
+			IsFixedTimeStep = false;
+			
+			
 		}
 		
 		
@@ -104,6 +142,10 @@ namespace FerretEngine
         protected override void Initialize()
         {
 	        base.Initialize();
+	        
+	        FerretInput.Initialize();
+	        
+	        // TODO load default font
         }
 
 		
@@ -113,75 +155,7 @@ namespace FerretEngine
         /// </summary>
         protected override void LoadContent()
         {
-	        MyraEnvironment.Game = this;
-
-	        var grid = new Grid
-	        {
-		        RowSpacing = 8,
-		        ColumnSpacing = 8
-	        };
-
-	        grid.ColumnsProportions.Add(new Proportion(ProportionType.Auto));
-	        grid.ColumnsProportions.Add(new Proportion(ProportionType.Auto));
-	        grid.RowsProportions.Add(new Proportion(ProportionType.Auto));
-	        grid.RowsProportions.Add(new Proportion(ProportionType.Auto));
-
-// TextBlock
-	        var helloWorld = new TextBlock
-	        {
-		        Id = "label",
-		        Text = "Hello, World!"
-	        };
-	        grid.Widgets.Add(helloWorld);
-
-// ComboBox
-	        var combo = new ComboBox
-	        {
-		        GridColumn = 1,
-		        GridRow = 0
-	        };
-
-	        combo.Items.Add(new ListItem("Red", Color.Red));
-	        combo.Items.Add(new ListItem("Green", Color.Green));
-	        combo.Items.Add(new ListItem("Blue", Color.Blue));
-	        grid.Widgets.Add(combo);
-
-// Button
-	        var button = new TextButton
-	        {
-		        GridColumn = 0,
-		        GridRow = 1,
-		        Text = "Show"
-	        };
-
-	        button.Click += (s, a) =>
-	        {
-		        var messageBox = Dialog.CreateMessageBox("Message", "Some message!");
-		        messageBox.ShowModal(_desktop);
-	        };
-
-	        grid.Widgets.Add(button);
-
-// Spin button
-	        var spinButton = new SpinButton
-	        {
-		        GridColumn = 1,
-		        GridRow = 1,
-		        Width = 100,
-		        Nullable = true
-	        };
-	        grid.Widgets.Add(spinButton);
-
-// Add it to the desktop
-	        _desktop = new Desktop();
-	        _desktop.Widgets.Add(grid);
-	        
-	        
-	        
-	        
-	        
-	        
-	        
+	        // TODO
 	        
             base.LoadContent();
             
@@ -211,10 +185,21 @@ namespace FerretEngine
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Update(GameTime gameTime)
         {
+	        FerretInput.Update();
+	        
+	        if (ExitOnEscapeKeypress && FerretInput.IsKeyPressed(Keys.Escape))
+	        {
+		        Exit();
+		        return;
+	        }
+	        
 	        // TODO UPDATE
-	        
-	        
-            // MonoGame update
+	        if (Scene != null)
+	        {
+		        Scene.Update();
+	        }
+
+	        // MonoGame update
             base.Update(gameTime);
         }
 
@@ -229,9 +214,12 @@ namespace FerretEngine
         {
 	        GraphicsDevice.Clear(Color.CornflowerBlue);
 
-	        _desktop.Render();
-	        
             // TODO Render();
+            
+            if (Scene != null)
+            {
+	            Scene.Render();
+            }
             
             
             base.Draw(gameTime);
@@ -253,6 +241,11 @@ namespace FerretEngine
         }
         
         
+        protected override void OnExiting(object sender, EventArgs args)
+        {
+	        base.OnExiting(sender, args);
+	        Logger.Log("Exiting game");
+        }
         
         
         

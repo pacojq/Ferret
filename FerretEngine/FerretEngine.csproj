@@ -61,10 +61,13 @@
         <Compile Include="src\Core\Entity.cs" />
         <Compile Include="src\Core\Scene.cs" />
         <Compile Include="src\FerretGame.cs" />
+        <Compile Include="src\Graphics\DrawGUI.cs" />
+        <Compile Include="src\Graphics\Screen.cs" />
         <Compile Include="src\Input\KeyboardInput.cs" />
         <Compile Include="src\Input\FerretInput.cs" />
         <Compile Include="src\Logging\ConsoleLogger.cs" />
         <Compile Include="src\Logging\ILogger.cs" />
+        <Compile Include="src\Utils\Assert.cs" />
     </ItemGroup>
     <ItemGroup>
       <ProjectReference Include="..\vendor\FNA\FNA.csproj">
@@ -97,6 +100,10 @@
             <Link>%(RecursiveDir)%(FileName)%(Extension)</Link>
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         </Content>
+    </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="Content" />
     </ItemGroup>
 
 </Project>
