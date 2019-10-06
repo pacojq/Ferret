@@ -3,16 +3,17 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using FerretEngine.Graphics;
-using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework;
 
 namespace FerretEngine.Core
 {
 	public abstract class Scene : IEnumerable<Entity>, IEnumerable
     {
 
-        
         public float TimeActive{ get; private set; }
 
+
+        public Color BackgroundColor { get; set; }
 
         public IEnumerable<Entity> Entities => _entities;
         private readonly List<Entity> _entities;
@@ -27,7 +28,8 @@ namespace FerretEngine.Core
         public Scene()
         {
             _entities = new List<Entity>();
-            
+
+            BackgroundColor = Color.CornflowerBlue;
             MainCamera = new Camera(FeGame.Width, FeGame.Height);
         }
         
@@ -86,8 +88,17 @@ namespace FerretEngine.Core
             // To be implemented by child classes
         }
 
+
+
+        public virtual void OnFocusGained()
+        {
+            // To be implemented by child classes
+        }
         
-        
+        public virtual void OnFocusLost()
+        {
+            // To be implemented by child classes
+        }
         
         
         
@@ -98,28 +109,31 @@ namespace FerretEngine.Core
 
         public void AddEntity(Entity entity)
         {
+            entity.Scene = this;
             _entities.Add(entity);
         }
         
 
         public void RemoveEntity(Entity entity)
         {
-            _entities.Remove(entity);
+            if (_entities.Remove(entity))
+                entity.Scene = null;
         }
 
         public void AddEntities(params Entity[] entities)
         {
             foreach (var e in entities)
-                _entities.Add(e);
+                AddEntity(e);
         }
 
         public void RemoveEntities(params Entity[] entities)
         {
             foreach (var e in entities)
-            {
-                _entities.Remove(e);   
-            }
+                RemoveEntity(e);   
         }
+        
+        
+        
         
         
         public T FindEntity<T>() where T : Entity
@@ -178,7 +192,8 @@ namespace FerretEngine.Core
         }
 
         #endregion
-        
 
+
+        
     }
 }

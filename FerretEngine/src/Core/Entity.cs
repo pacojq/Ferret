@@ -18,7 +18,7 @@ namespace FerretEngine.Core
         /// <summary>
         /// The Scene this Entity is in.
         /// </summary>
-        public Scene Scene { get; private set; }
+        public Scene Scene { get; internal set; }
 
         
         /// <summary>
@@ -132,6 +132,14 @@ namespace FerretEngine.Core
             }
         }
         
+        
+        public void DrawGUI(float deltaTime)
+        {
+            foreach (Component c in Components)
+            {
+                c.DrawGUI(deltaTime);
+            }
+        }
         
         
         

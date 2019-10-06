@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using FerretEngine.Core;
 using FerretEngine.Graphics.Renderers;
@@ -16,42 +17,42 @@ namespace FerretEngine.Graphics
         /// </summary>
         public static Sprite Pixel { get; private set; }
         
-        
-        
-        
-        
-        
-        
-        public Renderer Renderer
-        {
-            get => _renderer;
-            set
-            {
-                Assert.IsNotNull(value);
-                _renderer = value;
-            }
-        }
-        private Renderer _renderer;
-        
+        /// <summary>
+        /// Default font for the Ferret Engine.
+        /// </summary>
+        public static SpriteFont DefaultFont { get; private set; }
 
+        
+        
+        
         public GraphicsDevice GraphicsDevice => _game.GraphicsDevice;
         public GraphicsDeviceManager GraphicsManager { get; }
 
 
         internal SpriteBatch SpriteBatch => _spriteBatch;
         private SpriteBatch _spriteBatch;
+
+
+        public bool IsRendering => CurrentRenderer != null;
         
-        
-        
+        internal Renderer CurrentRenderer { get; private set; }
         
         private readonly FeGame _game;
         
+        
+        private readonly List<Renderer> _allRenderers;
+        private readonly List<Renderer> _defaultRenderers;
+        private readonly List<Renderer> _guiRenderers;
+        
+        private readonly RenderTarget2D _renderTarget;
+
+
         /// <summary>
         /// Whether the <see cref="_spriteBatch"/> has already called Begin()
         /// </summary>
         private bool _isOpen;
         
-        private readonly RenderTarget2D _renderTarget;
+        
 
         
         
@@ -91,18 +92,76 @@ namespace FerretEngine.Graphics
             GraphicsManager.ApplyChanges();
             */
             
-            _renderTarget = new RenderTarget2D(GraphicsDevice, width, height);
-            Renderer = new BaseRenderer();
             
+            
+            
+            _renderTarget = new RenderTarget2D(GraphicsDevice, width, height);
+
+            
+            _allRenderers = new List<Renderer>();
+            _defaultRenderers = new List<Renderer>();
+            _guiRenderers = new List<Renderer>();
+
+            AddRenderer(new DefaultRenderer());
+            AddRenderer(new GuiRenderer());
+            
+
             FeDraw.Initialize(this);
         }
 
         internal void LoadContent()
         {
             _spriteBatch = new SpriteBatch(_game.GraphicsDevice);
+            
             Pixel = Sprite.PlainColor(1, 1, Color.White);
+            DefaultFont = _game.Content.Load<SpriteFont>(@"Ferret\FerretDefault");
+
+            FeDraw.Font = DefaultFont;
+            FeDraw.Color = Color.White;
         }
 
+
+
+        internal void OnSceneChange(Scene scene)
+        {
+            Camera sceneCamera = null;
+            if (_game.Scene != null)
+                sceneCamera = _game.Scene.MainCamera;
+                
+            foreach (Renderer renderer in _allRenderers)
+            {
+                if (renderer.Camera == sceneCamera)
+                    renderer.Camera = scene.MainCamera;
+            }
+        }
+
+        public void AddRenderer(Renderer renderer)
+        {
+            if (renderer.Camera == null)
+                if (_game.Scene != null)
+                    renderer.Camera = _game.Scene.MainCamera;
+
+            switch (renderer.Surface)
+            {
+                case RenderSurface.Default:
+                    _defaultRenderers.Add(renderer);
+                    break;
+                case RenderSurface.Gui:
+                    _guiRenderers.Add(renderer);
+                    break;
+                default:
+                    throw new Exception($"RendererSurface {renderer.Surface} is not supported");
+            }
+            
+            _allRenderers.Add(renderer);
+        }
+        
+        
+        
+        
+        
+        
+        
         
         private void Begin(SpriteSortMode sortMode)
         {
@@ -133,33 +192,33 @@ namespace FerretEngine.Graphics
         
         internal void Render(GameTime gameTime)
         {
-            GraphicsDevice.SetRenderTarget(_renderTarget);
-            GraphicsDevice.Clear(Color.CornflowerBlue);
-            
-            Begin( Renderer.SortMode );
-
             Scene scene = _game.Scene;
+            Color clearColor = Color.CornflowerBlue;
+            if (scene != null)
+                clearColor = scene.BackgroundColor;
+
+            float deltaTime = (float) gameTime.ElapsedGameTime.TotalSeconds;
+            
+            GraphicsDevice.SetRenderTarget(_renderTarget);
+            GraphicsDevice.Clear(clearColor);
+            
+            // Make each Renderer render the scene in the corresponding order
+            
             if (scene != null)
             {
                 scene.BeforeRender();
-                Renderer.BeforeRender(scene);
-
-                Renderer.Camera = scene.MainCamera;
                 
-                Renderer.Render(scene, (float) gameTime.ElapsedGameTime.TotalSeconds);
-
-                Renderer.Camera = null;
+                RenderList(scene, deltaTime, _defaultRenderers);
+                RenderList(scene, deltaTime, _guiRenderers);
                 
-                Renderer.AfterRender(scene);
                 scene.AfterRender();
             }
             
-            End();
             
-            
-            
+            // Now let's go to the default RenderTarget and render the target we've painted before
             
             GraphicsDevice.SetRenderTarget(null);
+            GraphicsDevice.Clear(clearColor);
             Begin(SpriteSortMode.Texture);
 
             Rectangle rect = new Rectangle(0, 0, 
@@ -170,6 +229,27 @@ namespace FerretEngine.Graphics
             
             End();
         }
+
+
+
+        private void RenderList(Scene scene, float deltaTime, List<Renderer> renderers)
+        {
+            foreach (Renderer renderer in renderers)
+            {
+                CurrentRenderer = renderer;
+                
+                Begin(renderer.SortMode);
+                renderer.BeforeRender(scene);
+                
+                renderer.Render(scene, deltaTime);
+
+                renderer.AfterRender(scene);
+                End();
+            }
+
+            CurrentRenderer = null;
+        }
+
         
         
         

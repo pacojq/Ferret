@@ -64,5 +64,10 @@ namespace FerretEngine.Core
 		{
 			// To be implemented by each individual component
 		}
+		
+		public virtual void DrawGUI(float deltaTime)
+		{
+			// To be implemented by each individual component
+		}
 	}
 }

@@ -1,4 +1,5 @@
 ﻿using FerretEngine.Core;
+using FerretEngine.Graphics;
 using FerretEngine.Input;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
@@ -34,6 +35,16 @@ namespace FerretEngine.Sandbox.Player
             pos.Y += ySpd * (_pxPerSecond * deltaTime);
 
             this.Entity.Position = pos;
+        }
+
+        public override void DrawGUI(float deltaTime)
+        {
+            base.DrawGUI(deltaTime);
+
+            Vector2 relPos = this.Entity.Scene.MainCamera.GetRelativePosition(this.Entity.Position);
+            
+            FeDraw.Text("This is GUI text", relPos + new Vector2(0, 24));
+            FeDraw.Text("Hi there :D", Vector2.Zero);
         }
     }
 }

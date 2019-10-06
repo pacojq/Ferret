@@ -17,17 +17,28 @@ namespace FerretEngine.Graphics
         public bool Active { get; set; }
 
 
-        public Camera(Vector2 position, int width, int height)
+        public Camera(int width, int height, Vector2 center)
         {
             Active = true;
-            Position = position;
-            Center = new Vector2(width/2, height/2);
+            Position = Vector2.Zero;
+            Center = center;
             Width = width;
             Height = height;
         }
-        
-        public Camera(int width, int height) : this(Vector2.Zero, width, height) { }
+
+        public Camera(int width, int height) : this(width, height, new Vector2(width / 2, height / 2))
+        {
+        }
 
 
+        /// <summary>
+        /// Transforms a world position to its relative position in camera.
+        /// </summary>
+        /// <param name="worldPos"></param>
+        /// <returns></returns>
+        public Vector2 GetRelativePosition(Vector2 worldPos)
+        {
+            return worldPos - this.Position + this.Center;
+        }
     }
 }

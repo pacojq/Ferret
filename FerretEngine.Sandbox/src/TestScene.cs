@@ -1,6 +1,7 @@
 ﻿using FerretEngine.Core;
 using FerretEngine.Logging;
 using FerretEngine.Sandbox.Player;
+using Microsoft.Xna.Framework;
 
 namespace FerretEngine.Sandbox
 {
@@ -8,6 +9,7 @@ namespace FerretEngine.Sandbox
     {
         public TestScene()
         {
+            BackgroundColor = Color.DimGray;
             AddEntity(new PlayerEntity());
         }
 

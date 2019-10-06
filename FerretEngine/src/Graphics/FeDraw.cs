@@ -44,10 +44,10 @@ namespace FerretEngine.Graphics
 
         
         
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private static Vector2 GetRenderPos(Vector2 pos)
         {
-            Camera cam = _graphics.Renderer.Camera;
-            return Mathf.Floor(pos - cam.Position + cam.Center);
+            return Mathf.Floor(_graphics.CurrentRenderer.Camera.GetRelativePosition(pos));
         }
 
 
@@ -65,6 +65,7 @@ namespace FerretEngine.Graphics
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static void Sprite(Sprite sprite, Vector2 position)
         {
+            Assert.IsTrue(_graphics.IsRendering);
             _graphics.SpriteBatch.Draw(
                     sprite.Texture,
                     GetRenderPos(position),
@@ -88,6 +89,7 @@ namespace FerretEngine.Graphics
         public static void SpriteExt(Sprite sprite, Vector2 position, Color color, float rotation,
                 Vector2 origin, Vector2 scale, SpriteEffects effects, float layerDepth)
         {
+            Assert.IsTrue(_graphics.IsRendering);
             _graphics.SpriteBatch.Draw(
                     sprite.Texture,
                     GetRenderPos(position),
@@ -118,6 +120,8 @@ namespace FerretEngine.Graphics
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static void Line(Vector2 p0, Vector2 p1, int width = 1)
         {
+            Assert.IsTrue(_graphics.IsRendering);
+            
             // Draw a scaled pixel
             SpriteExt(
                     FeGraphics.Pixel, 
@@ -156,6 +160,7 @@ namespace FerretEngine.Graphics
         
         public static void RectExt(Rectangle rect, Color color, bool outline)
         {
+            Assert.IsTrue(_graphics.IsRendering);
             if (outline) RectOutline(rect, color, 1);
             else RectFilled(rect, color);
         }
@@ -208,6 +213,7 @@ namespace FerretEngine.Graphics
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static void TextExt(string text, Vector2 position, Color color)
         {
+            Assert.IsTrue(_graphics.IsRendering);
             _graphics.SpriteBatch.DrawString(
                     Font,
                     text,

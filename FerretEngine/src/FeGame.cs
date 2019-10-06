@@ -80,8 +80,7 @@ namespace FerretEngine
 		
 		
 
-		public FeGame(int width, int height, int windowWidth, int windowHeight, string windowTitle, 
-				bool fullscreen, string contentRootDirectory)
+		public FeGame(int width, int height, int windowWidth, int windowHeight, string windowTitle, bool fullscreen)
 		{
 			Instance = this;
 			
@@ -92,7 +91,7 @@ namespace FerretEngine
 			FeLog.Initialize();
 			Graphics = new FeGraphics(this, width, height, windowWidth, windowHeight, fullscreen);
 
-			Content.RootDirectory = contentRootDirectory;
+			Content.RootDirectory = @"Content";
 			
 			IsMouseVisible = true;
 			IsFixedTimeStep = false;
@@ -107,8 +106,16 @@ namespace FerretEngine
 			if (Scene != null)
 				Scene.End();
 			
+			Graphics.OnSceneChange(scene);
+			OnSceneChange(scene);
+			
 			Scene = scene;
 			scene.Begin();
+		}
+
+		protected virtual void OnSceneChange(Scene scene)
+		{
+			// To be implemented by child classes
 		}
 		
 		
@@ -225,6 +232,20 @@ namespace FerretEngine
         }
         
         
-        
+        protected override void OnActivated(object sender, EventArgs args)
+        {
+	        base.OnActivated(sender, args);
+
+	        if (Scene != null)
+		        Scene.OnFocusGained();
+        }
+
+        protected override void OnDeactivated(object sender, EventArgs args)
+        {
+	        base.OnDeactivated(sender, args);
+
+	        if (Scene != null)
+		        Scene.OnFocusLost();
+        }
 	}
 }

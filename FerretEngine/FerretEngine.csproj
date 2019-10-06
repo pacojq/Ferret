@@ -70,8 +70,10 @@
     <Compile Include="src\Graphics\Camera.cs" />
     <Compile Include="src\Graphics\FeDraw.cs" />
     <Compile Include="src\Graphics\FeGraphics.cs" />
-    <Compile Include="src\Graphics\Renderer.cs" />
-    <Compile Include="src\Graphics\Renderers\BaseRenderer.cs" />
+    <Compile Include="src\Graphics\Renderers\DefaultRenderer.cs" />
+    <Compile Include="src\Graphics\Renderers\GuiRenderer.cs" />
+    <Compile Include="src\Graphics\Renderers\Renderer.cs" />
+    <Compile Include="src\Graphics\RenderSurface.cs" />
     <Compile Include="src\Graphics\Screen.cs" />
     <Compile Include="src\Graphics\Sprite.cs" />
     <Compile Include="src\Graphics\SpriteSheet.cs" />
@@ -88,7 +90,9 @@
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <!-- - - - - - - - - - - - fnalibs - - - - - - - - - - - -->
+  <!-- 
+    - - - - - - - - - - - fnalibs - - - - - - - - - - - 
+  -->
   <ItemGroup Condition=" '$(Platform)' == 'x86' ">
     <Content Include="..\vendor\fnalibs\x86\*.dll">
       <Link>%(RecursiveDir)%(FileName)%(Extension)</Link>
@@ -101,13 +105,18 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
-  <!-- - - - - - - - - - - - - NLog - - - - - - - - - - - - -->
+  <!-- 
+    - - - - - - - - - - - - NLog - - - - - - - - - - - - 
+  -->
   <ItemGroup>
     <Content Include="..\vendor\NLog\*.dll">
       <Link>%(FileName)%(Extension)</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
+  <!-- 
+    - - - - - - - - - - - - Content - - - - - - - - - - - - 
+  -->
   <ItemGroup>
     <Content Include="Content\**\*">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>

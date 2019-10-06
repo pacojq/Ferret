@@ -3,13 +3,13 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace FerretEngine.Graphics.Renderers
 {
-    public class BaseRenderer : Renderer
+    public class DefaultRenderer : Renderer
     {
         public BlendState BlendState;
         public SamplerState SamplerState;
         public Effect Effect;
 
-        public BaseRenderer()
+        public DefaultRenderer() : base(RenderSurface.Default, SpriteSortMode.Deferred)
         {
             BlendState = BlendState.AlphaBlend;
             SamplerState = SamplerState.LinearClamp;
