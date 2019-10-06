@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Microsoft.Xna.Framework.Graphics;
 
 namespace FerretEngine.Core
 {
@@ -8,8 +9,10 @@ namespace FerretEngine.Core
 
         
         public float TimeActive{ get; private set; }
-        public float RawTimeActive { get; private set; }
-        public List<Entity> Entities { get; }
+
+
+        public IEnumerable<Entity> Entities => _entities;
+        private readonly List<Entity> _entities;
         
         
         
@@ -19,7 +22,7 @@ namespace FerretEngine.Core
 
         public Scene()
         {
-            Entities = new List<Entity>();
+            _entities = new List<Entity>();
         }
         
         
@@ -40,21 +43,20 @@ namespace FerretEngine.Core
         public virtual void BeforeUpdate()
         {
             if (!Paused)
-                TimeActive += FerretGame.DeltaTime;
-            RawTimeActive += FerretGame.RawDeltaTime;
+                TimeActive += FeGame.DeltaTime;
         }
         
         
         
 
-        public virtual void Update()
+        public virtual void Update(float deltaTime)
         {
             if (Paused)
                 return;
         
             foreach (Entity e in Entities)
             {
-                e.Update();
+                e.Update(deltaTime);
             }
         }
 
@@ -63,21 +65,24 @@ namespace FerretEngine.Core
             
         }
 
+        
+        
+        
+        
         public virtual void BeforeRender()
         {
-            
+            // To be implemented by child classes
         }
 
-        public virtual void Render()
-        {
-            
-        }
 
         public virtual void AfterRender()
         {
-            
+            // To be implemented by child classes
         }
 
+        
+        
+        
         
         
         
@@ -87,20 +92,20 @@ namespace FerretEngine.Core
 
         public void Add(Entity entity)
         {
-            Entities.Add(entity);
+            _entities.Add(entity);
         }
         
 
         public void Remove(Entity entity)
         {
-            Entities.Remove(entity);
+            _entities.Remove(entity);
         }
 
         public void Add(params Entity[] entities)
         {
             foreach (var e in entities)
             {
-                Entities.Add(e);   
+                _entities.Add(e);   
             }
         }
 
@@ -108,9 +113,11 @@ namespace FerretEngine.Core
         {
             foreach (var e in entities)
             {
-                Entities.Remove(e);   
+                _entities.Remove(e);   
             }
         }
+        
+        
 
         public IEnumerator<Entity> GetEnumerator()
         {

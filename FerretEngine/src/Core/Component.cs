@@ -1,5 +1,7 @@
 using System;
+using FerretEngine.Utils;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 
 namespace FerretEngine.Core
 {
@@ -7,16 +9,7 @@ namespace FerretEngine.Core
 	{
 
 		private Entity _entity;
-		public Entity Entity
-		{
-			get => _entity;
-			set
-			{
-				if (_entity != null)
-					throw new InvalidOperationException("Cannot set a new entity to a bound component.");
-				_entity = value;
-			}
-		}
+		public Entity Entity => _entity;
 
 
 		public Vector2 LocalPosition = Vector2.Zero;
@@ -33,18 +26,41 @@ namespace FerretEngine.Core
 
 
 
-		public virtual void OnBinding(Entity entity)
+		internal void Bind(Entity entity)
+		{
+			Assert.IsNotNull(entity);
+			Assert.IsNull(_entity);
+
+			OnBinding(entity);
+			_entity = entity;
+		}
+
+		internal void Unbind()
+		{
+			OnUnbinding(_entity);
+			_entity = null;
+		}
+		
+		
+		protected virtual void OnBinding(Entity entity)
 		{
 			// To be implemented by each individual component
 		}
 		
-		public virtual void OnUnbinding(Entity entity)
+		protected virtual void OnUnbinding(Entity entity)
 		{
 			// To be implemented by each individual component
 		}
 
 
-		public virtual void Update()
+		
+		
+		public virtual void Update(float deltaTime)
+		{
+			// To be implemented by each individual component
+		}
+
+		public virtual void Draw(float deltaTime)
 		{
 			// To be implemented by each individual component
 		}

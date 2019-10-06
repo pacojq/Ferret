@@ -3,7 +3,7 @@ using Microsoft.Xna.Framework.Input;
 
 namespace FerretEngine.Input
 {
-	public static class FerretInput
+	public static class FeInput
 	{
 
 		public static KeyboardInput Keyboard { get; private set; }
@@ -12,7 +12,7 @@ namespace FerretEngine.Input
 		{
 			Keyboard = new KeyboardInput();
 			
-			FerretGame.Instance.Logger.Log("FerretInput initialized!");
+			FeGame.Instance.Logger.Log("FerretInput initialized!");
 		}
 		
 		

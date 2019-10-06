@@ -1,19 +1,28 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using FerretEngine.Utils;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 
 namespace FerretEngine.Core
 {
 	public class Entity : IEnumerable<Component>
     {
+        private static uint _idCount;
+        public readonly uint ID;
+        
         
         #region // - - - - - Properties - - - - - //
-        
 
+        /// <summary>
+        /// The Scene this Entity is in.
+        /// </summary>
         public Scene Scene { get; private set; }
+
+        public IEnumerable<Component> Components => _components;
+        private readonly List<Component> _components;
         
-        public List<Component> Components { get; private set; }
         
         
         public Vector2 Position { get; set; }
@@ -69,10 +78,14 @@ namespace FerretEngine.Core
 
         public Entity(Vector2 position)
         {
+            ID = _idCount++;
+            
+            
             Position = position;
-            Components = new List<Component>();
+            _components = new List<Component>();
         }
 
+        
         // Util constructor
         public Entity() : this(Vector2.Zero) { }
         
@@ -83,15 +96,24 @@ namespace FerretEngine.Core
         /// Update game logic.
         /// Don't perform any rendering calls here.
         /// This method will be skipped if the entity is not <see cref="Active"/>
+        /// <param name="deltaTime">The time in seconds since the last update</param>
         /// </summary>
-        public void Update()
+        public void Update(float deltaTime)
         {
             foreach (Component c in Components)
             {
-                c.Update();
+                c.Update(deltaTime);
             }
         }
         
+        
+        public void Draw(float deltaTime)
+        {
+            foreach (Component c in Components)
+            {
+                c.Draw(deltaTime);
+            }
+        }
         
         
         
@@ -105,24 +127,24 @@ namespace FerretEngine.Core
             if (component.Entity != null)
                 throw new InvalidOperationException("Cannot add a component that is already bound to an entity.");
             
-            Components.Add(component);
-            component.OnBinding(this);
-            component.Entity = this;
+            _components.Add(component);
+            component.Bind(this);
         }
         
 
         public void Unbind(Component component)
         {
-            component.Entity = null;
-            component.OnUnbinding(this);
-            Components.Remove(component);
+            if (component.Entity != this)
+                throw new ArgumentException("An Entity can only unbind components which are bound to it.");
+            
+            component.Unbind();
+            _components.Remove(component);
         }
 
         public void Bind(params Component[] components)
         {
             foreach (var c in components)
                 Bind(c);
-            
         }
 
         public void Unbind(params Component[] components)

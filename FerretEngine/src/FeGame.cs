@@ -11,10 +11,10 @@ using Microsoft.Xna.Framework.Input;
 
 namespace FerretEngine
 {
-	public class FerretGame : Game
+	public class FeGame : Game
 	{
 
-		public static FerretGame Instance { get; private set; }
+		public static FeGame Instance { get; private set; }
 		
 		
 		
@@ -29,9 +29,11 @@ namespace FerretEngine
 		
 		
 		
-		
+		/// <summary>
+		/// The time (in seconds) since the last update tick.
+		/// </summary>
 		public static float DeltaTime { get; private set; }
-		public static float RawDeltaTime { get; private set; }
+		
 		
 		
 		public static string ContentDirectory
@@ -63,8 +65,8 @@ namespace FerretEngine
 		public Scene Scene { get; private set; }
 		
 		
-		protected GraphicsDeviceManager GraphicsManager { get; }
-		protected SpriteBatch SpriteBatch { get; private set; }
+		
+		public FeGraphics Graphics { get; }
 
 		
 		
@@ -82,7 +84,7 @@ namespace FerretEngine
 		
 		
 
-		public FerretGame(int width, int height, int windowWidth, int windowHeight, string windowTitle, 
+		public FeGame(int width, int height, int windowWidth, int windowHeight, string windowTitle, 
 				bool fullscreen, string contentRootDirectory)
 		{
 			Instance = this;
@@ -93,36 +95,8 @@ namespace FerretEngine
             
 			Logger = new ConsoleLogger();
 
-			GraphicsManager = new GraphicsDeviceManager(this)
-			{
-				PreferredBackBufferWidth = windowWidth,
-				PreferredBackBufferHeight = windowHeight,
-				IsFullScreen = fullscreen,
-				SynchronizeWithVerticalRetrace = true
-			};
-			//GraphicsManager.DeviceReset += OnGraphicsReset;
-			//GraphicsManager.DeviceCreated += OnGraphicsCreate;
-            
-			Window.AllowUserResizing = false;
-			//Window.ClientSizeChanged += OnClientSizeChanged;
+			Graphics = new FeGraphics(this, width, height, windowWidth, windowHeight, fullscreen);
 
-			Screen.Initialize(GraphicsManager);
-			/*
-			if (fullscreen)
-			{
-				GraphicsManager.PreferredBackBufferWidth = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width;
-				GraphicsManager.PreferredBackBufferHeight = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height;
-				GraphicsManager.IsFullScreen = true;
-			}
-			else
-			{
-				GraphicsManager.PreferredBackBufferWidth = windowWidth;
-				GraphicsManager.PreferredBackBufferHeight = windowHeight;
-				GraphicsManager.IsFullScreen = false;
-			}
-			GraphicsManager.ApplyChanges();
-            */
-            
 			Content.RootDirectory = contentRootDirectory;
 			
 			IsMouseVisible = true;
@@ -130,6 +104,19 @@ namespace FerretEngine
 			
 			
 		}
+
+
+
+		public void SetScene(Scene scene)
+		{
+			if (Scene != null)
+				Scene.End();
+			
+			Scene = scene;
+			scene.Begin();
+		}
+		
+		
 		
 		
 		
@@ -143,7 +130,7 @@ namespace FerretEngine
         {
 	        base.Initialize();
 	        
-	        FerretInput.Initialize();
+	        FeInput.Initialize();
 	        
 	        // TODO load default font
         }
@@ -155,7 +142,7 @@ namespace FerretEngine
         /// </summary>
         protected override void LoadContent()
         {
-	        // TODO
+	        Graphics.LoadContent();
 	        
             base.LoadContent();
             
@@ -185,18 +172,21 @@ namespace FerretEngine
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Update(GameTime gameTime)
         {
-	        FerretInput.Update();
+	        FeInput.Update();
 	        
-	        if (ExitOnEscapeKeypress && FerretInput.IsKeyPressed(Keys.Escape))
+	        if (ExitOnEscapeKeypress && FeInput.IsKeyPressed(Keys.Escape))
 	        {
 		        Exit();
 		        return;
 	        }
 	        
+	        DeltaTime = (float) gameTime.ElapsedGameTime.TotalSeconds;
+
+	        
 	        // TODO UPDATE
 	        if (Scene != null)
 	        {
-		        Scene.Update();
+		        Scene.Update(DeltaTime);
 	        }
 
 	        // MonoGame update
@@ -212,18 +202,9 @@ namespace FerretEngine
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Draw(GameTime gameTime)
         {
-	        GraphicsDevice.Clear(Color.CornflowerBlue);
-
-            // TODO Render();
-            
-            if (Scene != null)
-            {
-	            Scene.Render();
-            }
-            
+	        Graphics.Render(gameTime);
             
             base.Draw(gameTime);
-            
             
             //Frame counter
             _fpsCounter++;
