@@ -1,4 +1,5 @@
 using System;
+using FerretEngine.Logging;
 using Microsoft.Xna.Framework.Input;
 
 namespace FerretEngine.Input
@@ -12,7 +13,7 @@ namespace FerretEngine.Input
 		{
 			Keyboard = new KeyboardInput();
 			
-			FeGame.Instance.Logger.Log("FerretInput initialized!");
+			FeLog.Info("FerretInput initialized!");
 		}
 		
 		

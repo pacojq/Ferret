@@ -1,4 +1,5 @@
 ﻿using FerretEngine.Core;
+using FerretEngine.Logging;
 using FerretEngine.Sandbox.Player;
 
 namespace FerretEngine.Sandbox
@@ -13,7 +14,7 @@ namespace FerretEngine.Sandbox
         public override void Begin()
         {
             base.Begin();
-            FeGame.Instance.Logger.Log("Test scene entered!");
+            FeLog.Info("Test scene entered!");
         }
     }
 }

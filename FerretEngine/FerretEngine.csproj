@@ -45,14 +45,19 @@
     <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="System" />
-    <Reference Include="System.Buffers, Version=4.0.2.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51">
-      <HintPath>..\packages\System.Buffers.4.4.0\lib\netstandard2.0\System.Buffers.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="NLog, Version=4.0.0.0, Culture=neutral, PublicKeyToken=5120e14c03d0593c">
+      <HintPath>..\vendor\NLog\NLog.dll</HintPath>
     </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
     <Reference Include="System.Data" />
+    <Reference Include="System.IO.Compression" />
     <Reference Include="System.Numerics" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.ServiceModel" />
+    <Reference Include="System.Transactions" />
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
@@ -71,8 +76,7 @@
     <Compile Include="src\Graphics\Sprite.cs" />
     <Compile Include="src\Input\KeyboardInput.cs" />
     <Compile Include="src\Input\FeInput.cs" />
-    <Compile Include="src\Logging\ConsoleLogger.cs" />
-    <Compile Include="src\Logging\ILogger.cs" />
+    <Compile Include="src\Logging\FeLog.cs" />
     <Compile Include="src\Utils\Assert.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -80,19 +84,12 @@
       <Project>{35253ce1-c864-4cd3-8249-4d1319748e8f}</Project>
       <Name>FNA</Name>
     </ProjectReference>
-    <ProjectReference Include="..\vendor\Myra\src\Myra\Myra.csproj">
-      <Project>{9fdefc37-fe31-4fde-84b7-f1723e8a2d45}</Project>
-      <Name>Myra</Name>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
-         Other similar extension points exist, see Microsoft.Common.targets.
-    <Target Name="BeforeBuild">
-    </Target>
-    <Target Name="AfterBuild">
-    </Target>
-    -->
+  <ItemGroup>
+    <Folder Include="Content" />
+  </ItemGroup>
+  <!-- - - - - - - - - - - - fnalibs - - - - - - - - - - - -->
   <ItemGroup Condition=" '$(Platform)' == 'x86' ">
     <Content Include="..\vendor\fnalibs\x86\*.dll">
       <Link>%(RecursiveDir)%(FileName)%(Extension)</Link>
@@ -105,7 +102,18 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
+  <!-- - - - - - - - - - - - - NLog - - - - - - - - - - - - -->
   <ItemGroup>
-    <Folder Include="Content" />
+    <Content Include="..\vendor\NLog\*.dll">
+      <Link>%(FileName)%(Extension)</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+         Other similar extension points exist, see Microsoft.Common.targets.
+    <Target Name="BeforeBuild">
+    </Target>
+    <Target Name="AfterBuild">
+    </Target>
+    -->
 </Project>

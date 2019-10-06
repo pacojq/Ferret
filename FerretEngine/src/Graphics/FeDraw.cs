@@ -7,8 +7,6 @@ namespace FerretEngine.Graphics
     public static class FeDraw
     {
         private static FeGraphics _graphics;
-
-        private static bool _isOpen;
         
         
         

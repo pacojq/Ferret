@@ -58,10 +58,6 @@ namespace FerretEngine
 		public static int Height { get; private set; }
 
 		
-		
-		public ILogger Logger { get; }
-		
-		
 		public Scene Scene { get; private set; }
 		
 		
@@ -92,9 +88,8 @@ namespace FerretEngine
 			Title = Window.Title = windowTitle;
 			Width = width;
 			Height = height;
-            
-			Logger = new ConsoleLogger();
 
+			FeLog.Initialize();
 			Graphics = new FeGraphics(this, width, height, windowWidth, windowHeight, fullscreen);
 
 			Content.RootDirectory = contentRootDirectory;
@@ -149,7 +144,7 @@ namespace FerretEngine
             // Create a new SpriteBatch, which can be used to draw textures.
             //spriteBatch = new SpriteBatch(GraphicsDevice);
 
-            Logger.Log("Content: " + this.Content.RootDirectory);
+            FeLog.Info("Content: " + this.Content.RootDirectory);
             
             // TODO: use this.Content to load your game content here
         }
@@ -160,6 +155,7 @@ namespace FerretEngine
         /// </summary>
         protected override void UnloadContent()
         {
+	        FeLog.Warning("Ferret unloading content");
             // TODO: Unload any non ContentManager content here
         }
 
@@ -225,7 +221,7 @@ namespace FerretEngine
         protected override void OnExiting(object sender, EventArgs args)
         {
 	        base.OnExiting(sender, args);
-	        Logger.Log("Exiting game");
+	        FeLog.Info("Exiting game");
         }
         
         
