@@ -74,10 +74,12 @@
     <Compile Include="src\Graphics\Renderers\BaseRenderer.cs" />
     <Compile Include="src\Graphics\Screen.cs" />
     <Compile Include="src\Graphics\Sprite.cs" />
+    <Compile Include="src\Graphics\SpriteSheet.cs" />
     <Compile Include="src\Input\KeyboardInput.cs" />
     <Compile Include="src\Input\FeInput.cs" />
     <Compile Include="src\Logging\FeLog.cs" />
     <Compile Include="src\Utils\Assert.cs" />
+    <Compile Include="src\Utils\Mathf.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\vendor\FNA\FNA.csproj">
@@ -106,10 +108,8 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
-  
-  
   <ItemGroup>
-    <Content Include="Content\**\*" >
+    <Content Include="Content\**\*">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>

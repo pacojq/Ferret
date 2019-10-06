@@ -100,7 +100,7 @@ namespace FerretEngine.Graphics
         internal void LoadContent()
         {
             _spriteBatch = new SpriteBatch(_game.GraphicsDevice);
-            Pixel = new Sprite(1, 1, Color.White);
+            Pixel = Sprite.PlainColor(1, 1, Color.White);
         }
 
         
@@ -143,8 +143,12 @@ namespace FerretEngine.Graphics
             {
                 scene.BeforeRender();
                 Renderer.BeforeRender(scene);
+
+                Renderer.Camera = scene.MainCamera;
                 
                 Renderer.Render(scene, (float) gameTime.ElapsedGameTime.TotalSeconds);
+
+                Renderer.Camera = null;
                 
                 Renderer.AfterRender(scene);
                 scene.AfterRender();

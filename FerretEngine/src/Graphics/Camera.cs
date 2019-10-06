@@ -8,7 +8,7 @@ namespace FerretEngine.Graphics
     public class Camera
     {
         public Vector2 Position { get; set; }
-        public Vector2 Offset { get; set; }
+        public Vector2 Center { get; set; }
         
         public int Width { get; set; }
 
@@ -21,6 +21,7 @@ namespace FerretEngine.Graphics
         {
             Active = true;
             Position = position;
+            Center = new Vector2(width/2, height/2);
             Width = width;
             Height = height;
         }

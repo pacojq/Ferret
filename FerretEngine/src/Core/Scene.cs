@@ -1,5 +1,8 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
+using FerretEngine.Graphics;
 using Microsoft.Xna.Framework.Graphics;
 
 namespace FerretEngine.Core
@@ -14,6 +17,7 @@ namespace FerretEngine.Core
         public IEnumerable<Entity> Entities => _entities;
         private readonly List<Entity> _entities;
         
+        public Camera MainCamera { get; set; }
         
         
         public bool Paused;
@@ -23,6 +27,8 @@ namespace FerretEngine.Core
         public Scene()
         {
             _entities = new List<Entity>();
+            
+            MainCamera = new Camera(FeGame.Width, FeGame.Height);
         }
         
         
@@ -90,26 +96,24 @@ namespace FerretEngine.Core
         #region // - - - - - Entity Management - - - - - //
 
 
-        public void Add(Entity entity)
+        public void AddEntity(Entity entity)
         {
             _entities.Add(entity);
         }
         
 
-        public void Remove(Entity entity)
+        public void RemoveEntity(Entity entity)
         {
             _entities.Remove(entity);
         }
 
-        public void Add(params Entity[] entities)
+        public void AddEntities(params Entity[] entities)
         {
             foreach (var e in entities)
-            {
-                _entities.Add(e);   
-            }
+                _entities.Add(e);
         }
 
-        public void Remove(params Entity[] entities)
+        public void RemoveEntities(params Entity[] entities)
         {
             foreach (var e in entities)
             {
@@ -118,7 +122,51 @@ namespace FerretEngine.Core
         }
         
         
+        public T FindEntity<T>() where T : Entity
+        {
+            return (T) _entities.FirstOrDefault(e => e is T);
+        }
+        
+        public Entity FindEntity(string tag)
+        {
+            if (tag == null)
+                throw new ArgumentNullException(nameof(tag));
+            
+            return _entities.FirstOrDefault(e => tag.Equals(e.Tag));
+        }
+        
+        public T FindEntity<T>(string tag) where T : Entity
+        {
+            return (T) _entities.FirstOrDefault(e => tag.Equals(e.Tag) && e is T);
+        }
+        
+        public T[] FindEntities<T>() where T : Entity
+        {
+            return (T[]) _entities
+                .Where(e => e is T)
+                .ToArray();
+        }
+        
+        public Entity[] FindEntities(string tag)
+        {
+            if (tag == null)
+                throw new ArgumentNullException(nameof(tag));
+            
+            return _entities
+                .Where(e => tag.Equals(e.Tag))
+                .ToArray();
+        }
+        
+        public T[] FindEntities<T>(string tag) where T : Entity
+        {
+            return (T[]) _entities
+                .Where(e => tag.Equals(e.Tag) && e is T)
+                .ToArray();
+        }
 
+        
+        
+        
         public IEnumerator<Entity> GetEnumerator()
         {
             return Entities.GetEnumerator();

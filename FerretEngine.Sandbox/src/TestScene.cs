@@ -8,7 +8,7 @@ namespace FerretEngine.Sandbox
     {
         public TestScene()
         {
-            Add(new PlayerEntity());
+            AddEntity(new PlayerEntity());
         }
 
         public override void Begin()

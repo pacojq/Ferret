@@ -9,6 +9,9 @@ namespace FerretEngine.Graphics
         public virtual SpriteSortMode SortMode => SpriteSortMode.Deferred;
 
 
+        public Camera Camera { get; internal set; }
+        
+        
         public abstract void Render(Scene scene, float deltaTime);
 
         public virtual void BeforeRender(Scene scene)

@@ -20,6 +20,14 @@ namespace FerretEngine.Core
         /// </summary>
         public Scene Scene { get; private set; }
 
+        
+        /// <summary>
+        /// A tag that identifies the entity.
+        /// If not set, it will return null.
+        /// </summary>
+        public string Tag { get; }
+        
+        
         public IEnumerable<Component> Components => _components;
         private readonly List<Component> _components;
         
@@ -76,18 +84,27 @@ namespace FerretEngine.Core
         
         
 
-        public Entity(Vector2 position)
+        public Entity(string tag, Vector2 position)
         {
             ID = _idCount++;
-            
-            
+
+            Tag = tag;
             Position = position;
             _components = new List<Component>();
         }
 
         
-        // Util constructor
-        public Entity() : this(Vector2.Zero) { }
+        // Util constructors //
+
+        public Entity(string tag) : this(tag, Vector2.Zero)
+        {
+        }
+
+        public Entity() : this(null, Vector2.Zero)
+        {
+        }
+        
+        
         
         
         

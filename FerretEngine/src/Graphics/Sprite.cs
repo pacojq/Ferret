@@ -16,31 +16,36 @@ namespace FerretEngine.Graphics
         public int Height { get; }
         
         
-        
-        public Sprite(Texture2D texture)
+        public Sprite(Texture2D texture, Rectangle clipRect)
         {
             Texture = texture;
-            ClipRect = new Rectangle(0, 0, texture.Width, texture.Height);
+            ClipRect = clipRect;
             DrawOffset = Vector2.Zero;
             Width = ClipRect.Width;
             Height = ClipRect.Height;
         }
         
+        public Sprite(Texture2D texture) : this(texture, new Rectangle(0, 0, texture.Width, texture.Height))
+        {
+        }
         
-        public Sprite(int width, int height, Color color)
+        
+        
+        
+        
+        
+        public static Sprite PlainColor(int width, int height, Color color)
         {
             GraphicsDevice gd = FeGame.Instance.Graphics.GraphicsDevice;
-            Texture = new Texture2D(gd, width, height);
             
             Color[] pixels = new Color[width * height];
             for (int i = 0; i < width * height; i++)
                 pixels[i] = color;
-            Texture.SetData(pixels);
             
-            ClipRect = new Rectangle(0, 0, width, height);
-            DrawOffset = Vector2.Zero;
-            Width = width;
-            Height = height;
+            Texture2D tex = new Texture2D(gd, width, height);
+            tex.SetData(pixels);
+            
+            return new Sprite(new Texture2D(gd, width, height));
         }
     }
 }

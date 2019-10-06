@@ -8,13 +8,11 @@ namespace FerretEngine.Graphics.Renderers
         public BlendState BlendState;
         public SamplerState SamplerState;
         public Effect Effect;
-        public Camera Camera;
 
         public BaseRenderer()
         {
             BlendState = BlendState.AlphaBlend;
             SamplerState = SamplerState.LinearClamp;
-            Camera = new Camera(FeGame.Width, FeGame.Height);
         }
         
 
