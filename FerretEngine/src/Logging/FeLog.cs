@@ -1,4 +1,5 @@
-﻿using NLog;
+﻿using System.Runtime.CompilerServices;
+using NLog;
 using NLog.Layouts;
 using NLog.Targets;
 
@@ -35,21 +36,28 @@ namespace FerretEngine.Logging
         
         
         
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static void Debug(string msg)
         {
             _logger.Debug(msg);
         }
         
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static void Info(string msg)
         {
             _logger.Info(msg);
         }
         
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static void Warning(string msg)
         {
             _logger.Warn(msg);
         }
         
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static void Error(string msg)
         {
             _logger.Error(msg);

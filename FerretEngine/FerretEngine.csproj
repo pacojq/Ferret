@@ -86,9 +86,6 @@
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <ItemGroup>
-    <Folder Include="Content" />
-  </ItemGroup>
   <!-- - - - - - - - - - - - fnalibs - - - - - - - - - - - -->
   <ItemGroup Condition=" '$(Platform)' == 'x86' ">
     <Content Include="..\vendor\fnalibs\x86\*.dll">
@@ -106,6 +103,13 @@
   <ItemGroup>
     <Content Include="..\vendor\NLog\*.dll">
       <Link>%(FileName)%(Extension)</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+  
+  
+  <ItemGroup>
+    <Content Include="Content\**\*" >
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
