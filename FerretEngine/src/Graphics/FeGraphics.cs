@@ -103,6 +103,7 @@ namespace FerretEngine.Graphics
             _guiRenderers = new List<Renderer>();
 
             AddRenderer(new DefaultRenderer());
+            AddRenderer(new DebugRenderer());
             AddRenderer(new GuiRenderer());
             
 

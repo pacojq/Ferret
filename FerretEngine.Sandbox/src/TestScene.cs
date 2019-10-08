@@ -1,5 +1,6 @@
 ﻿using FerretEngine.Core;
 using FerretEngine.Logging;
+using FerretEngine.Sandbox.Box;
 using FerretEngine.Sandbox.Player;
 using Microsoft.Xna.Framework;
 
@@ -11,6 +12,10 @@ namespace FerretEngine.Sandbox
         {
             BackgroundColor = Color.DimGray;
             AddEntity(new PlayerEntity());
+            
+            BoxEntity box = new BoxEntity();
+            box.Position = new Vector2(64, 64);
+            AddEntity(box);
         }
 
         public override void Begin()

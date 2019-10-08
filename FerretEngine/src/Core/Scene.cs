@@ -2,7 +2,9 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using FerretEngine.Components;
 using FerretEngine.Graphics;
+using FerretEngine.Physics;
 using Microsoft.Xna.Framework;
 
 namespace FerretEngine.Core
@@ -21,6 +23,18 @@ namespace FerretEngine.Core
         public Camera MainCamera { get; set; }
         
         
+        /// <summary>
+        /// The physics space of the scene
+        /// </summary>
+        internal Space Space { get; }
+
+        public Vector2 Gravity
+        {
+            get => this.Space.Gravity;
+            set => this.Space.Gravity = value;
+        }
+        
+        
         public bool Paused;
         
 
@@ -28,13 +42,14 @@ namespace FerretEngine.Core
         public Scene()
         {
             _entities = new List<Entity>();
+            Space = new Space();
 
             BackgroundColor = Color.CornflowerBlue;
             MainCamera = new Camera(FeGame.Width, FeGame.Height);
         }
-        
-        
-        
+
+
+
 
         public virtual void Begin()
         {
@@ -61,11 +76,15 @@ namespace FerretEngine.Core
         {
             if (Paused)
                 return;
-        
+            
             foreach (Entity e in Entities)
             {
+                if (!e.IsActive)
+                    continue;
                 e.Update(deltaTime);
             }
+            
+            Space.Update();
         }
 
         public virtual void AfterUpdate()
@@ -111,13 +130,20 @@ namespace FerretEngine.Core
         {
             entity.Scene = this;
             _entities.Add(entity);
+
+            foreach (Collider col in entity.Colliders)
+                Space.Add(col);
         }
         
 
         public void RemoveEntity(Entity entity)
         {
             if (_entities.Remove(entity))
+            {
                 entity.Scene = null;
+                foreach (Collider col in entity.Colliders)
+                    Space.Add(col);
+            }
         }
 
         public void AddEntities(params Entity[] entities)

@@ -1,6 +1,9 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using FerretEngine.Components;
+using FerretEngine.Graphics;
+using FerretEngine.Logging;
 using FerretEngine.Utils;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -32,6 +35,10 @@ namespace FerretEngine.Core
         private readonly List<Component> _components;
         
         
+        public IEnumerable<Collider> Colliders => _colliders;
+        private readonly List<Collider> _colliders;
+
+        
         
         public Vector2 Position { get; set; }
 
@@ -61,7 +68,8 @@ namespace FerretEngine.Core
             get => Position.Y;
             set => Position += new Vector2(0, value);
         }
-        
+
+
         #endregion
 
 
@@ -72,9 +80,9 @@ namespace FerretEngine.Core
 
         
         
-        public bool Active = true;
-        public bool Visible = true;
-        public bool Collidable = true;
+        public bool IsActive = true;
+        public bool IsVisible = true;
+        public bool IsCollidable = true;
         
         internal int _depth = 0;
         
@@ -91,6 +99,7 @@ namespace FerretEngine.Core
             Tag = tag;
             Position = position;
             _components = new List<Component>();
+            _colliders = new List<Collider>();
         }
 
         
@@ -112,7 +121,7 @@ namespace FerretEngine.Core
         /// <summary>
         /// Update game logic.
         /// Don't perform any rendering calls here.
-        /// This method will be skipped if the entity is not <see cref="Active"/>
+        /// This method will be skipped if the entity is not <see cref="IsActive"/>
         /// <param name="deltaTime">The time in seconds since the last update</param>
         /// </summary>
         public void Update(float deltaTime)
@@ -154,6 +163,14 @@ namespace FerretEngine.Core
             
             _components.Add(component);
             component.Bind(this);
+
+            if (component is Collider)
+            {
+                Collider col = (Collider) component;
+                _colliders.Add(col);
+                if (this.Scene != null)
+                    this.Scene.Space.Add(col);
+            }
         }
         
 
@@ -164,6 +181,14 @@ namespace FerretEngine.Core
             
             component.Unbind();
             _components.Remove(component);
+            
+            if (component is Collider)
+            {
+                Collider col = (Collider) component;
+                _colliders.Remove(col);
+                if (this.Scene != null)
+                    this.Scene.Space.Remove(col);
+            }
         }
 
         public void Bind(params Component[] components)
