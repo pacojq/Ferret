@@ -6,7 +6,7 @@ using Microsoft.Xna.Framework;
 
 namespace FerretEngine.Components.Colliders
 {
-    public sealed class BoxCollider : Collider
+    public sealed class PointCollider : Collider
     {
         public override float Top => this.Position.Y - Center.Y;
         
@@ -15,13 +15,10 @@ namespace FerretEngine.Components.Colliders
         public override float Right => this.Left + Width;
 
 
-        public BoxCollider(float width, float height, Vector2 center)
+        public PointCollider(Vector2 center)
         {
-            Assert.IsTrue(width>0 && height>0, 
-                "Box colliders must have positive width and height values!");
-            
-            Width = width;
-            Height = height;
+            Width = 1;
+            Height = 1;
             Center = center;
         }
         
@@ -42,12 +39,12 @@ namespace FerretEngine.Components.Colliders
         
         internal override bool CollidesWith(BoxCollider other)
         {
-            return CollisionCheck.BoxWithBox(this, other);
+            return CollisionCheck.BoxWithPoint(other, this);
         }
-        
+
         internal override bool CollidesWith(PointCollider other)
         {
-            return CollisionCheck.BoxWithPoint(this, other);
+            return CollisionCheck.PointWithPoint(this, other);
         }
     }
 }

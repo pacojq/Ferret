@@ -24,8 +24,12 @@ namespace FerretEngine.Logging
             logconsole.Header = Layout.FromString("${longdate} | Welcome to FerretEngine");
             logconsole.Layout = Layout.FromString("${date} | [${level:uppercase=true}]\t${message}");
             
-            // Rules for mapping loggers to targets            
+            // Rules for mapping loggers to targets   
+#if DEBUG
             config.AddRule(LogLevel.Debug, LogLevel.Fatal, logconsole);
+#else
+            config.AddRule(LogLevel.Info, LogLevel.Fatal, logconsole);
+#endif
             //config.AddRule(LogLevel.Debug, LogLevel.Fatal, logfile);
             
             // Apply config           

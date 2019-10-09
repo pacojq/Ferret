@@ -84,6 +84,7 @@ namespace FerretEngine.Components
         internal abstract bool Accept(Collider other);
         
         internal abstract bool CollidesWith(BoxCollider other);
+        internal abstract bool CollidesWith(PointCollider other);
         
     }
 }
