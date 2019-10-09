@@ -180,20 +180,17 @@ namespace FerretEngine.Graphics
         private static void RectOutline(Rectangle rect, Color color, int border)
         {
             Sprite px = FeGraphics.Pixel;
-            
             Vector2 rel = GetRenderPos(new Vector2(rect.X, rect.Y));
-            rect.X = (int) rel.X;
-            rect.Y = (int) rel.Y;
             
-            var top = new Rectangle(rect.X, rect.Y, rect.Width, border);
-            var bot = new Rectangle(rect.X, rect.Y + rect.Height - border, rect.Width, border);
-            var right = new Rectangle(rect.X + rect.Width - border, rect.Y, border, rect.Height);
-            var left = new Rectangle(rect.X, rect.Y, border, rect.Height);
+            var top = new Rectangle((int)rel.X, (int)rel.Y, rect.Width, border);
+            var bot = new Rectangle((int)rel.X, (int)rel.Y + rect.Height - border, rect.Width, border);
+            var right = new Rectangle((int)rel.X + rect.Width - border, (int)rel.Y, border, rect.Height);
+            var left = new Rectangle((int)rel.X, (int)rel.Y, border, rect.Height);
             
-            _graphics.SpriteBatch.Draw(px.Texture, top, px.ClipRect, _color);
-            _graphics.SpriteBatch.Draw(px.Texture, bot, px.ClipRect, _color);
-            _graphics.SpriteBatch.Draw(px.Texture, right, px.ClipRect, _color);
-            _graphics.SpriteBatch.Draw(px.Texture, left, px.ClipRect, _color);
+            _graphics.SpriteBatch.Draw(px.Texture, top, px.ClipRect, color);
+            _graphics.SpriteBatch.Draw(px.Texture, bot, px.ClipRect, color);
+            _graphics.SpriteBatch.Draw(px.Texture, right, px.ClipRect, color);
+            _graphics.SpriteBatch.Draw(px.Texture, left, px.ClipRect, color);
         }
         
         

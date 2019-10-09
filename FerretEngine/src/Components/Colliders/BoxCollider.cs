@@ -1,5 +1,6 @@
 ﻿
 using FerretEngine.Graphics;
+using FerretEngine.Utils;
 using Microsoft.Xna.Framework;
 
 namespace FerretEngine.Components.Colliders
@@ -15,6 +16,9 @@ namespace FerretEngine.Components.Colliders
 
         public BoxCollider(float width, float height, Vector2 center)
         {
+            Assert.IsTrue(width>0 && height>0, 
+                "Box colliders must have positive width and height values!");
+            
             Width = width;
             Height = height;
             Center = center;
@@ -23,7 +27,9 @@ namespace FerretEngine.Components.Colliders
         
         internal override void DebugDraw(float deltaTime)
         {
+            FeDraw.Color = Color.Red;
             FeDraw.Rect(Left, Top, Width, Height, true);
+            FeDraw.Color = Color.White;
         }
 
         
@@ -35,12 +41,10 @@ namespace FerretEngine.Components.Colliders
         
         internal override bool CollidesWith(BoxCollider other)
         {
-            Vector2 relPos = other.Position - this.Position;
-            
-            if (this.Right <= relPos.X + other.Left) return false;
-            if (this.Bottom <= relPos.Y + other.Top) return false;
-            if (this.Left >= relPos.X + other.Right) return false;
-            if (this.Top >= relPos.Y + other.Bottom) return false;
+            if (this.Right <= other.Left) return false;
+            if (this.Bottom <= other.Top) return false;
+            if (this.Left >= other.Right) return false;
+            if (this.Top >= other.Bottom) return false;
             return true;
         }
     }

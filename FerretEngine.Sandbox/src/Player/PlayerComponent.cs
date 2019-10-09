@@ -37,6 +37,7 @@ namespace FerretEngine.Sandbox.Player
             this.Entity.Position = pos;
         }
 
+
         public override void DrawGUI(float deltaTime)
         {
             base.DrawGUI(deltaTime);

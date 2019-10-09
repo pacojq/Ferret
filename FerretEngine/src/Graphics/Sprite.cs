@@ -44,8 +44,8 @@ namespace FerretEngine.Graphics
             
             Texture2D tex = new Texture2D(gd, width, height);
             tex.SetData(pixels);
-            
-            return new Sprite(new Texture2D(gd, width, height));
+
+            return new Sprite(tex);
         }
     }
 }

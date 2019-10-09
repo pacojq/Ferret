@@ -17,8 +17,8 @@ namespace FerretEngine.Sandbox.Player
             BoxCollider col = new BoxCollider(sprite.Width, sprite.Height, Vector2.Zero);
             Bind(col);
 
-            col.OnCollisionEnter += o => FeLog.Debug("ENTER");
-            col.OnCollisionExit += o => FeLog.Debug("EXIT");
+            col.OnCollisionEnter += o => FeLog.Debug($"PLAYER ENTER: {this}");
+            col.OnCollisionExit += o => FeLog.Debug($"PLAYER EXIT: {this}");
             
             Bind(new PlayerComponent());
         }

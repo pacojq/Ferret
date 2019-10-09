@@ -1,4 +1,5 @@
 using System;
+using FerretEngine.Graphics;
 using FerretEngine.Utils;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -18,6 +19,7 @@ namespace FerretEngine.Core
 		{
 			get
 			{
+				Assert.IsNotNull(Entity, "La chingamos");
 				if (Entity != null)
 					return Entity.Position + LocalPosition;
 				return LocalPosition;

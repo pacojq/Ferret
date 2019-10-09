@@ -237,5 +237,13 @@ namespace FerretEngine.Core
         {
             // TODO
         }
+
+
+
+        public override string ToString()
+        {
+            string tag = string.IsNullOrEmpty(Tag) ? "-" : Tag;
+            return $"[{this.GetType().Name} | id:{ID} | tag:{tag}]";
+        }
     }
 }

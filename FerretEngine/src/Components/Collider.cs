@@ -70,6 +70,10 @@ namespace FerretEngine.Components
         }
 
 
+        public override void Draw(float deltaTime)
+        {
+            //DebugDraw(deltaTime);
+        }
 
         internal abstract void DebugDraw(float deltaTime);
 

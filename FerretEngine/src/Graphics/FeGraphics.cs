@@ -25,7 +25,9 @@ namespace FerretEngine.Graphics
         
         
         
-        public GraphicsDevice GraphicsDevice => _game.GraphicsDevice;
+        public GraphicsDevice GraphicsDevice => _graphicsDevice;
+        private GraphicsDevice _graphicsDevice;
+        
         public GraphicsDeviceManager GraphicsManager { get; }
 
 
@@ -95,7 +97,7 @@ namespace FerretEngine.Graphics
             
             
             
-            _renderTarget = new RenderTarget2D(GraphicsDevice, width, height);
+            _renderTarget = new RenderTarget2D(game.GraphicsDevice, width, height);
 
             
             _allRenderers = new List<Renderer>();
@@ -112,6 +114,7 @@ namespace FerretEngine.Graphics
 
         internal void LoadContent()
         {
+            _graphicsDevice = _game.GraphicsDevice;
             _spriteBatch = new SpriteBatch(_game.GraphicsDevice);
             
             Pixel = Sprite.PlainColor(1, 1, Color.White);
