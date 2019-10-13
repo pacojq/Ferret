@@ -261,6 +261,20 @@ namespace FerretEngine.Graphics
         
         
         /// <summary>
+        /// Loads a raw PNG image from the Content directory as a <see cref="Texture2D"/>.
+        /// </summary>
+        /// <param name="path"></param>
+        /// <returns></returns>
+        public static Texture2D LoadTexture(string path)
+        {
+            string texPath = Path.Combine(FeGame.ContentDirectory, path) + ".png";
+            var fileStream = new FileStream(texPath, FileMode.Open, FileAccess.Read);
+            Texture2D texture = Texture2D.FromStream(FeGame.Instance.GraphicsDevice, fileStream);
+            fileStream.Close();
+            return texture;
+        }
+        
+        /// <summary>
         /// Loads a raw PNG image from the Content directory as a Sprite.
         /// </summary>
         /// <param name="path"></param>
@@ -273,8 +287,6 @@ namespace FerretEngine.Graphics
             fileStream.Close();
             return new Sprite(texture);
         }
-        
-        
         
         
     }
