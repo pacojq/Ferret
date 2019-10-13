@@ -47,7 +47,7 @@ namespace FerretEngine.Graphics
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private static Vector2 GetRenderPos(Vector2 pos)
         {
-            return Mathf.Floor(_graphics.CurrentRenderer.Camera.GetRelativePosition(pos));
+            return FeMath.Floor(_graphics.CurrentRenderer.Camera.GetRelativePosition(pos));
         }
 
 
@@ -66,6 +66,9 @@ namespace FerretEngine.Graphics
         public static void Sprite(Sprite sprite, Vector2 position)
         {
             Assert.IsTrue(_graphics.IsRendering);
+            if (!WillRender(sprite, position, Vector2.One))
+                return;
+            
             _graphics.SpriteBatch.Draw(
                     sprite.Texture,
                     GetRenderPos(position),
@@ -90,19 +93,36 @@ namespace FerretEngine.Graphics
                 Vector2 origin, Vector2 scale, SpriteEffects effects, float layerDepth)
         {
             Assert.IsTrue(_graphics.IsRendering);
+            if (!WillRender(sprite, position, scale))
+                return;
+            
             _graphics.SpriteBatch.Draw(
                     sprite.Texture,
                     GetRenderPos(position),
                     sprite.ClipRect,
                     color,
-                    rotation,
+                    FeMath.DegToRad(rotation),
                     origin,
                     scale,
                     effects,
                     layerDepth
                 );
         }
+
         
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        private static bool WillRender(Sprite sprite, Vector2 worldPos, Vector2 scale)
+        {
+            return _graphics.CurrentRenderer.Camera
+                .GetRenderRect()
+                .Intersects(
+                    new Rectangle(
+                        (int) worldPos.X, 
+                        (int) worldPos.Y,
+                        (int) (sprite.Width * scale.X), 
+                        (int) (sprite.Height * scale.Y))
+                 );
+        }
         
         
         
@@ -127,9 +147,9 @@ namespace FerretEngine.Graphics
                     FeGraphics.Pixel, 
                     GetRenderPos(p0),
                     _color,
-                    Mathf.PointDirection(p0, p1), 
+                    FeMath.Direction(p0, p1), 
                     Vector2.Zero,
-                    new Vector2(Mathf.PointDistance(p0, p1), width), 
+                    new Vector2(FeMath.Distance(p0, p1), width), 
                     SpriteEffects.None, 
                     0
                 );

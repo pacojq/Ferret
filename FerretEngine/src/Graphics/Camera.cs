@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework;
+﻿using System.Runtime.CompilerServices;
+using Microsoft.Xna.Framework;
 
 namespace FerretEngine.Graphics
 {
@@ -36,9 +37,21 @@ namespace FerretEngine.Graphics
         /// </summary>
         /// <param name="worldPos"></param>
         /// <returns></returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public Vector2 GetRelativePosition(Vector2 worldPos)
         {
             return worldPos - this.Position + this.Center;
+        }
+        
+        
+        
+
+        public Rectangle GetRenderRect()
+        {
+            Vector2 pos = Position + this.Center;
+            int w = (int) (this.Width * 1.5f);
+            int h = (int) (this.Height * 1.5f);
+            return new Rectangle((int)pos.X - w/2, (int)pos.Y - h/2, w, h);
         }
     }
 }

@@ -87,7 +87,8 @@
     <Compile Include="src\Physics\CollisionCheck.cs" />
     <Compile Include="src\Physics\Space.cs" />
     <Compile Include="src\Utils\Assert.cs" />
-    <Compile Include="src\Utils\Mathf.cs" />
+    <Compile Include="src\Utils\FeMath.cs" />
+    <Compile Include="src\Utils\MinMax.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\vendor\FNA\FNA.csproj">
