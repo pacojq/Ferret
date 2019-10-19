@@ -32,7 +32,7 @@ namespace FerretEngine.Components
             if (Sprite == null)
                 return;
 
-            FeDraw.SpriteExt(Sprite, Position, Color.White, Rotation, Vector2.Zero, Scale, Flip, 0);
+            FeDraw.SpriteExt(Sprite, Position, Color.White, Rotation, Sprite.Origin, Scale, Flip, 0);
         }
     }
 }

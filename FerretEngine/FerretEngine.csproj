@@ -46,6 +46,9 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Microsoft.CSharp" />
+    <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed">
+      <HintPath>..\vendor\Newtonsoft.Json\bin\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
     <Reference Include="NLog, Version=4.0.0.0, Culture=neutral, PublicKeyToken=5120e14c03d0593c">
       <HintPath>..\vendor\NLog\NLog.dll</HintPath>
     </Reference>
@@ -73,6 +76,8 @@
     <Compile Include="src\Graphics\Camera.cs" />
     <Compile Include="src\Graphics\FeDraw.cs" />
     <Compile Include="src\Graphics\FeGraphics.cs" />
+    <Compile Include="src\Graphics\Loading\SpriteLoader.cs" />
+    <Compile Include="src\Graphics\Loading\SpriteLoaderPng.cs" />
     <Compile Include="src\Graphics\Renderers\DebugRenderer.cs" />
     <Compile Include="src\Graphics\Renderers\DefaultRenderer.cs" />
     <Compile Include="src\Graphics\Renderers\GuiRenderer.cs" />

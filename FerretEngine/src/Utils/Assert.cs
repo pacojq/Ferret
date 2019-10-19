@@ -76,5 +76,30 @@ namespace FerretEngine.Utils
 		{
 			IsTrue(obj != null);
 		}
+		
+		
+		[Conditional("DEBUG")]
+		[DebuggerHidden]
+		public static void EqualsTo<T>(T value, T other)
+		{
+			IsTrue(Equals(value, other));
+		}
+
+		
+		[Conditional("DEBUG")]
+		[DebuggerHidden]
+		public static void EqualsToAny<T>(T value, params T[] others)
+		{
+			bool isValid = false;
+			foreach (T other in others)
+			{
+				if (Equals(value, other))
+				{
+					isValid = true;
+					break;
+				}
+			}
+			IsTrue(isValid);
+		}
 	}
 }

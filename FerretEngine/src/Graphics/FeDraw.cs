@@ -113,6 +113,9 @@ namespace FerretEngine.Graphics
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private static bool WillRender(Sprite sprite, Vector2 worldPos, Vector2 scale)
         {
+            return true;
+            
+            /* TODO culling
             return _graphics.CurrentRenderer.Camera
                 .GetRenderRect()
                 .Intersects(
@@ -122,6 +125,7 @@ namespace FerretEngine.Graphics
                         (int) (sprite.Width * scale.X), 
                         (int) (sprite.Height * scale.Y))
                  );
+            */
         }
         
         

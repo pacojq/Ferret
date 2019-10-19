@@ -11,21 +11,27 @@ namespace FerretEngine.Graphics
         public Texture2D Texture { get; }
         public Rectangle ClipRect { get; }
             
-        public Vector2 DrawOffset { get; set; }
+        public Vector2 Origin { get; set; }
         public int Width { get; }
         public int Height { get; }
         
         
-        public Sprite(Texture2D texture, Rectangle clipRect)
+        public Sprite(Texture2D texture, Rectangle clipRect, Vector2 origin)
         {
             Texture = texture;
             ClipRect = clipRect;
-            DrawOffset = Vector2.Zero;
+            Origin = origin;
             Width = ClipRect.Width;
             Height = ClipRect.Height;
         }
         
-        public Sprite(Texture2D texture) : this(texture, new Rectangle(0, 0, texture.Width, texture.Height))
+        public Sprite(Texture2D texture) 
+            : this(texture, new Rectangle(0, 0, texture.Width, texture.Height))
+        {
+        }
+        
+        public Sprite(Texture2D texture, Rectangle clipRect) 
+            : this(texture, new Rectangle(0, 0, texture.Width, texture.Height), Vector2.Zero)
         {
         }
         
