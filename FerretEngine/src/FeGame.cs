@@ -3,10 +3,10 @@ using System.IO;
 using System.Reflection;
 using FerretEngine.Core;
 using FerretEngine.Graphics;
+using FerretEngine.GUI;
 using FerretEngine.Input;
 using FerretEngine.Logging;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 
 namespace FerretEngine
@@ -74,8 +74,7 @@ namespace FerretEngine
 
 
 
-
-	
+		private FeGUI _gui;
 		
 		
 		
@@ -96,7 +95,7 @@ namespace FerretEngine
 			IsMouseVisible = true;
 			IsFixedTimeStep = false;
 			
-			
+			_gui = new FeGUI();
 		}
 
 
@@ -145,6 +144,8 @@ namespace FerretEngine
         protected override void LoadContent()
         {
 	        Graphics.LoadContent();
+	        
+	        _gui.LoadContent();
 	        
             base.LoadContent();
             
@@ -207,6 +208,8 @@ namespace FerretEngine
         {
 	        Graphics.Render(gameTime);
             
+	        _gui.Draw();
+	        
             base.Draw(gameTime);
             
             //Frame counter

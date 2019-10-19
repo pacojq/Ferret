@@ -86,6 +86,7 @@
     <Compile Include="src\Graphics\Screen.cs" />
     <Compile Include="src\Graphics\Sprite.cs" />
     <Compile Include="src\Graphics\SpriteSheet.cs" />
+    <Compile Include="src\GUI\FeGUI.cs" />
     <Compile Include="src\Input\KeyboardInput.cs" />
     <Compile Include="src\Input\FeInput.cs" />
     <Compile Include="src\Logging\FeLog.cs" />
@@ -99,6 +100,10 @@
     <ProjectReference Include="..\vendor\FNA\FNA.csproj">
       <Project>{35253ce1-c864-4cd3-8249-4d1319748e8f}</Project>
       <Name>FNA</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\vendor\Myra\src\Myra\Myra.csproj">
+      <Project>{917f04f8-0038-422b-b9f4-afe0f09b39ea}</Project>
+      <Name>Myra</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
