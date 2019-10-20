@@ -4,6 +4,3 @@
 [submodule "vendor/FNA"]
 	path = vendor/FNA
 	url = https://github.com/pacojq/FNA.git
-[submodule "vendor/Myra"]
-	path = vendor/Myra
-	url = https://github.com/rds1983/Myra.git

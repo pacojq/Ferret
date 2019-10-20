@@ -46,6 +46,9 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Microsoft.CSharp" />
+    <Reference Include="Myra, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null">
+      <HintPath>..\vendor\Myra\Myra.dll</HintPath>
+    </Reference>
     <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed">
       <HintPath>..\vendor\Newtonsoft.Json\bin\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
@@ -100,10 +103,6 @@
     <ProjectReference Include="..\vendor\FNA\FNA.csproj">
       <Project>{35253ce1-c864-4cd3-8249-4d1319748e8f}</Project>
       <Name>FNA</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\vendor\Myra\src\Myra\Myra.csproj">
-      <Project>{917f04f8-0038-422b-b9f4-afe0f09b39ea}</Project>
-      <Name>Myra</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
