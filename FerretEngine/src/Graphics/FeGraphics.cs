@@ -197,7 +197,7 @@ namespace FerretEngine.Graphics
         internal void Render(GameTime gameTime)
         {
             Scene scene = _game.Scene;
-            Color clearColor = Color.CornflowerBlue;
+            Color clearColor = _game.ClearColor;
             if (scene != null)
                 clearColor = scene.BackgroundColor;
 

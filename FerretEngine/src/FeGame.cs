@@ -57,6 +57,7 @@ namespace FerretEngine
 		public static int Width { get; private set; }
 		public static int Height { get; private set; }
 
+		public Color ClearColor { get; set; }
 		
 		public Scene Scene { get; private set; }
 		
@@ -68,6 +69,7 @@ namespace FerretEngine
 		
 		// Variables used for FPS count //
 		public int FPS { get; private set; }
+
 		private int _fpsCounter = 0;
 		private TimeSpan _counterElapsed = TimeSpan.Zero;
 
@@ -94,6 +96,8 @@ namespace FerretEngine
 			
 			IsMouseVisible = true;
 			IsFixedTimeStep = false;
+
+			ClearColor = Color.CornflowerBlue;
 			
 			_gui = new FeGUI();
 		}
