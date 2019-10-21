@@ -73,7 +73,9 @@ namespace FerretEngine.Graphics
             //GraphicsManager.DeviceCreated += OnGraphicsCreate;
             
             GraphicsManager.ApplyChanges();
-            
+
+            // TODO allow changing borderless and resizing
+            game.Window.IsBorderlessEXT = false;
             game.Window.AllowUserResizing = false;
             //game.Window.ClientSizeChanged += OnClientSizeChanged;
 
@@ -93,9 +95,6 @@ namespace FerretEngine.Graphics
             }
             GraphicsManager.ApplyChanges();
             */
-            
-            
-            
             
             _renderTarget = new RenderTarget2D(game.GraphicsDevice, width, height);
 

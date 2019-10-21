@@ -6,7 +6,12 @@ namespace FerretEngine.Input
     {
         private KeyboardState _previous;
         private KeyboardState _current;
-        
+
+
+        internal KeyboardInput()
+        {
+            
+        }
         
         internal void Update()
         {

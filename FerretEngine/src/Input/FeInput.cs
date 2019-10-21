@@ -13,6 +13,7 @@ namespace FerretEngine.Input
 		{
 			Keyboard = new KeyboardInput();
 			
+			
 			FeLog.Info("FerretInput initialized!");
 		}
 		

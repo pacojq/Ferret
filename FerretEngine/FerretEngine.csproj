@@ -90,6 +90,7 @@
     <Compile Include="src\Graphics\Sprite.cs" />
     <Compile Include="src\Graphics\SpriteSheet.cs" />
     <Compile Include="src\GUI\FeGUI.cs" />
+    <Compile Include="src\Input\GamepadInput.cs" />
     <Compile Include="src\Input\KeyboardInput.cs" />
     <Compile Include="src\Input\FeInput.cs" />
     <Compile Include="src\Logging\FeLog.cs" />
