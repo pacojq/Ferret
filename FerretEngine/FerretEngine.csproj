@@ -97,6 +97,14 @@
     <Compile Include="src\Input\FeInput.cs" />
     <Compile Include="src\Logging\FeLog.cs" />
     <Compile Include="src\Particles\Particle.cs" />
+    <Compile Include="src\Particles\ParticleAttributes\ParticleAcceleration.cs" />
+    <Compile Include="src\Particles\ParticleAttributes\ParticleAngle.cs" />
+    <Compile Include="src\Particles\ParticleAttributes\ParticleDirection.cs" />
+    <Compile Include="src\Particles\ParticleAttributes\ParticleGrowth.cs" />
+    <Compile Include="src\Particles\ParticleAttributes\ParticleLifetime.cs" />
+    <Compile Include="src\Particles\ParticleAttributes\ParticleRotation.cs" />
+    <Compile Include="src\Particles\ParticleAttributes\ParticleSize.cs" />
+    <Compile Include="src\Particles\ParticleAttributes\ParticleSpeed.cs" />
     <Compile Include="src\Particles\ParticleEmitter.cs" />
     <Compile Include="src\Particles\ParticleSystem.cs" />
     <Compile Include="src\Particles\ParticleType.cs" />

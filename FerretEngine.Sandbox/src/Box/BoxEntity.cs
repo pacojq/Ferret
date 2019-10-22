@@ -3,6 +3,7 @@ using FerretEngine.Components.Colliders;
 using FerretEngine.Core;
 using FerretEngine.Graphics;
 using FerretEngine.Logging;
+using FerretEngine.Particles;
 using Microsoft.Xna.Framework;
 
 namespace FerretEngine.Sandbox.Box

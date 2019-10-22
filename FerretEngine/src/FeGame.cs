@@ -36,6 +36,8 @@ namespace FerretEngine
 		public static float DeltaTime { get; private set; }
 		
 		
+		public static Random Random { get; private set; }
+		
 		
 		public static string ContentDirectory
 		{
@@ -99,6 +101,8 @@ namespace FerretEngine
 			IsFixedTimeStep = false;
 
 			ClearColor = Color.CornflowerBlue;
+			
+			Random = new Random();
 			
 			_gui = new FeGUI();
 		}

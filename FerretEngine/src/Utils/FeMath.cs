@@ -53,7 +53,7 @@ namespace FerretEngine.Utils
         /// <param name="degrees"></param>
         /// <returns></returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static float DSin(float degrees)
+        public static float Sin(float degrees)
         {
             return (float) Math.Sin(DegToRad(degrees));
         }

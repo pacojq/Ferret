@@ -10,10 +10,16 @@ namespace FerretEngine.Particles
         public Color Color;
         
         public Vector2 Position;
-        public Vector2 Speed;
+        
+        public float Speed;
+        public float Acceleration;
+        
+        public float Direction;
         
         public float Size;
+        public float Growth;
 
+        public float Angle;
         public float Rotation;
     }
 }

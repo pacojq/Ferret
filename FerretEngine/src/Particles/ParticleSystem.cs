@@ -1,7 +1,11 @@
 using System;
 using System.Runtime.CompilerServices;
 using FerretEngine.Core;
+using FerretEngine.Graphics;
+using FerretEngine.Logging;
+using FerretEngine.Utils;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 
 namespace FerretEngine.Particles
 {
@@ -19,6 +23,10 @@ namespace FerretEngine.Particles
         
 
         private Particle[] _particles;
+        
+        /// <summary>
+        /// Pointer to the next free particle
+        /// </summary>
         private int _seek;
 
 
@@ -28,17 +36,21 @@ namespace FerretEngine.Particles
         
         public ParticleSystem(ParticleType particleType, int maxParticles)
         {
+            ParticleType = particleType;
             _particles = new Particle[maxParticles];
             _maxParticles = maxParticles;
             _seek = 0;
         }
 
 
-        internal void Add(Particle particle)
+        internal void CreateParticle(Vector2 position)
         {
+            _particles[_seek] = ParticleType.CreateParticle(_particles[_seek]);
+            
+            Particle particle = _particles[_seek];
             particle.Active = true;
+            particle.Position = position;
             _particles[_seek] = particle;
-
             
             // TODO improve seek increase
             // to actually have _maxParticles number of particles available
@@ -53,15 +65,34 @@ namespace FerretEngine.Particles
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         internal void Update(float deltaTime)
         {
-            foreach (var p in _particles)
-                if (p.Active)
-                    Update(p, deltaTime);
+            for (int i = 0; i < _maxParticles; i++)
+            {
+                if (_particles[i].Active)
+                    Update(ref _particles[i], deltaTime);
+            }
         }
 
 
-        private void Update(Particle part, float deltaTime)
+        private void Update(ref Particle part, float deltaTime)
         {
+            part.LifeTime -= deltaTime;
+            if (part.LifeTime <= 0)
+            {
+                part.Active = false;
+                return;
+            }
+
+            Vector2 delta = new Vector2( 
+                    FeMath.Cos(part.Direction) * part.Speed,
+                    FeMath.Sin(part.Direction) * part.Speed
+                );
             
+            part.Position += delta;
+            part.Speed += part.Acceleration;
+
+            part.Angle += part.Rotation;
+            
+            part.Size += part.Growth;
         }
         
         
@@ -74,9 +105,19 @@ namespace FerretEngine.Particles
                     Draw(p, deltaTime);
         }
         
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private void Draw(Particle part, float deltaTime)
         {
-            
+            FeDraw.SpriteExt(
+                    ParticleType.Sprite,
+                    part.Position,
+                    part.Color,
+                    part.Angle,
+                    ParticleType.Sprite.Origin,
+                    Vector2.One * part.Size,
+                    SpriteEffects.None,
+                    1
+                );
         }
         
         
@@ -97,5 +138,6 @@ namespace FerretEngine.Particles
             _maxParticles = maxParticles;
         }
 
+        
     }
 }

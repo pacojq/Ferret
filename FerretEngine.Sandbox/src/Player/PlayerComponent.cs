@@ -1,6 +1,7 @@
 ﻿using FerretEngine.Core;
 using FerretEngine.Graphics;
 using FerretEngine.Input;
+using FerretEngine.Particles;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 
@@ -8,6 +9,7 @@ namespace FerretEngine.Sandbox.Player
 {
     public class PlayerComponent : Component
     {
+        private ParticleEmitter _emitter;
         private KeyboardInput _input;
 
         private float _pxPerSecond = 96;
@@ -16,8 +18,14 @@ namespace FerretEngine.Sandbox.Player
         {
             _input = FeInput.Keyboard;
         }
-        
-        
+
+
+        protected override void OnBinding(Entity entity)
+        {
+            base.OnBinding(entity);
+            _emitter = entity.Get<ParticleEmitter>();
+        }
+
         public override void Update(float deltaTime)
         {
             Vector2 pos = this.Entity.Position;
@@ -35,6 +43,10 @@ namespace FerretEngine.Sandbox.Player
             pos.Y += ySpd * (_pxPerSecond * deltaTime);
 
             this.Entity.Position = pos;
+
+
+            if (_input.IsKeyPressed(Keys.Space))
+                _emitter.Emit();
         }
 
 

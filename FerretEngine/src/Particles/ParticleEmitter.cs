@@ -1,5 +1,8 @@
 using System;
+using System.Collections;
+using System.Collections.Generic;
 using FerretEngine.Core;
+using FerretEngine.Logging;
 
 namespace FerretEngine.Particles
 {
@@ -39,10 +42,19 @@ namespace FerretEngine.Particles
         public float EmitDelay { get; set; }
         
         /// <summary>
-        /// Time in seconds between each emitted particle in a single
-        /// burst.
+        /// Time in seconds between each step in a burst.
         /// </summary>
-        public float Interval { get; set; }
+        public float BurstStepDelay { get; set; }
+        
+        /// <summary>
+        /// The number of emissions in a single burst.
+        /// </summary>
+        public int BurstSteps { get; set; }
+        
+        /// <summary>
+        /// The number of emitted particles in a burst emission.
+        /// </summary>
+        public int BurstCunt { get; set; }
         
         
         
@@ -50,8 +62,11 @@ namespace FerretEngine.Particles
         
         private readonly ParticleSystem _system;
 
-        private float _emitCoundown;
+        private float _emitCountdown;
         
+        
+        private IEnumerator _coroutine;
+        private float _coroutineDelay;
         
         
         public ParticleEmitter(ParticleType particleType, int maxParticles)
@@ -73,7 +88,26 @@ namespace FerretEngine.Particles
         /// </summary>
         public void Emit()
         {
-            
+            _emitCountdown = EmitDelay;
+            _coroutine = Burst();
+        }
+
+        private IEnumerator Burst()
+        {
+            for (int i = 0; i < BurstSteps-1; i++)
+            {
+                CreateParticles();
+                yield return BurstStepDelay;
+            }
+            CreateParticles();
+        }
+
+        private void CreateParticles()
+        {
+            for (int i = 0; i < BurstCunt; i++)
+            {
+                _system.CreateParticle(Position);
+            }
         }
         
         
@@ -83,11 +117,39 @@ namespace FerretEngine.Particles
             base.Update(deltaTime);
             _system.Update(deltaTime);
 
-            if (AutoEmit)
+
+            if (_coroutine != null)
             {
-                this.Emit();
+                if (_coroutineDelay > 0)
+                {
+                    _coroutineDelay -= deltaTime;
+                }
+                else
+                {
+                    bool result = _coroutine.MoveNext();
+                    
+                    if (_coroutine.Current is float)
+                        _coroutineDelay = (float)_coroutine.Current;
+                    
+                    if (!result)
+                        _coroutine = null;
+                }
+            }
+            else if (AutoEmit)
+            {
+                if (_emitCountdown > 0)
+                {
+                    _emitCountdown -= deltaTime;
+                }
+                else
+                {
+                    this.Emit();
+                }
             }
         }
+        
+        
+        
         
         public override void Draw(float deltaTime)
         {
