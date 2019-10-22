@@ -2,6 +2,7 @@
 using System.IO;
 using System.Reflection;
 using FerretEngine.Core;
+using FerretEngine.Coroutines;
 using FerretEngine.Graphics;
 using FerretEngine.GUI;
 using FerretEngine.Input;
@@ -134,7 +135,8 @@ namespace FerretEngine
         protected override void Initialize()
         {
 	        base.Initialize();
-	        
+
+	        FeCoroutines.Initialize();
 	        FeInput.Initialize();
 	        
 	        // TODO load default font
@@ -180,6 +182,9 @@ namespace FerretEngine
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Update(GameTime gameTime)
         {
+	        DeltaTime = (float) gameTime.ElapsedGameTime.TotalSeconds;
+	        
+	        // Early Update
 	        FeInput.Update();
 	        
 	        if (ExitOnEscapeKeypress && FeInput.IsKeyPressed(Keys.Escape))
@@ -188,15 +193,19 @@ namespace FerretEngine
 		        return;
 	        }
 	        
-	        DeltaTime = (float) gameTime.ElapsedGameTime.TotalSeconds;
-
 	        
-	        // TODO UPDATE
+
+	        // TODO Game Update
 	        if (Scene != null)
 	        {
 		        Scene.Update(DeltaTime);
 	        }
+	        
+	        
+	        // Late update
+	        FeCoroutines.Update(DeltaTime);
 
+	        
 	        // MonoGame update
             base.Update(gameTime);
         }

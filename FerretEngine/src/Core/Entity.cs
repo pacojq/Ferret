@@ -124,7 +124,7 @@ namespace FerretEngine.Core
         /// This method will be skipped if the entity is not <see cref="IsActive"/>
         /// <param name="deltaTime">The time in seconds since the last update</param>
         /// </summary>
-        public void Update(float deltaTime)
+        internal virtual void Update(float deltaTime)
         {
             foreach (Component c in Components)
             {
@@ -133,7 +133,7 @@ namespace FerretEngine.Core
         }
         
         
-        public void Draw(float deltaTime)
+        internal virtual void Draw(float deltaTime)
         {
             foreach (Component c in Components)
             {
@@ -142,7 +142,7 @@ namespace FerretEngine.Core
         }
         
         
-        public void DrawGUI(float deltaTime)
+        internal void DrawGUI(float deltaTime)
         {
             foreach (Component c in Components)
             {
