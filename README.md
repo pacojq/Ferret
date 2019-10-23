@@ -20,6 +20,19 @@ Ferret is still in *very* early stages of development. Some of the already exist
 - Full control of the game for the programmer
 
 
+## Getting Started
+
+If you are using Ferret as a **git submodule**, execute: `git submodule update --init --recursive`.
+
+Also, you may need the following:
+
+- **DirectX SDK (June 2010)** for building shaders.
+  - **On Windows** : Download from https://www.microsoft.com/en-us/download/details.aspx?id=6812
+  - **On Linux/macOS:** Install using Wine and winetricks
+
+- **FNA Dependencies**, already added as a submodule of Ferret
+
+
 ## License
 
 Ferret is under [MIT License](/LICENSE).
