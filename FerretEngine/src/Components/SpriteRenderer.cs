@@ -17,6 +17,9 @@ namespace FerretEngine.Components
 
         public SpriteEffects Flip { get; set; }
         
+        
+        public Material Material { get; set; }
+        
         public SpriteRenderer(Sprite sprite)
         {
             Sprite = sprite;
@@ -24,6 +27,7 @@ namespace FerretEngine.Components
             Scale = Vector2.One;
             Rotation = 0;
             Flip = SpriteEffects.None;
+            Material = Material.Default;
         }
 
 
@@ -32,6 +36,7 @@ namespace FerretEngine.Components
             if (Sprite == null)
                 return;
 
+            FeDraw.SetMaterial(Material);
             FeDraw.SpriteExt(Sprite, Position, Color.White, Rotation, Sprite.Origin, Scale, Flip, 0);
         }
     }

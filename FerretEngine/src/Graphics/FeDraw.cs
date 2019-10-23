@@ -33,6 +33,8 @@ namespace FerretEngine.Graphics
         }
         private static Color _color;
 
+        private static Material _currentMaterial;
+
 
         private static FeGraphics _graphics;
         
@@ -51,8 +53,47 @@ namespace FerretEngine.Graphics
         }
 
 
+
+
+        internal static void Begin()
+        {
+            _currentMaterial = Material.Default;
+        }
+
+        internal static void End()
+        {
+            
+        }
         
-        
+        public static void SetMaterial(Material material)
+        {
+            if (material != _currentMaterial)
+            {
+                _graphics.SpriteBatch.End();
+                _currentMaterial = material;
+
+                if (material.Effect != null)
+                {
+                    _graphics.SpriteBatch.Begin(
+                        SpriteSortMode.Deferred,
+                        BlendState.AlphaBlend,
+                        SamplerState.PointClamp,
+                        DepthStencilState.None,
+                        RasterizerState.CullNone,
+                        material.Effect);
+                }
+                else
+                {
+                    _graphics.SpriteBatch.Begin(
+                        SpriteSortMode.Texture, 
+                        BlendState.AlphaBlend, 
+                        SamplerState.PointClamp, 
+                        DepthStencilState.None, 
+                        RasterizerState.CullNone
+                    );
+                }
+            }
+        }
         
         
         
@@ -242,7 +283,6 @@ namespace FerretEngine.Graphics
                     color
                 );
         }
-        
         
     }
 }

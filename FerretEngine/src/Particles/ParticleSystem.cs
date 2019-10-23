@@ -108,6 +108,7 @@ namespace FerretEngine.Particles
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private void Draw(Particle part, float deltaTime)
         {
+            FeDraw.SetMaterial(Material.Default);
             FeDraw.SpriteExt(
                     ParticleType.Sprite,
                     part.Position,

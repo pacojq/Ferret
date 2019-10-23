@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Runtime.CompilerServices;
 using FerretEngine.Core;
 using FerretEngine.Graphics.Renderers;
 using FerretEngine.Utils;
@@ -286,7 +287,49 @@ namespace FerretEngine.Graphics
             fileStream.Close();
             return new Sprite(texture);
         }
+
+
+
+
+        public static Effect LoadEffect(string path)
+        {
+            string fxPath = Path.Combine(FeGame.ContentDirectory, path) + ".fxb";
+            byte[] bytes = GetFileResourceBytes(fxPath);
+            return new Effect(FeGame.Instance.GraphicsDevice, bytes);
+        }
         
         
+        private static byte[] GetFileResourceBytes(string path)
+        {
+            byte[] bytes;
+            try
+            {
+                using (var stream = TitleContainer.OpenStream(path))
+                {
+                    if (stream.CanSeek)
+                    {
+                        bytes = new byte[stream.Length];
+                        stream.Read(bytes, 0, bytes.Length);
+                    }
+                    else
+                    {
+                        using (var ms = new MemoryStream())
+                        {
+                            stream.CopyTo(ms);
+                            bytes = ms.ToArray();
+                        }
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                var txt = string.Format(
+                    "OpenStream failed to find file at path: {0}. Did you add it to the Content folder and set its properties to copy to output directory?",
+                    path);
+                throw new Exception(txt, e);
+            }
+
+            return bytes;
+        }
     }
 }

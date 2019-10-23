@@ -15,7 +15,11 @@ namespace FerretEngine.Sandbox.Player
         public PlayerEntity()
         {
             Sprite sprite = SpriteLoader.LoadSprites("character/charAtlas.feAsset")[0];
-            Bind(new SpriteRenderer(sprite));
+            SpriteRenderer renderer = new SpriteRenderer(sprite);
+            
+            renderer.Material = new Material(SandboxGame.TestEffect);
+            
+            Bind(renderer);
 
             BoxCollider col = new BoxCollider(sprite.Width, sprite.Height, Vector2.Zero);
             Bind(col);
