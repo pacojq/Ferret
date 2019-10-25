@@ -66,9 +66,6 @@ namespace FerretEngine
 		
 		
 		
-		public FeGraphics Graphics { get; }
-
-		
 		
 		// Variables used for FPS count //
 		public int FPS { get; private set; }
@@ -93,7 +90,7 @@ namespace FerretEngine
 			Height = height;
 
 			FeLog.Initialize();
-			Graphics = new FeGraphics(this, width, height, windowWidth, windowHeight, fullscreen);
+			FeGraphics.Initialize(this, width, height, windowWidth, windowHeight, fullscreen);
 
 			Content.RootDirectory = @"Content";
 			
@@ -114,7 +111,7 @@ namespace FerretEngine
 			if (Scene != null)
 				Scene.End();
 			
-			Graphics.OnSceneChange(scene);
+			FeGraphics.OnSceneChange(scene);
 			OnSceneChange(scene);
 			
 			Scene = scene;
@@ -153,7 +150,7 @@ namespace FerretEngine
         /// </summary>
         protected override void LoadContent()
         {
-	        Graphics.LoadContent();
+	        FeGraphics.LoadContent();
 	        
 	        _gui.LoadContent();
 	        
@@ -223,7 +220,7 @@ namespace FerretEngine
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Draw(GameTime gameTime)
         {
-	        Graphics.Render(gameTime);
+	        FeGraphics.Render(gameTime);
             
 	        _gui.Draw();
 	        

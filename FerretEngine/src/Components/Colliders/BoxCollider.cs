@@ -1,4 +1,5 @@
 ﻿
+using FerretEngine.Core;
 using FerretEngine.Graphics;
 using FerretEngine.Physics;
 using FerretEngine.Utils;
@@ -29,7 +30,8 @@ namespace FerretEngine.Components.Colliders
         internal override void DebugDraw(float deltaTime)
         {
             FeDraw.Color = Color.Red;
-            FeDraw.Rect(Left, Top, Width, Height, true);
+            Vector2 pos = FeGame.Instance.Scene.MainCamera.WorldToScreen(new Vector2(Left, Top));
+            FeDraw.Rect(pos.X, pos.Y, Width, Height, true);
             FeDraw.Color = Color.White;
         }
 

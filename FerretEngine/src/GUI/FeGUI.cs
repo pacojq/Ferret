@@ -76,7 +76,7 @@ namespace FerretEngine.GUI
 
         public void Draw()
         {
-            _desktop.Render();
+            //_desktop.Render();
         }
     }
 }

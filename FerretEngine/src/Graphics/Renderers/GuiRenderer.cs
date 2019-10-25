@@ -14,7 +14,8 @@ namespace FerretEngine.Graphics.Renderers
         {
             BlendState = BlendState.AlphaBlend;
             SamplerState = SamplerState.LinearClamp;
-            Camera = new Camera(FeGame.Width, FeGame.Height, Vector2.Zero);
+            Camera = new Camera();
+            Camera.Position = new Vector2(FeGraphics.Resolution.VirtualWidth/2f, FeGraphics.Resolution.VirtualHeight/2f);
         }
         
 

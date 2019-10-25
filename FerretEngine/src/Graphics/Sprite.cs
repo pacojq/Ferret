@@ -42,7 +42,7 @@ namespace FerretEngine.Graphics
         
         public static Sprite PlainColor(int width, int height, Color color)
         {
-            GraphicsDevice gd = FeGame.Instance.Graphics.GraphicsDevice;
+            GraphicsDevice gd = FeGraphics.GraphicsDevice;
             
             Color[] pixels = new Color[width * height];
             for (int i = 0; i < width * height; i++)

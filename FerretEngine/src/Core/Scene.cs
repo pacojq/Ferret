@@ -45,7 +45,7 @@ namespace FerretEngine.Core
             Space = new Space();
 
             BackgroundColor = Color.CornflowerBlue;
-            MainCamera = new Camera(FeGame.Width, FeGame.Height);
+            MainCamera = new Camera();
         }
 
 
