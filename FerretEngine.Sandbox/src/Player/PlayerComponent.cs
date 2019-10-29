@@ -46,7 +46,6 @@ namespace FerretEngine.Sandbox.Player
             this.Entity.Position = pos;
             this.Entity.Scene.MainCamera.Position = pos;
 
-
             if (_input.IsKeyPressed(Keys.Space))
                 _emitter.Emit();
         }

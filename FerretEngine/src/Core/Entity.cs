@@ -28,7 +28,7 @@ namespace FerretEngine.Core
         /// A tag that identifies the entity.
         /// If not set, it will return null.
         /// </summary>
-        public string Tag { get; }
+        public string Tag { get; protected set; }
         
         
         public IEnumerable<Component> Components => _components;

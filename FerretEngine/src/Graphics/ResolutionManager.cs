@@ -10,6 +10,10 @@ namespace FerretEngine.Graphics
 
         public int VirtualWidth => _VWidth;
         public int VirtualHeight => _VHeight;
+
+        public int WindowWidth => GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width;
+        public int WindowHeight => GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height;
+        
         
         
         public Matrix TransformationMatrix

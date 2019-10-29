@@ -51,7 +51,6 @@ namespace FerretEngine.Graphics
         private static List<Renderer> _defaultRenderers;
         private static List<Renderer> _guiRenderers;
         
-        private static RenderTarget2D _renderTarget;
 
 
         /// <summary>
@@ -62,6 +61,7 @@ namespace FerretEngine.Graphics
         
         private static Material _currentMaterial;
 
+        private static RenderTarget2D _renderTarget;
         
         
         internal static void Initialize(FeGame game, int width, int height, int windowWidth, int windowHeight, bool fullscreen)
@@ -69,35 +69,36 @@ namespace FerretEngine.Graphics
             _game = game;
 
             GraphicsManager = new GraphicsDeviceManager(game);
-            
             Resolution = new ResolutionManager(GraphicsManager, width, height);
             
-            // Game Resolution
-            Resolution.SetVirtualResolution(width, height);
-            
-            // Window resolution
-            Resolution.SetResolution(windowWidth, windowHeight, fullscreen);
-            
+            Resolution.SetVirtualResolution(width, height); // Game Resolution
+            Resolution.SetResolution(windowWidth, windowHeight, fullscreen); // Window resolution
             
             // TODO allow changing borderless and resizing
             game.Window.IsBorderlessEXT = false;
             game.Window.AllowUserResizing = false;
-            
-            _renderTarget = new RenderTarget2D(game.GraphicsDevice, width, height);
 
+            
+            
             _allRenderers = new List<Renderer>();
             _defaultRenderers = new List<Renderer>();
             _guiRenderers = new List<Renderer>();
 
+            
             AddRenderer(new DefaultRenderer());
+#if DEBUG
             AddRenderer(new DebugRenderer());
+#endif
             AddRenderer(new GuiRenderer());
         }
+
 
         internal static void LoadContent()
         {
             _graphicsDevice = _game.GraphicsDevice;
+            
             _spriteBatch = new SpriteBatch(_game.GraphicsDevice);
+            _renderTarget = new RenderTarget2D(GraphicsDevice, Resolution.WindowWidth, Resolution.WindowHeight);
             
             _currentMaterial = Material.Default;
             
@@ -109,6 +110,13 @@ namespace FerretEngine.Graphics
         }
 
 
+        internal static void OnWindowResize()
+        {
+            
+        }
+        
+        
+        
 
         internal static void OnSceneChange(Scene scene)
         {
@@ -223,15 +231,25 @@ namespace FerretEngine.Graphics
             GraphicsDevice.SetRenderTarget(null);
             GraphicsDevice.Clear(clearColor);
             
+            
             Resolution.BeginDraw();
            
             
-            SpriteBatchBegin(Resolution.TransformationMatrix, SpriteSortMode.Texture, null);
             
-            Rectangle rect = new Rectangle(0, 0, GraphicsManager.PreferredBackBufferWidth, GraphicsManager.PreferredBackBufferHeight);
+            
+            _spriteBatch.Begin(
+                SpriteSortMode.Texture, 
+                BlendState.AlphaBlend, 
+                SamplerState.PointClamp, 
+                DepthStencilState.Default,
+                RasterizerState.CullNone
+            );
+            
+            Rectangle rect = new Rectangle(0, 0, Resolution.WindowWidth, Resolution.WindowHeight);
             _spriteBatch.Draw(_renderTarget, rect, Color.White);
             
-            SpriteBatchEnd();
+            _spriteBatch.End();
+            
         }
 
 
@@ -241,11 +259,10 @@ namespace FerretEngine.Graphics
             foreach (Renderer renderer in renderers)
             {
                 CurrentRenderer = renderer;
-                renderer.Camera.Update();
 
                 _isOpen = true;
-                //SpriteBatchBegin(CurrentRenderer.Camera.TransformMatrix, CurrentRenderer.SortMode, _currentMaterial?.Effect);
-                SpriteBatchBegin(Resolution.TransformationMatrix, CurrentRenderer.SortMode, _currentMaterial?.Effect);
+                SpriteBatchBegin(CurrentRenderer.Camera.TransformMatrix, CurrentRenderer.SortMode, _currentMaterial?.Effect);
+                //SpriteBatchBegin(Resolution.TransformationMatrix, CurrentRenderer.SortMode, _currentMaterial?.Effect);
                 
                 renderer.BeforeRender(scene);
                 renderer.Render(scene, deltaTime);
@@ -256,84 +273,6 @@ namespace FerretEngine.Graphics
             }
 
             CurrentRenderer = null;
-        }
-
-        
-        
-        
-        
-        
-        
-        /// <summary>
-        /// Loads a raw PNG image from the Content directory as a <see cref="Texture2D"/>.
-        /// </summary>
-        /// <param name="path"></param>
-        /// <returns></returns>
-        public static Texture2D LoadTexture(string path)
-        {
-            string texPath = Path.Combine(FeGame.ContentDirectory, path) + ".png";
-            var fileStream = new FileStream(texPath, FileMode.Open, FileAccess.Read);
-            Texture2D texture = Texture2D.FromStream(FeGame.Instance.GraphicsDevice, fileStream);
-            fileStream.Close();
-            return texture;
-        }
-        
-        /// <summary>
-        /// Loads a raw PNG image from the Content directory as a Sprite.
-        /// </summary>
-        /// <param name="path"></param>
-        /// <returns></returns>
-        public static Sprite LoadSprite(string path)
-        {
-            string texPath = Path.Combine(FeGame.ContentDirectory, path) + ".png";
-            var fileStream = new FileStream(texPath, FileMode.Open, FileAccess.Read);
-            Texture2D texture = Texture2D.FromStream(FeGame.Instance.GraphicsDevice, fileStream);
-            fileStream.Close();
-            return new Sprite(texture);
-        }
-
-
-
-
-        public static Effect LoadEffect(string path)
-        {
-            string fxPath = Path.Combine(FeGame.ContentDirectory, path) + ".fxb";
-            byte[] bytes = GetFileResourceBytes(fxPath);
-            return new Effect(FeGame.Instance.GraphicsDevice, bytes);
-        }
-        
-        
-        private static byte[] GetFileResourceBytes(string path)
-        {
-            byte[] bytes;
-            try
-            {
-                using (var stream = TitleContainer.OpenStream(path))
-                {
-                    if (stream.CanSeek)
-                    {
-                        bytes = new byte[stream.Length];
-                        stream.Read(bytes, 0, bytes.Length);
-                    }
-                    else
-                    {
-                        using (var ms = new MemoryStream())
-                        {
-                            stream.CopyTo(ms);
-                            bytes = ms.ToArray();
-                        }
-                    }
-                }
-            }
-            catch (Exception e)
-            {
-                var txt = string.Format(
-                    "OpenStream failed to find file at path: {0}. Did you add it to the Content folder and set its properties to copy to output directory?",
-                    path);
-                throw new Exception(txt, e);
-            }
-
-            return bytes;
         }
 
         

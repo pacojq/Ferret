@@ -1,8 +1,8 @@
 ﻿using FerretEngine.Components;
 using FerretEngine.Components.Colliders;
+using FerretEngine.Content;
 using FerretEngine.Core;
 using FerretEngine.Graphics;
-using FerretEngine.Graphics.Loading;
 using FerretEngine.Logging;
 using FerretEngine.Particles;
 using FerretEngine.Particles.ParticleAttributes;
@@ -14,7 +14,7 @@ namespace FerretEngine.Sandbox.Player
     {
         public PlayerEntity()
         {
-            Sprite sprite = SpriteLoader.LoadSprites("character/charAtlas.feAsset")[0];
+            Sprite sprite = FeContent.LoadSpriteSheet("character/charAtlas.feAsset")[0];
             SpriteRenderer renderer = new SpriteRenderer(sprite);
             
             renderer.Material = new Material(SandboxGame.TestEffect);
@@ -28,7 +28,7 @@ namespace FerretEngine.Sandbox.Player
             col.OnCollisionExit += o => FeLog.Debug($"PLAYER EXIT: {this}");
 
 
-            ParticleType partType = new ParticleType(FeGraphics.LoadSprite("box"))
+            ParticleType partType = new ParticleType(FeContent.LoadSprite("box.png"))
             {
                 Lifetime = ParticleLifetime.RandomRange(0.5f, 1f),
                 StartAngle = ParticleAngle.RandomRange(0, 360),

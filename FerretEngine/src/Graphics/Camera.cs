@@ -9,7 +9,12 @@ namespace FerretEngine.Graphics
     /// </summary>
     public class Camera
     {
-        public Vector2 Position { get; set; }
+        public Vector2 Position
+        {
+            get => _position;
+            set => _position = value;
+        }
+        private Vector2 _position;
         
         public float Rotation { get; set; }
         
@@ -28,11 +33,16 @@ namespace FerretEngine.Graphics
         private Rectangle screenRect;
         
 
-        public Camera()
+        public Camera(Vector2 position)
         {
             Active = true;
-            Position = new Vector2(FeGraphics.Resolution.VirtualWidth/2f, FeGraphics.Resolution.VirtualHeight/2f);
+            position = position;
             Zoom = 1;
+        }
+        
+        public Camera() :
+            this(new Vector2(FeGraphics.Resolution.VirtualWidth/2f, FeGraphics.Resolution.VirtualHeight/2f))
+        {
         }
 
 
@@ -46,10 +56,15 @@ namespace FerretEngine.Graphics
             //The math involved with calculated our transformMatrix and screenRect is a little intense, so instead of calling the math whenever we need these variables,
             //we'll calculate them once each frame and store them... when someone needs these variables we will simply return the stored variable instead of re cauclating them every time.
 
+            Vector3 middleScreen = new Vector3(
+                FeGraphics.Resolution.VirtualWidth * 0.5f,
+                FeGraphics.Resolution.VirtualHeight * 0.5f, 0);
+            
             //Calculate the camera transform matrix:
-            _transformMatrix = Matrix.CreateTranslation(new Vector3(-Position, 0)) * Matrix.CreateRotationZ(Rotation) *
-                        Matrix.CreateScale(new Vector3(Zoom, Zoom, 1)) * Matrix.CreateTranslation(new Vector3(FeGraphics.Resolution.VirtualWidth
-                            * 0.5f, FeGraphics.Resolution.VirtualHeight * 0.5f, 0));
+            _transformMatrix = Matrix.CreateTranslation(new Vector3(-_position, 0)) 
+                    * Matrix.CreateRotationZ(Rotation) 
+                    * Matrix.CreateScale(new Vector3(Zoom, Zoom, 1)) 
+                    * Matrix.CreateTranslation(middleScreen);
 
             //Now combine the camera's matrix with the Resolution Manager's transform matrix to get our final working matrix:
             _transformMatrix = _transformMatrix * FeGraphics.Resolution.TransformationMatrix;

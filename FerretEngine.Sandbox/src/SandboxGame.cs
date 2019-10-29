@@ -1,3 +1,4 @@
+using FerretEngine.Content;
 using FerretEngine.Graphics;
 using Microsoft.Xna.Framework.Graphics;
 
@@ -30,7 +31,7 @@ namespace FerretEngine.Sandbox
 		{
 			base.LoadContent();
 
-			TestEffect = Content.Load<Effect>("Ferret/Effects/test");
+			TestEffect = FeContent.LoadEffect("Ferret/Effects/test.fxb");
 		}
 	}
 }

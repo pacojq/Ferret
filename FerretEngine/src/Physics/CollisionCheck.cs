@@ -8,6 +8,17 @@ namespace FerretEngine.Physics
 {
     public static class CollisionCheck
     {
+        /*
+            COLLISION CHECK IMPLEMENTATIONS
+         
+                        Box    Circle    Point
+            Box      |   x       x         x
+            Circle   |           x         x
+            Point    |                     x
+         */
+        
+        
+        
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool BoxWithBox(BoxCollider collider, BoxCollider other)
@@ -31,6 +42,38 @@ namespace FerretEngine.Physics
                     ||  (collider.Top >= other.Bottom) 
                 );
         }
+        
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static bool BoxWithCircle(BoxCollider collider, CircleCollider other)
+        {
+            throw new NotImplementedException();
+        }
+        
+        
+        
+        
+        
+        
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static bool CircleWithCircle(CircleCollider collider, CircleCollider other)
+        {
+            return FeMath.Distance(collider.Position, other.Position) <= collider.Radius + other.Radius;
+        }
+        
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static bool CircleWithPoint(CircleCollider collider, PointCollider other)
+        {
+            throw new NotImplementedException();
+        }
+        
+        
+        
+        
+        
+        
         
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]

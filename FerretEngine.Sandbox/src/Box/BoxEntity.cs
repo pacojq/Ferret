@@ -1,5 +1,6 @@
 ﻿using FerretEngine.Components;
 using FerretEngine.Components.Colliders;
+using FerretEngine.Content;
 using FerretEngine.Core;
 using FerretEngine.Graphics;
 using FerretEngine.Logging;
@@ -12,7 +13,7 @@ namespace FerretEngine.Sandbox.Box
     {
         public BoxEntity()
         {
-            Sprite sprite = FeGraphics.LoadSprite("box");
+            Sprite sprite = FeContent.LoadSprite("box.png");
             Bind(new SpriteRenderer(sprite));
 
             BoxCollider col = new BoxCollider(sprite.Width, sprite.Height, Vector2.Zero);

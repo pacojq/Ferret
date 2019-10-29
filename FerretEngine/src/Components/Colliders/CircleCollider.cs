@@ -6,26 +6,30 @@ using Microsoft.Xna.Framework;
 
 namespace FerretEngine.Components.Colliders
 {
-    public sealed class PointCollider : Collider
+    public sealed class CircleCollider : Collider
     {
-        public override float Top => this.Position.Y - Center.Y;
+        public float Radius { get; }
+        
+        public override float Top => this.Position.Y - Radius;
         
         public override float Bottom => this.Top + Height;
-        public override float Left => this.Position.X - Center.X;
+        public override float Left => this.Position.X - Radius;
         public override float Right => this.Left + Width;
 
 
-        public PointCollider(Vector2 center)
+        public CircleCollider(float radius)
         {
-            Width = 1;
-            Height = 1;
-            Center = center;
+            Radius = radius;
+            Width = radius * 2;
+            Height = radius * 2;
+            Center = Vector2.Zero;
         }
         
         
         internal override void DebugDraw(float deltaTime)
         {
             FeDraw.Color = Color.Red;
+            // TODO draw circle
             FeDraw.Rect(Left, Top, Width, Height, true);
             FeDraw.Color = Color.White;
         }
@@ -39,17 +43,17 @@ namespace FerretEngine.Components.Colliders
         
         internal override bool CollidesWith(BoxCollider other)
         {
-            return CollisionCheck.BoxWithPoint(other, this);
-        }
-        
-        internal override bool CollidesWith(CircleCollider other)
-        {
-            return CollisionCheck.CircleWithPoint(other, this);
+            return CollisionCheck.BoxWithCircle(other, this);
         }
 
+        internal override bool CollidesWith(CircleCollider other)
+        {
+            return CollisionCheck.CircleWithCircle(other, this);
+        }
+        
         internal override bool CollidesWith(PointCollider other)
         {
-            return CollisionCheck.PointWithPoint(this, other);
+            return CollisionCheck.CircleWithPoint(this, other);
         }
     }
 }

@@ -81,8 +81,12 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="src\Components\Collider.cs" />
     <Compile Include="src\Components\Colliders\BoxCollider.cs" />
+    <Compile Include="src\Components\Colliders\CircleCollider.cs" />
     <Compile Include="src\Components\Colliders\PointCollider.cs" />
     <Compile Include="src\Components\SpriteRenderer.cs" />
+    <Compile Include="src\Content\Dto\SpriteDto.cs" />
+    <Compile Include="src\Content\Dto\SpriteSheetDto.cs" />
+    <Compile Include="src\Content\FeContent.cs" />
     <Compile Include="src\Core\Component.cs" />
     <Compile Include="src\Core\Entity.cs" />
     <Compile Include="src\Core\Scene.cs" />
@@ -92,8 +96,6 @@
     <Compile Include="src\Graphics\Camera.cs" />
     <Compile Include="src\Graphics\FeDraw.cs" />
     <Compile Include="src\Graphics\FeGraphics.cs" />
-    <Compile Include="src\Graphics\Loading\SpriteLoader.cs" />
-    <Compile Include="src\Graphics\Loading\SpriteLoaderPng.cs" />
     <Compile Include="src\Graphics\Material.cs" />
     <Compile Include="src\Graphics\Renderers\DebugRenderer.cs" />
     <Compile Include="src\Graphics\Renderers\DefaultRenderer.cs" />
