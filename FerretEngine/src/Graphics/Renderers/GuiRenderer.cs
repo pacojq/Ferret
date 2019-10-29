@@ -14,7 +14,7 @@ namespace FerretEngine.Graphics.Renderers
         {
             BlendState = BlendState.AlphaBlend;
             SamplerState = SamplerState.LinearClamp;
-            Camera = new Camera(FeGame.Width, FeGame.Height, Vector2.Zero);
+            Camera = new Camera(new Vector2(FeGraphics.Resolution.VirtualWidth/2f, FeGraphics.Resolution.VirtualHeight/2f));
         }
         
 
@@ -24,6 +24,12 @@ namespace FerretEngine.Graphics.Renderers
             {
                 entity.DrawGUI(deltaTime);
             }
+        }
+        
+        public override void BeforeRender(Scene scene)
+        {
+            base.BeforeRender(scene);
+            Camera.Update();
         }
 
     }

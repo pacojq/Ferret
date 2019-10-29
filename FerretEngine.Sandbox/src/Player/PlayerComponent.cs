@@ -1,6 +1,7 @@
 ﻿using FerretEngine.Core;
 using FerretEngine.Graphics;
 using FerretEngine.Input;
+using FerretEngine.Particles;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 
@@ -8,6 +9,7 @@ namespace FerretEngine.Sandbox.Player
 {
     public class PlayerComponent : Component
     {
+        private ParticleEmitter _emitter;
         private KeyboardInput _input;
 
         private float _pxPerSecond = 96;
@@ -16,11 +18,18 @@ namespace FerretEngine.Sandbox.Player
         {
             _input = FeInput.Keyboard;
         }
-        
-        
+
+
+        protected override void OnBinding(Entity entity)
+        {
+            base.OnBinding(entity);
+            _emitter = entity.Get<ParticleEmitter>();
+        }
+
         public override void Update(float deltaTime)
         {
             Vector2 pos = this.Entity.Position;
+
 
             int xSpd = 0;
             int ySpd = 0;
@@ -35,6 +44,10 @@ namespace FerretEngine.Sandbox.Player
             pos.Y += ySpd * (_pxPerSecond * deltaTime);
 
             this.Entity.Position = pos;
+            this.Entity.Scene.MainCamera.Position = pos;
+
+            if (_input.IsKeyPressed(Keys.Space))
+                _emitter.Emit();
         }
 
 
@@ -42,9 +55,9 @@ namespace FerretEngine.Sandbox.Player
         {
             base.DrawGUI(deltaTime);
 
-            Vector2 relPos = this.Entity.Scene.MainCamera.GetRelativePosition(this.Entity.Position);
-            
-            FeDraw.Text("This is GUI text", relPos + new Vector2(0, 24));
+            Vector2 rel = this.Entity.Scene.MainCamera.WorldToScreen(this.Entity.Position);
+
+            FeDraw.Text("This is GUI text", rel + new Vector2(0, 24));
             FeDraw.Text("Hi there :D", Vector2.Zero);
         }
     }

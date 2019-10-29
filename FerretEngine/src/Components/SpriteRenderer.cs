@@ -8,6 +8,8 @@ namespace FerretEngine.Components
     public class SpriteRenderer : Component
     {
         public Sprite Sprite { get; set; }
+        
+        public Color BlendColor { get; set; }
 
         public Rectangle ClipRect { get; set; }
 
@@ -17,13 +19,18 @@ namespace FerretEngine.Components
 
         public SpriteEffects Flip { get; set; }
         
+        
+        public Material Material { get; set; }
+
         public SpriteRenderer(Sprite sprite)
         {
             Sprite = sprite;
+            BlendColor = Color.White;
             ClipRect = new Rectangle(0, 0, sprite.Width, sprite.Height);
             Scale = Vector2.One;
             Rotation = 0;
             Flip = SpriteEffects.None;
+            Material = Material.Default;
         }
 
 
@@ -32,7 +39,8 @@ namespace FerretEngine.Components
             if (Sprite == null)
                 return;
 
-            FeDraw.SpriteExt(Sprite, Position, Color.White, Rotation, Vector2.Zero, Scale, Flip, 0);
+            FeDraw.SetMaterial(Material);
+            FeDraw.SpriteExt(Sprite, Position, BlendColor, Rotation, Sprite.Origin, Scale, Flip, 0);
         }
     }
 }

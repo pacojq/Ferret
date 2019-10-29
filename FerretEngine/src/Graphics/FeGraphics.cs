@@ -1,15 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Runtime.CompilerServices;
 using FerretEngine.Core;
 using FerretEngine.Graphics.Renderers;
 using FerretEngine.Utils;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Myra.Graphics2D;
 
 namespace FerretEngine.Graphics
 {
-    public class FeGraphics
+    public static class FeGraphics
     {
         
         /// <summary>
@@ -25,97 +27,80 @@ namespace FerretEngine.Graphics
         
         
         
-        public GraphicsDevice GraphicsDevice => _graphicsDevice;
-        private GraphicsDevice _graphicsDevice;
+        public static GraphicsDevice GraphicsDevice => _graphicsDevice;
+        private static GraphicsDevice _graphicsDevice;
         
-        public GraphicsDeviceManager GraphicsManager { get; }
+        public static GraphicsDeviceManager GraphicsManager { get; private set; }
 
 
-        internal SpriteBatch SpriteBatch => _spriteBatch;
-        private SpriteBatch _spriteBatch;
+        internal static SpriteBatch SpriteBatch => _spriteBatch;
+        private static SpriteBatch _spriteBatch;
 
 
-        public bool IsRendering => CurrentRenderer != null;
+        public static bool IsRendering => CurrentRenderer != null;
         
-        internal Renderer CurrentRenderer { get; private set; }
+        internal static Renderer CurrentRenderer { get; private set; }
+
         
-        private readonly FeGame _game;
+        internal static ResolutionManager Resolution { get; private set; }
+
+        private static FeGame _game;
         
         
-        private readonly List<Renderer> _allRenderers;
-        private readonly List<Renderer> _defaultRenderers;
-        private readonly List<Renderer> _guiRenderers;
+        private static List<Renderer> _allRenderers;
+        private static List<Renderer> _defaultRenderers;
+        private static List<Renderer> _guiRenderers;
         
-        private readonly RenderTarget2D _renderTarget;
 
 
         /// <summary>
         /// Whether the <see cref="_spriteBatch"/> has already called Begin()
         /// </summary>
-        private bool _isOpen;
+        private static bool _isOpen;
         
         
+        private static Material _currentMaterial;
 
+        private static RenderTarget2D _renderTarget;
         
         
-        public FeGraphics(FeGame game, int width, int height, int windowWidth, int windowHeight, bool fullscreen)
+        internal static void Initialize(FeGame game, int width, int height, int windowWidth, int windowHeight, bool fullscreen)
         {
             _game = game;
+
+            GraphicsManager = new GraphicsDeviceManager(game);
+            Resolution = new ResolutionManager(GraphicsManager, width, height);
             
-            GraphicsManager = new GraphicsDeviceManager(game)
-            {
-                PreferredBackBufferWidth = windowWidth,
-                PreferredBackBufferHeight = windowHeight,
-                IsFullScreen = fullscreen,
-                SynchronizeWithVerticalRetrace = true
-            };
-            //GraphicsManager.DeviceReset += OnGraphicsReset;
-            //GraphicsManager.DeviceCreated += OnGraphicsCreate;
+            Resolution.SetVirtualResolution(width, height); // Game Resolution
+            Resolution.SetResolution(windowWidth, windowHeight, fullscreen); // Window resolution
             
-            GraphicsManager.ApplyChanges();
-            
+            // TODO allow changing borderless and resizing
+            game.Window.IsBorderlessEXT = false;
             game.Window.AllowUserResizing = false;
-            //game.Window.ClientSizeChanged += OnClientSizeChanged;
 
-            Screen.Initialize(GraphicsManager);
-            /*
-            if (fullscreen)
-            {
-                GraphicsManager.PreferredBackBufferWidth = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width;
-                GraphicsManager.PreferredBackBufferHeight = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height;
-                GraphicsManager.IsFullScreen = true;
-            }
-            else
-            {
-                GraphicsManager.PreferredBackBufferWidth = windowWidth;
-                GraphicsManager.PreferredBackBufferHeight = windowHeight;
-                GraphicsManager.IsFullScreen = false;
-            }
-            GraphicsManager.ApplyChanges();
-            */
             
-            
-            
-            
-            _renderTarget = new RenderTarget2D(game.GraphicsDevice, width, height);
-
             
             _allRenderers = new List<Renderer>();
             _defaultRenderers = new List<Renderer>();
             _guiRenderers = new List<Renderer>();
 
-            AddRenderer(new DefaultRenderer());
-            AddRenderer(new DebugRenderer());
-            AddRenderer(new GuiRenderer());
             
-
-            FeDraw.Initialize(this);
+            AddRenderer(new DefaultRenderer());
+#if DEBUG
+            AddRenderer(new DebugRenderer());
+#endif
+            AddRenderer(new GuiRenderer());
         }
 
-        internal void LoadContent()
+
+        internal static void LoadContent()
         {
             _graphicsDevice = _game.GraphicsDevice;
+            
             _spriteBatch = new SpriteBatch(_game.GraphicsDevice);
+            _renderTarget = new RenderTarget2D(GraphicsDevice, Resolution.WindowWidth, Resolution.WindowHeight);
+            
+            _currentMaterial = Material.Default;
             
             Pixel = Sprite.PlainColor(1, 1, Color.White);
             DefaultFont = _game.Content.Load<SpriteFont>(@"Ferret\FerretDefault");
@@ -125,8 +110,15 @@ namespace FerretEngine.Graphics
         }
 
 
+        internal static void OnWindowResize()
+        {
+            
+        }
+        
+        
+        
 
-        internal void OnSceneChange(Scene scene)
+        internal static void OnSceneChange(Scene scene)
         {
             Camera sceneCamera = null;
             if (_game.Scene != null)
@@ -139,7 +131,7 @@ namespace FerretEngine.Graphics
             }
         }
 
-        public void AddRenderer(Renderer renderer)
+        public static void AddRenderer(Renderer renderer)
         {
             if (renderer.Camera == null)
                 if (_game.Scene != null)
@@ -167,25 +159,23 @@ namespace FerretEngine.Graphics
         
         
         
-        private void Begin(SpriteSortMode sortMode)
+        
+        
+        private static void SpriteBatchBegin(Matrix transformMatrix, SpriteSortMode sortMode, Effect effect)
         {
-            Assert.IsFalse(_isOpen);
-            _isOpen = true;
-            
             _spriteBatch.Begin(
                 sortMode, 
                 BlendState.AlphaBlend, 
                 SamplerState.PointClamp, 
-                DepthStencilState.None, 
-                RasterizerState.CullNone
+                DepthStencilState.Default, 
+                RasterizerState.CullNone,
+                effect,
+                transformMatrix
             );
         }
 
-        private void End()
+        private static void SpriteBatchEnd()
         {
-            Assert.IsTrue(_isOpen);
-            _isOpen = false;
-            
             _spriteBatch.End();
         }
         
@@ -194,10 +184,26 @@ namespace FerretEngine.Graphics
         
         
         
-        internal void Render(GameTime gameTime)
+        
+        internal static void SetMaterial(Material material)
+        {
+            Assert.IsNotNull(CurrentRenderer);
+            if (material != _currentMaterial)
+            {
+                SpriteBatchEnd();
+                _currentMaterial = material;
+                SpriteBatchBegin(CurrentRenderer.Camera.TransformMatrix, CurrentRenderer.SortMode, material.Effect);
+            }
+        }
+        
+        
+        
+        
+        
+        internal static void Render(GameTime gameTime)
         {
             Scene scene = _game.Scene;
-            Color clearColor = Color.CornflowerBlue;
+            Color clearColor = _game.ClearColor;
             if (scene != null)
                 clearColor = scene.BackgroundColor;
 
@@ -205,6 +211,7 @@ namespace FerretEngine.Graphics
             
             GraphicsDevice.SetRenderTarget(_renderTarget);
             GraphicsDevice.Clear(clearColor);
+            
             
             // Make each Renderer render the scene in the corresponding order
             
@@ -223,71 +230,51 @@ namespace FerretEngine.Graphics
             
             GraphicsDevice.SetRenderTarget(null);
             GraphicsDevice.Clear(clearColor);
-            Begin(SpriteSortMode.Texture);
-
-            Rectangle rect = new Rectangle(0, 0, 
-                    GraphicsManager.PreferredBackBufferWidth,
-                    GraphicsManager.PreferredBackBufferHeight
-                );
+            
+            
+            Resolution.BeginDraw();
+           
+            
+            
+            
+            _spriteBatch.Begin(
+                SpriteSortMode.Texture, 
+                BlendState.AlphaBlend, 
+                SamplerState.PointClamp, 
+                DepthStencilState.Default,
+                RasterizerState.CullNone
+            );
+            
+            Rectangle rect = new Rectangle(0, 0, Resolution.WindowWidth, Resolution.WindowHeight);
             _spriteBatch.Draw(_renderTarget, rect, Color.White);
             
-            End();
+            _spriteBatch.End();
+            
         }
 
 
 
-        private void RenderList(Scene scene, float deltaTime, List<Renderer> renderers)
+        private static void RenderList(Scene scene, float deltaTime, List<Renderer> renderers)
         {
             foreach (Renderer renderer in renderers)
             {
                 CurrentRenderer = renderer;
-                
-                Begin(renderer.SortMode);
-                renderer.BeforeRender(scene);
-                
-                renderer.Render(scene, deltaTime);
 
+                _isOpen = true;
+                SpriteBatchBegin(CurrentRenderer.Camera.TransformMatrix, CurrentRenderer.SortMode, _currentMaterial?.Effect);
+                //SpriteBatchBegin(Resolution.TransformationMatrix, CurrentRenderer.SortMode, _currentMaterial?.Effect);
+                
+                renderer.BeforeRender(scene);
+                renderer.Render(scene, deltaTime);
                 renderer.AfterRender(scene);
-                End();
+                
+                SpriteBatchEnd();
+                _isOpen = false;
             }
 
             CurrentRenderer = null;
         }
 
-        
-        
-        
-        
-        
-        
-        /// <summary>
-        /// Loads a raw PNG image from the Content directory as a <see cref="Texture2D"/>.
-        /// </summary>
-        /// <param name="path"></param>
-        /// <returns></returns>
-        public static Texture2D LoadTexture(string path)
-        {
-            string texPath = Path.Combine(FeGame.ContentDirectory, path) + ".png";
-            var fileStream = new FileStream(texPath, FileMode.Open, FileAccess.Read);
-            Texture2D texture = Texture2D.FromStream(FeGame.Instance.GraphicsDevice, fileStream);
-            fileStream.Close();
-            return texture;
-        }
-        
-        /// <summary>
-        /// Loads a raw PNG image from the Content directory as a Sprite.
-        /// </summary>
-        /// <param name="path"></param>
-        /// <returns></returns>
-        public static Sprite LoadSprite(string path)
-        {
-            string texPath = Path.Combine(FeGame.ContentDirectory, path) + ".png";
-            var fileStream = new FileStream(texPath, FileMode.Open, FileAccess.Read);
-            Texture2D texture = Texture2D.FromStream(FeGame.Instance.GraphicsDevice, fileStream);
-            fileStream.Close();
-            return new Sprite(texture);
-        }
-        
         
     }
 }

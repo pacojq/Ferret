@@ -56,7 +56,12 @@ namespace FerretEngine.Core
 
 
 		
-		
+		/// <summary>
+		/// Update game logic.
+		/// Don't perform any rendering calls here.
+		/// This method will be skipped if the <see cref="Entity"/> is not active.
+		/// </summary>
+		/// <param name="deltaTime">The time in seconds since the last update</param>
 		public virtual void Update(float deltaTime)
 		{
 			// To be implemented by each individual component

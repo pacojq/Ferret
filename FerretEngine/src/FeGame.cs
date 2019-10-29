@@ -2,11 +2,12 @@
 using System.IO;
 using System.Reflection;
 using FerretEngine.Core;
+using FerretEngine.Coroutines;
 using FerretEngine.Graphics;
+using FerretEngine.GUI;
 using FerretEngine.Input;
 using FerretEngine.Logging;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 
 namespace FerretEngine
@@ -35,6 +36,8 @@ namespace FerretEngine
 		public static float DeltaTime { get; private set; }
 		
 		
+		public static Random Random { get; private set; }
+		
 		
 		public static string ContentDirectory
 		{
@@ -57,25 +60,23 @@ namespace FerretEngine
 		public static int Width { get; private set; }
 		public static int Height { get; private set; }
 
+		public Color ClearColor { get; set; }
 		
 		public Scene Scene { get; private set; }
 		
 		
 		
-		public FeGraphics Graphics { get; }
-
-		
 		
 		// Variables used for FPS count //
 		public int FPS { get; private set; }
+
 		private int _fpsCounter = 0;
 		private TimeSpan _counterElapsed = TimeSpan.Zero;
 
 
 
 
-
-	
+		private FeGUI _gui;
 		
 		
 		
@@ -89,14 +90,18 @@ namespace FerretEngine
 			Height = height;
 
 			FeLog.Initialize();
-			Graphics = new FeGraphics(this, width, height, windowWidth, windowHeight, fullscreen);
+			FeGraphics.Initialize(this, width, height, windowWidth, windowHeight, fullscreen);
 
 			Content.RootDirectory = @"Content";
 			
 			IsMouseVisible = true;
 			IsFixedTimeStep = false;
+
+			ClearColor = Color.CornflowerBlue;
 			
+			Random = new Random();
 			
+			_gui = new FeGUI();
 		}
 
 
@@ -106,7 +111,7 @@ namespace FerretEngine
 			if (Scene != null)
 				Scene.End();
 			
-			Graphics.OnSceneChange(scene);
+			FeGraphics.OnSceneChange(scene);
 			OnSceneChange(scene);
 			
 			Scene = scene;
@@ -131,7 +136,8 @@ namespace FerretEngine
         protected override void Initialize()
         {
 	        base.Initialize();
-	        
+
+	        FeCoroutines.Initialize();
 	        FeInput.Initialize();
 	        
 	        // TODO load default font
@@ -144,7 +150,9 @@ namespace FerretEngine
         /// </summary>
         protected override void LoadContent()
         {
-	        Graphics.LoadContent();
+	        FeGraphics.LoadContent();
+	        
+	        _gui.LoadContent();
 	        
             base.LoadContent();
             
@@ -175,6 +183,9 @@ namespace FerretEngine
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Update(GameTime gameTime)
         {
+	        DeltaTime = (float) gameTime.ElapsedGameTime.TotalSeconds;
+	        
+	        // Early Update
 	        FeInput.Update();
 	        
 	        if (ExitOnEscapeKeypress && FeInput.IsKeyPressed(Keys.Escape))
@@ -183,15 +194,19 @@ namespace FerretEngine
 		        return;
 	        }
 	        
-	        DeltaTime = (float) gameTime.ElapsedGameTime.TotalSeconds;
-
 	        
-	        // TODO UPDATE
+
+	        // TODO Game Update
 	        if (Scene != null)
 	        {
 		        Scene.Update(DeltaTime);
 	        }
+	        
+	        
+	        // Late update
+	        FeCoroutines.Update(DeltaTime);
 
+	        
 	        // MonoGame update
             base.Update(gameTime);
         }
@@ -205,8 +220,10 @@ namespace FerretEngine
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Draw(GameTime gameTime)
         {
-	        Graphics.Render(gameTime);
+	        FeGraphics.Render(gameTime);
             
+	        _gui.Draw();
+	        
             base.Draw(gameTime);
             
             //Frame counter

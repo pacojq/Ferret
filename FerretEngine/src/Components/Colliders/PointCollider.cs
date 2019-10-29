@@ -41,6 +41,11 @@ namespace FerretEngine.Components.Colliders
         {
             return CollisionCheck.BoxWithPoint(other, this);
         }
+        
+        internal override bool CollidesWith(CircleCollider other)
+        {
+            return CollisionCheck.CircleWithPoint(other, this);
+        }
 
         internal override bool CollidesWith(PointCollider other)
         {

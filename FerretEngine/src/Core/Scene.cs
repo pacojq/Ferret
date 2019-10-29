@@ -45,7 +45,7 @@ namespace FerretEngine.Core
             Space = new Space();
 
             BackgroundColor = Color.CornflowerBlue;
-            MainCamera = new Camera(FeGame.Width, FeGame.Height);
+            MainCamera = new Camera(Vector2.Zero);
         }
 
 
@@ -83,7 +83,9 @@ namespace FerretEngine.Core
                     continue;
                 e.Update(deltaTime);
             }
-            
+
+            MainCamera.Position += Vector2.One;
+            MainCamera.Update();
             Space.Update();
         }
 

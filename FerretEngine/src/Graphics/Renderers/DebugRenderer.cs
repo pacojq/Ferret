@@ -20,6 +20,6 @@ namespace FerretEngine.Graphics.Renderers
         {
             scene.Space.DebugDraw(deltaTime);
         }
-
+        
     }
 }

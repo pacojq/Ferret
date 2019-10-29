@@ -32,27 +32,16 @@ namespace FerretEngine.Graphics
             }
         }
         private static Color _color;
-
-
-        private static FeGraphics _graphics;
         
         
-        internal static void Initialize(FeGraphics graphics)
+        
+
+        
+        
+        public static void SetMaterial(Material material)
         {
-            _graphics = graphics;
+            FeGraphics.SetMaterial(material);
         }
-
-        
-        
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private static Vector2 GetRenderPos(Vector2 pos)
-        {
-            return FeMath.Floor(_graphics.CurrentRenderer.Camera.GetRelativePosition(pos));
-        }
-
-
-        
-        
         
         
         
@@ -65,13 +54,13 @@ namespace FerretEngine.Graphics
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static void Sprite(Sprite sprite, Vector2 position)
         {
-            Assert.IsTrue(_graphics.IsRendering);
+            Assert.IsTrue(FeGraphics.IsRendering);
             if (!WillRender(sprite, position, Vector2.One))
                 return;
             
-            _graphics.SpriteBatch.Draw(
+            FeGraphics.SpriteBatch.Draw(
                     sprite.Texture,
-                    GetRenderPos(position),
+                    position,
                     sprite.ClipRect,
                     Color.White
                 );
@@ -92,13 +81,13 @@ namespace FerretEngine.Graphics
         public static void SpriteExt(Sprite sprite, Vector2 position, Color color, float rotation,
                 Vector2 origin, Vector2 scale, SpriteEffects effects, float layerDepth)
         {
-            Assert.IsTrue(_graphics.IsRendering);
+            Assert.IsTrue(FeGraphics.IsRendering);
             if (!WillRender(sprite, position, scale))
                 return;
             
-            _graphics.SpriteBatch.Draw(
+            FeGraphics.SpriteBatch.Draw(
                     sprite.Texture,
-                    GetRenderPos(position),
+                    position,
                     sprite.ClipRect,
                     color,
                     FeMath.DegToRad(rotation),
@@ -113,7 +102,10 @@ namespace FerretEngine.Graphics
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private static bool WillRender(Sprite sprite, Vector2 worldPos, Vector2 scale)
         {
-            return _graphics.CurrentRenderer.Camera
+            return true;
+            
+            /* TODO culling
+            return FeGraphics.CurrentRenderer.Camera
                 .GetRenderRect()
                 .Intersects(
                     new Rectangle(
@@ -122,6 +114,7 @@ namespace FerretEngine.Graphics
                         (int) (sprite.Width * scale.X), 
                         (int) (sprite.Height * scale.Y))
                  );
+            */
         }
         
         
@@ -140,12 +133,12 @@ namespace FerretEngine.Graphics
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static void Line(Vector2 p0, Vector2 p1, int width = 1)
         {
-            Assert.IsTrue(_graphics.IsRendering);
+            Assert.IsTrue(FeGraphics.IsRendering);
             
             // Draw a scaled pixel
             SpriteExt(
                     FeGraphics.Pixel, 
-                    GetRenderPos(p0),
+                    FeMath.Floor(p0),
                     _color,
                     FeMath.Direction(p0, p1), 
                     Vector2.Zero,
@@ -180,7 +173,7 @@ namespace FerretEngine.Graphics
         
         public static void RectExt(Rectangle rect, Color color, bool outline)
         {
-            Assert.IsTrue(_graphics.IsRendering);
+            Assert.IsTrue(FeGraphics.IsRendering);
             if (outline) RectOutline(rect, color, 1);
             else RectFilled(rect, color);
         }
@@ -190,27 +183,27 @@ namespace FerretEngine.Graphics
         {
             Sprite px = FeGraphics.Pixel;
             
-            Vector2 rel = GetRenderPos(new Vector2(rect.X, rect.Y));
+            Vector2 rel = FeMath.Floor(new Vector2(rect.X, rect.Y));
             rect.X = (int) rel.X;
             rect.Y = (int) rel.Y;
             
-            _graphics.SpriteBatch.Draw(px.Texture, rect, px.ClipRect, _color);
+            FeGraphics.SpriteBatch.Draw(px.Texture, rect, px.ClipRect, _color);
         }
         
         private static void RectOutline(Rectangle rect, Color color, int border)
         {
             Sprite px = FeGraphics.Pixel;
-            Vector2 rel = GetRenderPos(new Vector2(rect.X, rect.Y));
+            Vector2 rel = FeMath.Floor(new Vector2(rect.X, rect.Y));
             
             var top = new Rectangle((int)rel.X, (int)rel.Y, rect.Width, border);
             var bot = new Rectangle((int)rel.X, (int)rel.Y + rect.Height - border, rect.Width, border);
             var right = new Rectangle((int)rel.X + rect.Width - border, (int)rel.Y, border, rect.Height);
             var left = new Rectangle((int)rel.X, (int)rel.Y, border, rect.Height);
             
-            _graphics.SpriteBatch.Draw(px.Texture, top, px.ClipRect, color);
-            _graphics.SpriteBatch.Draw(px.Texture, bot, px.ClipRect, color);
-            _graphics.SpriteBatch.Draw(px.Texture, right, px.ClipRect, color);
-            _graphics.SpriteBatch.Draw(px.Texture, left, px.ClipRect, color);
+            FeGraphics.SpriteBatch.Draw(px.Texture, top, px.ClipRect, color);
+            FeGraphics.SpriteBatch.Draw(px.Texture, bot, px.ClipRect, color);
+            FeGraphics.SpriteBatch.Draw(px.Texture, right, px.ClipRect, color);
+            FeGraphics.SpriteBatch.Draw(px.Texture, left, px.ClipRect, color);
         }
         
         
@@ -230,15 +223,14 @@ namespace FerretEngine.Graphics
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static void TextExt(string text, Vector2 position, Color color)
         {
-            Assert.IsTrue(_graphics.IsRendering);
-            _graphics.SpriteBatch.DrawString(
+            Assert.IsTrue(FeGraphics.IsRendering);
+            FeGraphics.SpriteBatch.DrawString(
                     Font,
                     text,
-                    GetRenderPos(position),
+                    position,
                     color
                 );
         }
-        
         
     }
 }
