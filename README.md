@@ -12,11 +12,11 @@ Simple game engine developed in C# with FNA, started as a project for the [devto
 
 Ferret is still in *very* early stages of development. Some of the already existent functionality can be listed as follows:
 
-- Scene-based engine
-- Entity-Component structure
+- Scene-Entity-Component structure
 - Simple collision system
 - Coroutine handling
 - Particle system
+- TTF font support
 - Full control of the game for the programmer
 
 
