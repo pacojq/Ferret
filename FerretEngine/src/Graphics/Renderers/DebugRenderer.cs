@@ -18,6 +18,7 @@ namespace FerretEngine.Graphics.Renderers
 
         public override void Render(Scene scene, float deltaTime)
         {
+            if (FeGame.Instance.PhysicsDebugDraw)
             scene.Space.DebugDraw(deltaTime);
         }
         

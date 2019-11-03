@@ -31,7 +31,7 @@ namespace FerretEngine.Graphics
         }
         
         public Sprite(Texture2D texture, Rectangle clipRect) 
-            : this(texture, new Rectangle(0, 0, texture.Width, texture.Height), Vector2.Zero)
+            : this(texture, clipRect, Vector2.Zero)
         {
         }
         

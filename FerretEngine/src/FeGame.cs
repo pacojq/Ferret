@@ -67,6 +67,11 @@ namespace FerretEngine
 		
 		
 		
+		// Debug //
+		
+		public bool PhysicsDebugDraw { get; protected set; }
+		
+		
 		
 		// Variables used for FPS count //
 		public int FPS { get; private set; }
