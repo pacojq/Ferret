@@ -98,10 +98,11 @@ namespace FerretEngine.Graphics
 
 
 
-        
+        /*
         public Vector2 WorldToScreen(Vector2 entityPosition)
         {
             return Vector2.Transform(entityPosition, this.TransformMatrix);
         }
+        */
     }
 }

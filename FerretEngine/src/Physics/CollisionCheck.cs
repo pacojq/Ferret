@@ -47,7 +47,16 @@ namespace FerretEngine.Physics
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool BoxWithCircle(BoxCollider collider, CircleCollider other)
         {
-            throw new NotImplementedException();
+            float closestX = FeMath.Clamp(other.Position.X, collider.Left, collider.Right);
+            float closestY = FeMath.Clamp(other.Position.Y, collider.Top, collider.Bottom);
+
+            // Calculate the distance between the circle's center and this closest point
+            float distanceX = other.Position.X - closestX;
+            float distanceY = other.Position.Y - closestY;
+
+            // If the distance is less than the circle's radius, an intersection occurs
+            float distanceSquared = (distanceX * distanceX) + (distanceY * distanceY);
+            return distanceSquared < (other.Radius * other.Radius);
         }
         
         
@@ -66,7 +75,7 @@ namespace FerretEngine.Physics
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool CircleWithPoint(CircleCollider collider, PointCollider other)
         {
-            throw new NotImplementedException();
+            return FeMath.Distance(collider.Position, other.Position) <= collider.Radius;
         }
         
         

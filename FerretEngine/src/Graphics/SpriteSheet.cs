@@ -1,4 +1,6 @@
-﻿using Microsoft.Xna.Framework;
+﻿using FerretEngine.Logging;
+using FerretEngine.Utils;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
 namespace FerretEngine.Graphics
@@ -51,7 +53,8 @@ namespace FerretEngine.Graphics
         private readonly int _textureWidth;
         private readonly int _textureHeight;
 
-        
+        private readonly int _spritesWide;
+        private readonly int _spritesHigh;
         
         
         public SpriteSheet(Texture2D texture, int spriteWidth, int spriteHeight, 
@@ -67,6 +70,11 @@ namespace FerretEngine.Graphics
             
             _textureWidth = texture.Width;
             _textureHeight = texture.Height;
+            
+            _spritesWide = (_textureWidth - beginX) / (spriteWidth + offsetX) + 1;
+            _spritesHigh = (_textureHeight - beginY) / (spriteHeight + offsetY) + 1;
+            
+            FeLog.Warning($"SpriteSheet created [{_spritesWide}x{_spritesHigh}]");
         }
         
         
@@ -100,6 +108,20 @@ namespace FerretEngine.Graphics
             int y = BeginY + (SpriteHeight + OffsetY) * j;
             
             return new Sprite(Texture, new Rectangle(x, y, SpriteWidth, SpriteHeight));
+        }
+        
+        
+        /// <summary>
+        /// Returns the sprite in the [index] position in the
+        /// SpriteSheet.
+        /// </summary>
+        /// <returns></returns>
+        public Sprite GetSprite(int index)
+        {
+            int sprX = index % _spritesWide;
+            int sprY = index / _spritesWide;
+
+            return GetSprite(sprX, sprY);
         }
     }
 }

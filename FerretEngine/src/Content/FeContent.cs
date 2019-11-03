@@ -3,6 +3,7 @@ using System.IO;
 using System.Linq;
 using FerretEngine.Content.Dto;
 using FerretEngine.Graphics;
+using FerretEngine.Graphics.Fonts;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Newtonsoft.Json;
@@ -60,17 +61,28 @@ namespace FerretEngine.Content
             }
             return bytes;
         }
+
+
+
+
+
+
         
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="path">Path to a TTF font</param>
+        /// <param name="size">Size of the font</param>
+        public static Font LoadFont(string path, int size)
+        {
+            // TODO try/catch FileNotFoundException and look for the font in the system
+            
+            path = CheckFilename(path, ".ttf");
+            FontLibrary lib = new FontLibrary(File.OpenRead(path), FeGame.Instance.GraphicsDevice);
+            Font fnt = lib.CreateFont(size);
+            //fnt.PreheatCache("asdfghjklñqwertyuiopzxcvbnm");
+            return fnt;
+        }
         
         
         /// <summary>

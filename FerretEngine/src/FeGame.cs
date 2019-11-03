@@ -3,6 +3,7 @@ using System.IO;
 using System.Reflection;
 using FerretEngine.Core;
 using FerretEngine.Coroutines;
+using FerretEngine.Debug;
 using FerretEngine.Graphics;
 using FerretEngine.GUI;
 using FerretEngine.Input;
@@ -66,6 +67,11 @@ namespace FerretEngine
 		
 		
 		
+		// Debug //
+		
+		public bool PhysicsDebugDraw { get; protected set; }
+		
+		
 		
 		// Variables used for FPS count //
 		public int FPS { get; private set; }
@@ -77,8 +83,8 @@ namespace FerretEngine
 
 
 		private FeGUI _gui;
-		
-		
+
+		private readonly DebugLayout _debugLayout;
 		
 
 		public FeGame(int width, int height, int windowWidth, int windowHeight, string windowTitle, bool fullscreen)
@@ -102,6 +108,7 @@ namespace FerretEngine
 			Random = new Random();
 			
 			_gui = new FeGUI();
+			_debugLayout = new DebugLayout();
 		}
 
 
@@ -153,6 +160,7 @@ namespace FerretEngine
 	        FeGraphics.LoadContent();
 	        
 	        _gui.LoadContent();
+	        _debugLayout.LoadContent();
 	        
             base.LoadContent();
             
@@ -194,6 +202,8 @@ namespace FerretEngine
 		        return;
 	        }
 	        
+	        _debugLayout.Update();
+	        
 	        
 
 	        // TODO Game Update
@@ -223,6 +233,7 @@ namespace FerretEngine
 	        FeGraphics.Render(gameTime);
             
 	        _gui.Draw();
+	        _debugLayout.Draw();
 	        
             base.Draw(gameTime);
             

@@ -30,8 +30,7 @@ namespace FerretEngine.Components.Colliders
         internal override void DebugDraw(float deltaTime)
         {
             FeDraw.Color = Color.Red;
-            Vector2 pos = FeGame.Instance.Scene.MainCamera.WorldToScreen(new Vector2(Left, Top));
-            FeDraw.Rect(pos.X, pos.Y, Width, Height, true);
+            FeDraw.Rect(Left, Top, Width, Height, true);
             FeDraw.Color = Color.White;
         }
 
