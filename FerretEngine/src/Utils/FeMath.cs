@@ -142,11 +142,29 @@ namespace FerretEngine.Utils
             return (float) Math.Floor(f);
         }
         
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static int FloorToInt(float f)
+        {
+            return (int) Floor(f);
+        }
+        
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Vector2 Floor(Vector2 vec)
         {
             return new Vector2(FeMath.Floor(vec.X), FeMath.Floor(vec.Y));
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static float Ceil(float f)
+        {
+            return (float) Math.Ceiling(f);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static int CeilToInt(float f)
+        {
+            return (int) Ceil(f);
         }
         
         
@@ -212,5 +230,7 @@ namespace FerretEngine.Utils
                 Lerp(a.A, b.A, percent)
             );
         }
+
+        
     }
 }

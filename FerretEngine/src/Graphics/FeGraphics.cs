@@ -2,7 +2,9 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Runtime.CompilerServices;
+using FerretEngine.Content;
 using FerretEngine.Core;
+using FerretEngine.Graphics.Fonts;
 using FerretEngine.Graphics.Renderers;
 using FerretEngine.Utils;
 using Microsoft.Xna.Framework;
@@ -22,7 +24,7 @@ namespace FerretEngine.Graphics
         /// <summary>
         /// Default font for the Ferret Engine.
         /// </summary>
-        public static SpriteFont DefaultFont { get; private set; }
+        public static Font DefaultFont { get; private set; }
 
         
         
@@ -103,7 +105,7 @@ namespace FerretEngine.Graphics
             _currentMaterial = Material.Default;
             
             Pixel = Sprite.PlainColor(1, 1, Color.White);
-            DefaultFont = _game.Content.Load<SpriteFont>(@"Ferret\FerretDefault");
+            DefaultFont = FeContent.LoadFont("Ferret/Fonts/MatchupPro.ttf", 12);
 
             FeDraw.Font = DefaultFont;
             FeDraw.Color = Color.White;

@@ -11,7 +11,7 @@ namespace FerretEngine.Sandbox
     {
         public TestScene()
         {
-            BackgroundColor = Color.AliceBlue;
+            //BackgroundColor = Color.AliceBlue;
 
             /*
             Random rand = new Random();

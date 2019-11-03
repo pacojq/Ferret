@@ -55,10 +55,14 @@ namespace FerretEngine.Sandbox.Player
         {
             base.DrawGUI(deltaTime);
 
-            Vector2 rel = this.Entity.Scene.MainCamera.WorldToScreen(this.Entity.Position);
-
-            FeDraw.Text("This is GUI text", rel + new Vector2(0, 24));
-            FeDraw.Text("Hi there :D", Vector2.Zero);
+            FeDraw.SetHAlign(FeDraw.HAlign.Left);
+            FeDraw.SetVAlign(FeDraw.VAlign.Top);
+            FeDraw.Text("This is GUI text", new Vector2(-FeGame.Width/2f, -FeGame.Height/2f));
+            
+            
+            FeDraw.SetHAlign(FeDraw.HAlign.Centre);
+            FeDraw.SetVAlign(FeDraw.VAlign.Centre);
+            FeDraw.Text("Hi there :D", new Vector2(0, 24));
         }
     }
 }

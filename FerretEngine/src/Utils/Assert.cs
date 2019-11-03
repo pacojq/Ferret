@@ -8,7 +8,7 @@ namespace FerretEngine.Utils
 		[DebuggerHidden]
 		public static void Fail()
 		{
-			Debug.Assert(false);
+			System.Diagnostics.Debug.Assert(false);
 			Debugger.Break();
 		}
 		
@@ -16,7 +16,7 @@ namespace FerretEngine.Utils
 		[DebuggerHidden]
 		public static void Fail(string message, params object[] args)
 		{
-			Debug.Assert(false, string.Format(message, args));
+			System.Diagnostics.Debug.Assert(false, string.Format(message, args));
 			Debugger.Break();
 		}
 		

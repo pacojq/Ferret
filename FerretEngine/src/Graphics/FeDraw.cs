@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Runtime.CompilerServices;
+using FerretEngine.Graphics.Fonts;
 using FerretEngine.Utils;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -8,18 +9,34 @@ namespace FerretEngine.Graphics
 {
     public static class FeDraw
     {
+        /// <summary>
+        /// The types of horizontal alignment a text can have. 
+        /// </summary>
+        public enum HAlign { Left, Centre, Right }
         
-        public static SpriteFont Font
+        /// <summary>
+        /// The types of vertical alignment a text can have. 
+        /// </summary>
+        public enum VAlign { Top, Centre, Bottom }
+        
+        
+        
+        
+        public static Font Font
         {
             get => _font;
             set
             {
                 if (value == null)
                     throw new ArgumentNullException();
+                
+                if (_font != null)
+                    _font.Dispose();
+                
                 _font = value;
             }
         }
-        private static SpriteFont _font;
+        private static Font _font;
 
         public static Color Color
         {
@@ -32,20 +49,36 @@ namespace FerretEngine.Graphics
             }
         }
         private static Color _color;
-        
-        
-        
 
+
+        private static HAlign _hAlign;
+        private static VAlign _vAlign;
+        
+        
+        
+        
+        
         
         
         public static void SetMaterial(Material material)
         {
             FeGraphics.SetMaterial(material);
         }
+
+
+        public static void SetHAlign(HAlign align)
+        {
+            _hAlign = align;
+        }
+
+        public static void SetVAlign(VAlign align)
+        {
+            _vAlign = align;
+        }
         
         
-        
-        
+
+
         /// <summary>
         /// Draw a sprite on screen.
         /// </summary>
@@ -224,12 +257,24 @@ namespace FerretEngine.Graphics
         public static void TextExt(string text, Vector2 position, Color color)
         {
             Assert.IsTrue(FeGraphics.IsRendering);
-            FeGraphics.SpriteBatch.DrawString(
-                    Font,
-                    text,
-                    position,
-                    color
-                );
+            
+            //SetMaterial(Material.Default);
+            
+            Text tx = Font.MakeText(text);
+            
+            Vector2 offset = Vector2.Zero;
+            
+            if (_hAlign == HAlign.Centre)
+                offset.X = -tx.Width / 2f;
+            else if (_hAlign == HAlign.Right)
+                offset.X = -tx.Width;
+            
+            if (_vAlign == VAlign.Centre)
+                offset.Y = -tx.Height / 2f;
+            else if (_vAlign == VAlign.Bottom)
+                offset.Y = -tx.Height;
+            
+            tx.Draw(FeGraphics.SpriteBatch, position + offset, color);
         }
         
     }

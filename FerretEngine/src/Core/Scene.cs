@@ -84,7 +84,6 @@ namespace FerretEngine.Core
                 e.Update(deltaTime);
             }
 
-            MainCamera.Position += Vector2.One;
             MainCamera.Update();
             Space.Update();
         }

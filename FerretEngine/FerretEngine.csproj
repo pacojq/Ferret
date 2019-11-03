@@ -60,6 +60,9 @@
     <Reference Include="NLog, Version=4.0.0.0, Culture=neutral, PublicKeyToken=5120e14c03d0593c">
       <HintPath>..\vendor\NLog\NLog.dll</HintPath>
     </Reference>
+    <Reference Include="SharpFont, Version=3.1.0.200, Culture=neutral, PublicKeyToken=48add4c483071cdf">
+      <HintPath>..\vendor\SharpFont\SharpFont.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
@@ -84,6 +87,7 @@
     <Compile Include="src\Components\Colliders\CircleCollider.cs" />
     <Compile Include="src\Components\Colliders\PointCollider.cs" />
     <Compile Include="src\Components\SpriteRenderer.cs" />
+    <Compile Include="src\Components\TileMapRenderer.cs" />
     <Compile Include="src\Content\Dto\SpriteDto.cs" />
     <Compile Include="src\Content\Dto\SpriteSheetDto.cs" />
     <Compile Include="src\Content\FeContent.cs" />
@@ -92,10 +96,17 @@
     <Compile Include="src\Core\Scene.cs" />
     <Compile Include="src\Coroutines\CoroutineHandle.cs" />
     <Compile Include="src\Coroutines\FeCoroutines.cs" />
+    <Compile Include="src\Debug\DebugLayout.cs" />
     <Compile Include="src\FeGame.cs" />
     <Compile Include="src\Graphics\Camera.cs" />
     <Compile Include="src\Graphics\FeDraw.cs" />
     <Compile Include="src\Graphics\FeGraphics.cs" />
+    <Compile Include="src\Graphics\Fonts\Font.cs" />
+    <Compile Include="src\Graphics\Fonts\FontLibrary.cs" />
+    <Compile Include="src\Graphics\Fonts\Glyph.cs" />
+    <Compile Include="src\Graphics\Fonts\GlyphInfo.cs" />
+    <Compile Include="src\Graphics\Fonts\GlyphPage.cs" />
+    <Compile Include="src\Graphics\Fonts\Text.cs" />
     <Compile Include="src\Graphics\Material.cs" />
     <Compile Include="src\Graphics\Renderers\DebugRenderer.cs" />
     <Compile Include="src\Graphics\Renderers\DefaultRenderer.cs" />
@@ -105,6 +116,7 @@
     <Compile Include="src\Graphics\ResolutionManager.cs" />
     <Compile Include="src\Graphics\Sprite.cs" />
     <Compile Include="src\Graphics\SpriteSheet.cs" />
+    <Compile Include="src\Graphics\TileMap.cs" />
     <Compile Include="src\GUI\FeGUI.cs" />
     <Compile Include="src\Input\GamepadInput.cs" />
     <Compile Include="src\Input\KeyboardInput.cs" />
@@ -147,6 +159,21 @@
     </Content>
   </ItemGroup>
   <!-- 
+    - - - - - - - - - - - freetype6 - - - - - - - - - - - 
+  -->
+  <ItemGroup Condition=" '$(Platform)' == 'x86' ">
+    <Content Include="..\vendor\freetype\x86\*.dll">
+      <Link>%(RecursiveDir)%(FileName)%(Extension)</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+  <ItemGroup Condition=" '$(Platform)' == 'x64' ">
+    <Content Include="..\vendor\freetype\x64\*.dll">
+      <Link>%(RecursiveDir)%(FileName)%(Extension)</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+  <!-- 
     - - - - - - - - - - - - NLog - - - - - - - - - - - - 
   -->
   <ItemGroup>
@@ -154,6 +181,7 @@
       <Link>%(FileName)%(Extension)</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="src\Graphics\Fonts\README.txt" />
   </ItemGroup>
   <!-- 
     - - - - - - - - - - - - Content - - - - - - - - - - - - 
