@@ -11,7 +11,7 @@ namespace FerretEngine.Graphics.Renderers
 
         public DebugRenderer() : base(RenderSurface.Default, SpriteSortMode.Deferred)
         {
-            BlendState = BlendState.AlphaBlend;
+            BlendState = BlendState.NonPremultiplied; // BlendState.AlphaBlend;
             SamplerState = SamplerState.LinearClamp;
         }
         
@@ -19,7 +19,7 @@ namespace FerretEngine.Graphics.Renderers
         public override void Render(Scene scene, float deltaTime)
         {
             if (FeGame.Instance.PhysicsDebugDraw)
-            scene.Space.DebugDraw(deltaTime);
+                scene.Space.DebugDraw(deltaTime);
         }
         
     }

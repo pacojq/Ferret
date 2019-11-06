@@ -11,7 +11,7 @@ namespace FerretEngine.Graphics.Renderers
 
         public DefaultRenderer() : base(RenderSurface.Default, SpriteSortMode.Deferred)
         {
-            BlendState = BlendState.AlphaBlend;
+            BlendState = BlendState.NonPremultiplied;//BlendState.AlphaBlend, 
             SamplerState = SamplerState.LinearClamp;
         }
         

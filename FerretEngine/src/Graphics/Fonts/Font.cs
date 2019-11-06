@@ -56,7 +56,7 @@ namespace FerretEngine.Graphics.Fonts
         
         
         
-        public Font(int size, byte[] fontBytes, GraphicsDevice graphicsDevice)
+        internal Font(int size, byte[] fontBytes, GraphicsDevice graphicsDevice)
         {
             Size = size;
             this.fontBytes = fontBytes;

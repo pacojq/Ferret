@@ -55,6 +55,8 @@ namespace FerretEngine.Sandbox.Player
         {
             base.DrawGUI(deltaTime);
 
+            FeDraw.Rect(0, 0, FeGame.Width, FeGame.Height, true);
+            
             FeDraw.SetHAlign(FeDraw.HAlign.Left);
             FeDraw.SetVAlign(FeDraw.VAlign.Top);
             FeDraw.Text("This is GUI text", new Vector2(-FeGame.Width/2f, -FeGame.Height/2f));

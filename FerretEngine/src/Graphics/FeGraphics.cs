@@ -167,7 +167,7 @@ namespace FerretEngine.Graphics
         {
             _spriteBatch.Begin(
                 sortMode, 
-                BlendState.AlphaBlend, 
+                BlendState.NonPremultiplied,//BlendState.AlphaBlend, 
                 SamplerState.PointClamp, 
                 DepthStencilState.Default, 
                 RasterizerState.CullNone,
@@ -241,7 +241,7 @@ namespace FerretEngine.Graphics
             
             _spriteBatch.Begin(
                 SpriteSortMode.Texture, 
-                BlendState.AlphaBlend, 
+                BlendState.NonPremultiplied,//BlendState.AlphaBlend, 
                 SamplerState.PointClamp, 
                 DepthStencilState.Default,
                 RasterizerState.CullNone

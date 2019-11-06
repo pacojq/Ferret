@@ -58,10 +58,11 @@ namespace FerretEngine.Graphics.Fonts
                 {
                     var src = by * width + bx;
                     var dest = (by + y) * TextureSize + bx + x;
-
                     float col = 255;
-                    if (bitmap[src] < 32) // This if statement fixes some weird low-alpha background rendering
-                        col = 0;
+                    
+                    // If we are not using BlendState.NonPremultiplied, weird stuff happen
+                    //if (bitmap[src] < 32) // This if statement fixes some weird low-alpha background rendering
+                    //    col = 0;
                     
                     colors[dest] = new Color(col, col, col, bitmap[src]);
                 }

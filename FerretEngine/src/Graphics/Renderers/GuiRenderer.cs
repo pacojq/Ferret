@@ -12,9 +12,11 @@ namespace FerretEngine.Graphics.Renderers
 
         public GuiRenderer() : base(RenderSurface.Gui, SpriteSortMode.Deferred)
         {
-            BlendState = BlendState.AlphaBlend;
+            BlendState = BlendState.NonPremultiplied;//BlendState.AlphaBlend;
             SamplerState = SamplerState.LinearClamp;
-            Camera = new Camera(new Vector2(FeGraphics.Resolution.VirtualWidth/2f, FeGraphics.Resolution.VirtualHeight/2f));
+
+            Vector2 pos = new Vector2(FeGame.Width/2f, FeGame.Height/2f);
+            Camera = new Camera(pos);
         }
         
 

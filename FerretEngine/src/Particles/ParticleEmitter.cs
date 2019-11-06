@@ -74,6 +74,11 @@ namespace FerretEngine.Particles
             _system = new ParticleSystem(particleType, maxParticles);
         }
 
+        /// <summary>
+        /// Creates a <see cref="ParticleEmitter"/> with a maximum
+        /// particle capacity of 128 particles.
+        /// </summary>
+        /// <param name="particleType"></param>
         public ParticleEmitter(ParticleType particleType)
             : this(particleType, 128)
         {
