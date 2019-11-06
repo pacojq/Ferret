@@ -36,7 +36,7 @@ namespace FerretEngine.Graphics
         public Camera(Vector2 position)
         {
             Active = true;
-            position = position;
+            _position = position;
             Zoom = 1;
         }
         

@@ -40,7 +40,7 @@ namespace FerretEngine.Components
                 return;
 
             FeDraw.SetMaterial(Material);
-            FeDraw.SpriteExt(Sprite, Position, BlendColor, Rotation, Sprite.Origin, Scale, Flip, 0);
+            FeDraw.SpriteExt(Sprite, Position, BlendColor, Rotation, Scale, Flip, 0);
         }
     }
 }

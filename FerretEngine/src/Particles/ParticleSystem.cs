@@ -114,7 +114,6 @@ namespace FerretEngine.Particles
                     part.Position,
                     part.Color,
                     part.Angle,
-                    ParticleType.Sprite.Origin,
                     Vector2.One * part.Size,
                     SpriteEffects.None,
                     1

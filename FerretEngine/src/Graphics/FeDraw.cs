@@ -29,10 +29,6 @@ namespace FerretEngine.Graphics
             {
                 if (value == null)
                     throw new ArgumentNullException();
-                
-                if (_font != null)
-                    _font.Dispose();
-                
                 _font = value;
             }
         }
@@ -93,7 +89,7 @@ namespace FerretEngine.Graphics
             
             FeGraphics.SpriteBatch.Draw(
                     sprite.Texture,
-                    position,
+                    position - sprite.Origin,
                     sprite.ClipRect,
                     Color.White
                 );
@@ -112,7 +108,7 @@ namespace FerretEngine.Graphics
         /// <param name="layerDepth"></param>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static void SpriteExt(Sprite sprite, Vector2 position, Color color, float rotation,
-                Vector2 origin, Vector2 scale, SpriteEffects effects, float layerDepth)
+                Vector2 scale, SpriteEffects effects, float layerDepth)
         {
             Assert.IsTrue(FeGraphics.IsRendering);
             if (!WillRender(sprite, position, scale))
@@ -124,7 +120,7 @@ namespace FerretEngine.Graphics
                     sprite.ClipRect,
                     color,
                     FeMath.DegToRad(rotation),
-                    origin,
+                    sprite.Origin,
                     scale,
                     effects,
                     layerDepth
@@ -173,8 +169,7 @@ namespace FerretEngine.Graphics
                     FeGraphics.Pixel, 
                     FeMath.Floor(p0),
                     _color,
-                    FeMath.Direction(p0, p1), 
-                    Vector2.Zero,
+                    FeMath.Direction(p0, p1),
                     new Vector2(FeMath.Distance(p0, p1), width), 
                     SpriteEffects.None, 
                     0
