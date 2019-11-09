@@ -82,6 +82,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="src\Components\AnimationComponent.cs" />
     <Compile Include="src\Components\Collider.cs" />
     <Compile Include="src\Components\Colliders\BoxCollider.cs" />
     <Compile Include="src\Components\Colliders\CircleCollider.cs" />
@@ -98,6 +99,8 @@
     <Compile Include="src\Coroutines\FeCoroutines.cs" />
     <Compile Include="src\Debug\DebugLayout.cs" />
     <Compile Include="src\FeGame.cs" />
+    <Compile Include="src\Graphics\Animation.cs" />
+    <Compile Include="src\Graphics\AnimationController.cs" />
     <Compile Include="src\Graphics\Camera.cs" />
     <Compile Include="src\Graphics\FeDraw.cs" />
     <Compile Include="src\Graphics\FeGraphics.cs" />

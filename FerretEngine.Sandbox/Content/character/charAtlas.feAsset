@@ -15,7 +15,7 @@
       "Y": 0,
       "Width": 24,
       "Height": 24,
-      "OriginX": 0,
+      "OriginX": 12,
       "OriginY": 0,
       "FileName": "sprites/char02.png"
     },
@@ -24,7 +24,7 @@
       "Y": 0,
       "Width": 24,
       "Height": 24,
-      "OriginX": 0,
+      "OriginX": 12,
       "OriginY": 0,
       "FileName": "sprites/char03.png"
     },
@@ -33,7 +33,7 @@
       "Y": 0,
       "Width": 24,
       "Height": 24,
-      "OriginX": 0,
+      "OriginX": 12,
       "OriginY": 0,
       "FileName": "sprites/char04.png"
     }

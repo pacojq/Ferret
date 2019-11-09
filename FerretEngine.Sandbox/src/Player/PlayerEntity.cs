@@ -14,14 +14,23 @@ namespace FerretEngine.Sandbox.Player
     {
         public PlayerEntity()
         {
-            Sprite sprite = FeContent.LoadSpriteSheet("character/charAtlas.feAsset")[0];
-            SpriteRenderer renderer = new SpriteRenderer(sprite);
+            Sprite[] sprites = FeContent.LoadSpriteSheet("character/charAtlas.feAsset");
             
+            Animation anim = new Animation(sprites, "walk", .1f);
+            AnimationController contr = new AnimationController(anim);
+            
+            SpriteRenderer renderer = new SpriteRenderer(sprites[0]);
             renderer.Material = new Material(SandboxGame.TestEffect);
             
-            Bind(renderer);
+            AnimationComponent animComponent = new AnimationComponent(renderer, contr);
 
-            BoxCollider col = new BoxCollider(sprite.Width, sprite.Height, Vector2.Zero);
+            Bind(renderer);
+            Bind(animComponent);
+            
+            
+            
+
+            BoxCollider col = new BoxCollider(sprites[0].Width, sprites[0].Height, Vector2.Zero);
             Bind(col);
 
             col.OnCollisionEnter += o => FeLog.Debug($"PLAYER ENTER: {this}");
