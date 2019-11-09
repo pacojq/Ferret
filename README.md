@@ -5,14 +5,16 @@
 
 # Ferret Engine
 
-Simple game engine developed in C# with FNA, started as a project for the [devtober](https://twitter.com/devtober) challenge.
+Ferret is a simple game engine developed in C# with [FNA](https://github.com/FNA-XNA/FNA), 
+started as a project for the [devtober](https://twitter.com/devtober) challenge.
 
 
 ## Features
 
-Ferret is still in *very* early stages of development. Some of the already existent functionality can be listed as follows:
+Ferret is still in *very* early stages of development. Some of the already existent 
+functionality can be listed as follows:
 
-- Scene-Entity-Component structure
+- Composable Game Object structure
 - Simple collision system
 - Coroutine handling
 - Particle system
@@ -21,6 +23,9 @@ Ferret is still in *very* early stages of development. Some of the already exist
 
 
 ## Getting Started
+
+You can pull the Ferret repository with: `git clone --recursive https://github.com/pacojq/Ferret.git`.
+Make sure you're using `--recursive`!
 
 If you are using Ferret as a **git submodule**, execute: `git submodule update --init --recursive`.
 
