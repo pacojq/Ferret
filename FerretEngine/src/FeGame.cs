@@ -209,7 +209,9 @@ namespace FerretEngine
 	        // TODO Game Update
 	        if (Scene != null)
 	        {
+		        Scene.BeforeUpdate();
 		        Scene.Update(DeltaTime);
+		        Scene.AfterUpdate();
 	        }
 	        
 	        

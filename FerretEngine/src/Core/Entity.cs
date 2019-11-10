@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using FerretEngine.Components;
 using FerretEngine.Graphics;
 using FerretEngine.Logging;
@@ -120,16 +121,31 @@ namespace FerretEngine.Core
 
         /// <summary>
         /// Update game logic.
-        /// Don't perform any rendering calls here.
-        /// This method will be skipped if the entity is not <see cref="IsActive"/>
+        /// This method will be skipped if the entity is not <see cref="IsActive"/>.
+        /// 
+        /// Rendering calls should never be called from this method.
         /// <param name="deltaTime">The time in seconds since the last update</param>
         /// </summary>
-        internal virtual void Update(float deltaTime)
+        internal void Update(float deltaTime)
         {
             foreach (Component c in Components)
             {
                 c.Update(deltaTime);
             }
+
+            OnUpdate(deltaTime);
+        }
+        
+        /// <summary>
+        /// Update game logic.
+        /// This method will be skipped if the entity is not <see cref="IsActive"/>.
+        /// 
+        /// Rendering calls should never be called from this method.
+        /// <param name="deltaTime">The time in seconds since the last update</param>
+        /// </summary>
+        protected virtual void OnUpdate(float deltaTime)
+        {
+            
         }
         
         
@@ -148,6 +164,12 @@ namespace FerretEngine.Core
             {
                 c.DrawGUI(deltaTime);
             }
+        }
+
+
+        public void Destroy()
+        {
+            this.Scene.Destroy(this);
         }
         
         

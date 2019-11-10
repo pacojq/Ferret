@@ -10,9 +10,6 @@ namespace FerretEngine.Components
         public AnimationController Controller { get; set; }
         public Animation CurrentAnimation { get; set; }
         
-        
-        public int ImageIndex { get; private set; }
-        private float _actualImageIndex;
 
         public Action OnAnimationUpdate;
         
@@ -23,19 +20,13 @@ namespace FerretEngine.Components
             Renderer = renderer;
             Controller = controller;
             CurrentAnimation = controller.CurrentAnimation;
-            
-            ImageIndex = 0;
-            _actualImageIndex = 0;
         }
 
 
         public override void Update(float dt)
         {
-            _actualImageIndex += CurrentAnimation.Speed;
-            _actualImageIndex %= CurrentAnimation.FrameCount;
-            ImageIndex = (int) Math.Floor(_actualImageIndex);
-
-            UpdateSprite(CurrentAnimation[ImageIndex]);
+            Controller.Update(dt);
+            UpdateSprite(CurrentAnimation[Controller.ImageIndex]);
         }
 
         private void UpdateSprite(Sprite frame)

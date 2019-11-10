@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace FerretEngine.Graphics
 {
@@ -8,6 +9,9 @@ namespace FerretEngine.Graphics
 
         private readonly IDictionary<string, Animation> _animations;
 
+        
+        public int ImageIndex { get; private set; }
+        private float _actualImageIndex;
 
         public AnimationController(params Animation[] animations)
         {
@@ -23,9 +27,26 @@ namespace FerretEngine.Graphics
         }
 
 
+        internal void Update(float dt)
+        {
+            SetFrame(_actualImageIndex + CurrentAnimation.Speed);
+        }
+
+
         public void SetAnimation(string name)
         {
             CurrentAnimation = _animations[name];
+        }
+
+
+        public void SetFrame(float index)
+        {
+            if (index < 0)
+                index = 0;
+            
+            _actualImageIndex = index;
+            _actualImageIndex %= CurrentAnimation.FrameCount;
+            ImageIndex = (int) Math.Floor(_actualImageIndex);
         }
     }
 }

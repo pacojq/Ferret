@@ -19,6 +19,10 @@ namespace FerretEngine.Core
 
         public IEnumerable<Entity> Entities => _entities;
         private readonly List<Entity> _entities;
+
+        private readonly Queue<Entity> _createQueue;
+        private readonly Queue<Entity> _destroyQueue;
+        
         
         public Camera MainCamera { get; set; }
         
@@ -42,6 +46,9 @@ namespace FerretEngine.Core
         public Scene()
         {
             _entities = new List<Entity>();
+            _createQueue = new Queue<Entity>();
+            _destroyQueue = new Queue<Entity>();
+            
             Space = new Space();
 
             BackgroundColor = Color.CornflowerBlue;
@@ -50,26 +57,39 @@ namespace FerretEngine.Core
 
 
 
-
+        /// <summary>
+        /// Called when the Scene starts after calling <see cref="FeGame.SetScene"/>.
+        /// </summary>
         public virtual void Begin()
         {
             foreach (var entity in Entities)
                 entity.OnSceneBegin(this);
         }
 
+        /// <summary>
+        /// Called when the Scene ends and a new Scene begins.
+        /// </summary>
         public virtual void End()
         {
             foreach (var entity in Entities)
                 entity.OnSceneEnd(this);
         }
 
+        
+        
+        
+        
+        
+        
+        
         public virtual void BeforeUpdate()
         {
             if (!Paused)
                 TimeActive += FeGame.DeltaTime;
+            
+            while (_createQueue.Count > 0)
+                AddEntity(_createQueue.Dequeue());
         }
-        
-        
         
 
         public virtual void Update(float deltaTime)
@@ -90,7 +110,8 @@ namespace FerretEngine.Core
 
         public virtual void AfterUpdate()
         {
-            
+            while (_destroyQueue.Count > 0)
+                RemoveEntity(_destroyQueue.Dequeue());
         }
 
         
@@ -127,7 +148,12 @@ namespace FerretEngine.Core
         #region // - - - - - Entity Management - - - - - //
 
 
-        public void AddEntity(Entity entity)
+        public void Create(Entity entity)
+        {
+            _createQueue.Enqueue(entity);
+        }
+        
+        private void AddEntity(Entity entity)
         {
             entity.Scene = this;
             _entities.Add(entity);
@@ -135,9 +161,16 @@ namespace FerretEngine.Core
             foreach (Collider col in entity.Colliders)
                 Space.Add(col);
         }
-        
 
-        public void RemoveEntity(Entity entity)
+
+
+
+        public void Destroy(Entity entity)
+        {
+            _destroyQueue.Enqueue(entity);
+        }
+
+        private void RemoveEntity(Entity entity)
         {
             if (_entities.Remove(entity))
             {
@@ -146,18 +179,8 @@ namespace FerretEngine.Core
                     Space.Add(col);
             }
         }
-
-        public void AddEntities(params Entity[] entities)
-        {
-            foreach (var e in entities)
-                AddEntity(e);
-        }
-
-        public void RemoveEntities(params Entity[] entities)
-        {
-            foreach (var e in entities)
-                RemoveEntity(e);   
-        }
+        
+        
         
         
         

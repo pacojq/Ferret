@@ -22,11 +22,11 @@ namespace FerretEngine.Sandbox
                 AddEntity(e);
             }
             */
-            AddEntity(new PlayerEntity());
+            Create(new PlayerEntity());
             
             BoxEntity box = new BoxEntity();
             box.Position = new Vector2(64, 64);
-            AddEntity(box);
+            Create(box);
         }
 
         public override void Begin()
