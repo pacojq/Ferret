@@ -141,6 +141,7 @@
     <Compile Include="src\Physics\Space.cs" />
     <Compile Include="src\Utils\Assert.cs" />
     <Compile Include="src\Utils\FeMath.cs" />
+    <Compile Include="src\Utils\FeRandom.cs" />
     <Compile Include="src\Utils\MinMax.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
