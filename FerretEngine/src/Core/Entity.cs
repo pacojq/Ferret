@@ -20,10 +20,18 @@ namespace FerretEngine.Core
         #region // - - - - - Properties - - - - - //
 
         /// <summary>
-        /// The Scene this Entity is in.
+        /// The <see cref="Core.Scene"/> this Entity is in.
         /// </summary>
         public Scene Scene { get; internal set; }
 
+        
+        /// <summary>
+        /// The <see cref="Core.Layer"/> where the Entity is
+        /// stored inside the <see cref="Core.Scene"/>.
+        /// </summary>
+        public Layer Layer { get; internal set; }
+        
+        
         
         /// <summary>
         /// A tag that identifies the entity.

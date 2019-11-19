@@ -94,6 +94,7 @@
     <Compile Include="src\Content\FeContent.cs" />
     <Compile Include="src\Core\Component.cs" />
     <Compile Include="src\Core\Entity.cs" />
+    <Compile Include="src\Core\Layer.cs" />
     <Compile Include="src\Core\Scene.cs" />
     <Compile Include="src\Coroutines\CoroutineHandle.cs" />
     <Compile Include="src\Coroutines\FeCoroutines.cs" />
