@@ -58,7 +58,8 @@ namespace FerretEngine.Sandbox.Player
             
             
             
-            Bind(new PlayerComponent());
+            //Bind(new PlayerComponent());
+            Bind(new PlayerComponentGamepad());
         }
     }
 }

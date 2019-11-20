@@ -1,0 +1,2 @@
+Under MIT License.
+https://code.google.com/archive/p/glaze-csharp/

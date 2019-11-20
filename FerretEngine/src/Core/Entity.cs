@@ -5,6 +5,7 @@ using System.Linq;
 using FerretEngine.Components;
 using FerretEngine.Graphics;
 using FerretEngine.Logging;
+using FerretEngine.Physics;
 using FerretEngine.Utils;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;

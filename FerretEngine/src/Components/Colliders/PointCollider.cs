@@ -2,6 +2,7 @@
 using FerretEngine.Graphics;
 using FerretEngine.Physics;
 using FerretEngine.Utils;
+using Glaze;
 using Microsoft.Xna.Framework;
 
 namespace FerretEngine.Components.Colliders
@@ -21,8 +22,13 @@ namespace FerretEngine.Components.Colliders
             Height = 1;
             Center = center;
         }
-        
-        
+
+
+        protected override void InitBody(Body body)
+        {
+            body.AddShape(new Polygon(new []{new Vec2(Left, Top)}));
+        }
+
         internal override void DebugDraw(float deltaTime)
         {
             FeDraw.Color = Color.Red;

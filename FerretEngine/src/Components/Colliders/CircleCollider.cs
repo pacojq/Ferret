@@ -1,7 +1,7 @@
-﻿
-using FerretEngine.Graphics;
+﻿using FerretEngine.Graphics;
 using FerretEngine.Physics;
 using FerretEngine.Utils;
+using Glaze;
 using Microsoft.Xna.Framework;
 
 namespace FerretEngine.Components.Colliders
@@ -24,8 +24,16 @@ namespace FerretEngine.Components.Colliders
             Height = radius * 2;
             Center = Vector2.Zero;
         }
-        
-        
+
+
+        protected override void InitBody(Body body)
+        {
+            body.AddShape(new Circle()
+            {
+                radius = Radius
+            });
+        }
+
         internal override void DebugDraw(float deltaTime)
         {
             FeDraw.Color = Color.Red;
