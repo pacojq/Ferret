@@ -2,7 +2,6 @@
 using System.Linq;
 using FerretEngine.Components.Colliders;
 using FerretEngine.Core;
-using Glaze;
 using Microsoft.Xna.Framework;
 
 namespace FerretEngine.Physics
@@ -23,9 +22,6 @@ namespace FerretEngine.Physics
         public virtual float Left { get; }
         public virtual float Right { get; }
 
-
-         
-        private Glaze.Body Body { get; }
         
         
         public delegate void CollisionEvent(Collider other);
@@ -41,12 +37,7 @@ namespace FerretEngine.Physics
         {
             _collisionCache = new HashSet<Collider>();
             _newCollisions = new HashSet<Collider>();
-            
-            Body = new Body();
-            InitBody(Body);
         }
-
-        protected abstract void InitBody(Glaze.Body body);
 
 
 

@@ -50,9 +50,6 @@
     <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Glaze, Version=1.0.3737.27157, Culture=neutral, PublicKeyToken=null">
-      <HintPath>..\vendor\Glaze\Glaze.dll</HintPath>
-    </Reference>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="Myra, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null">
       <HintPath>..\vendor\Myra\Myra.dll</HintPath>
