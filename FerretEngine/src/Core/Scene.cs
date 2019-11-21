@@ -234,8 +234,8 @@ namespace FerretEngine.Core
         
         public T[] FindEntities<T>() where T : Entity
         {
-            return (T[]) Entities
-                .Where(e => e is T)
+            return Entities
+                .OfType<T>()
                 .ToArray();
         }
         
