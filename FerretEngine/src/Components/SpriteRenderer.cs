@@ -1,5 +1,6 @@
 ﻿using FerretEngine.Core;
 using FerretEngine.Graphics;
+using FerretEngine.Graphics.Effects;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 

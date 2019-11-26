@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Runtime.CompilerServices;
+using FerretEngine.Graphics.Effects;
 using FerretEngine.Graphics.Fonts;
 using FerretEngine.Utils;
 using Microsoft.Xna.Framework;

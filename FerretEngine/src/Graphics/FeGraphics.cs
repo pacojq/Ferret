@@ -4,6 +4,7 @@ using System.IO;
 using System.Runtime.CompilerServices;
 using FerretEngine.Content;
 using FerretEngine.Core;
+using FerretEngine.Graphics.Effects;
 using FerretEngine.Graphics.Fonts;
 using FerretEngine.Graphics.Renderers;
 using FerretEngine.Utils;
@@ -25,7 +26,7 @@ namespace FerretEngine.Graphics
         /// Default font for the Ferret Engine.
         /// </summary>
         public static Font DefaultFont { get; private set; }
-
+        
         
         
         
@@ -64,6 +65,10 @@ namespace FerretEngine.Graphics
         private static Material _currentMaterial;
 
         private static RenderTarget2D _renderTarget;
+
+
+        // TODO remove this
+        private static Effect _testPostPro;
         
         
         internal static void Initialize(FeGame game, int width, int height, int windowWidth, int windowHeight, bool fullscreen)
@@ -109,6 +114,11 @@ namespace FerretEngine.Graphics
 
             FeDraw.Font = DefaultFont;
             FeDraw.Color = Color.White;
+
+            //_testPostPro = FeContent.LoadEffect("Ferret/Effects/Surface/plain.fxb");
+            _testPostPro = FeContent.LoadEffect("Ferret/Effects/Surface/colored.fxb");
+            _testPostPro.Parameters["Color"].SetValue(new Vector4(1, 0, 0, 1));
+            //_testPostPro.Parameters["Color"].SetValue(new Vector4(1, 0, 0, 1));
         }
 
 
@@ -244,7 +254,8 @@ namespace FerretEngine.Graphics
                 BlendState.NonPremultiplied,//BlendState.AlphaBlend, 
                 SamplerState.PointClamp, 
                 DepthStencilState.Default,
-                RasterizerState.CullNone
+                RasterizerState.CullNone,
+                _testPostPro
             );
             
             Rectangle rect = new Rectangle(0, 0, Resolution.WindowWidth, Resolution.WindowHeight);

@@ -32,6 +32,7 @@ namespace FerretEngine.Sandbox
 			base.LoadContent();
 
 			TestEffect = FeContent.LoadEffect("Ferret/Effects/test.fxb");
+			//TestEffect = FeContent.LoadEffect("Ferret/Effects/colorPalette.fxb");
 		}
 	}
 }

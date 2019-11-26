@@ -3,6 +3,7 @@ using FerretEngine.Components.Colliders;
 using FerretEngine.Content;
 using FerretEngine.Core;
 using FerretEngine.Graphics;
+using FerretEngine.Graphics.Effects;
 using FerretEngine.Logging;
 using FerretEngine.Particles;
 using FerretEngine.Particles.ParticleAttributes;
@@ -58,8 +59,8 @@ namespace FerretEngine.Sandbox.Player
             
             
             
-            //Bind(new PlayerComponent());
-            Bind(new PlayerComponentGamepad());
+            Bind(new PlayerComponent());
+            //Bind(new PlayerComponentGamepad());
         }
     }
 }
