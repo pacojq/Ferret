@@ -183,27 +183,27 @@ namespace FerretEngine.Graphics
         
         
         
-        public static void Rect(float x, float y, float width, float height, bool outline)
+        public static void Rect(float x, float y, float width, float height, bool outline, int borderWidth = 1)
         {
             Rectangle rect = new Rectangle((int)x, (int)y, (int)width, (int)height);
-            RectExt(rect, Color, outline);
+            RectExt(rect, Color, outline, borderWidth);
         }
         
-        public static void Rect(Rectangle rect, bool outline)
+        public static void Rect(Rectangle rect, bool outline, int borderWidth = 1)
         {
-            RectExt(rect, Color, outline);
+            RectExt(rect, Color, outline, borderWidth);
         }
         
-        public static void RectExt(float x, float y, float width, float height, Color color, bool outline)
+        public static void RectExt(float x, float y, float width, float height, Color color, bool outline, int borderWidth = 1)
         {
             Rectangle rect = new Rectangle((int)x, (int)y, (int)width, (int)height);
-            RectExt(rect, color, outline);
+            RectExt(rect, color, outline, borderWidth);
         }
         
-        public static void RectExt(Rectangle rect, Color color, bool outline)
+        public static void RectExt(Rectangle rect, Color color, bool outline, int borderWidth = 1)
         {
             Assert.IsTrue(FeGraphics.IsRendering);
-            if (outline) RectOutline(rect, color, 1);
+            if (outline) RectOutline(rect, color, borderWidth);
             else RectFilled(rect, color);
         }
 

@@ -11,8 +11,13 @@ namespace FerretEngine.Graphics
         public int VirtualWidth => _VWidth;
         public int VirtualHeight => _VHeight;
 
-        public int WindowWidth => GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width;
-        public int WindowHeight => GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height;
+        
+        public int WindowWidth => _graphicsDevice.PreferredBackBufferWidth;
+        public int WindowHeight => _graphicsDevice.PreferredBackBufferHeight;
+        
+        
+        public int DisplayWidth => GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width;
+        public int DisplayHeight => GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height;
         
         
         

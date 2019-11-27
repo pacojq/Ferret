@@ -7,6 +7,7 @@ using FerretEngine.Core;
 using FerretEngine.Graphics.Effects;
 using FerretEngine.Graphics.Fonts;
 using FerretEngine.Graphics.Renderers;
+using FerretEngine.Logging;
 using FerretEngine.Utils;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -105,6 +106,8 @@ namespace FerretEngine.Graphics
             _graphicsDevice = _game.GraphicsDevice;
             
             _spriteBatch = new SpriteBatch(_game.GraphicsDevice);
+            
+            FeLog.Debug($"Creating Render Target. Size = {Resolution.WindowWidth}x{Resolution.WindowHeight}");
             _renderTarget = new RenderTarget2D(GraphicsDevice, Resolution.WindowWidth, Resolution.WindowHeight);
             
             _currentMaterial = Material.Default;
@@ -116,9 +119,14 @@ namespace FerretEngine.Graphics
             FeDraw.Color = Color.White;
 
             //_testPostPro = FeContent.LoadEffect("Ferret/Effects/Surface/plain.fxb");
-            _testPostPro = FeContent.LoadEffect("Ferret/Effects/Surface/colored.fxb");
-            _testPostPro.Parameters["Color"].SetValue(new Vector4(1, 0, 0, 1));
+            
+            //_testPostPro = FeContent.LoadEffect("Ferret/Effects/Surface/colored.fxb");
             //_testPostPro.Parameters["Color"].SetValue(new Vector4(1, 0, 0, 1));
+            
+            
+            _testPostPro = FeContent.LoadEffect("Ferret/Effects/Surface/distortion.fxb");
+            _testPostPro.Parameters["_MaskTexture"]
+                .SetValue(FeContent.LoadTexture("Ferret/Effects/Res/scanline.png"));
         }
 
 
@@ -257,6 +265,7 @@ namespace FerretEngine.Graphics
                 RasterizerState.CullNone,
                 _testPostPro
             );
+            
             
             Rectangle rect = new Rectangle(0, 0, Resolution.WindowWidth, Resolution.WindowHeight);
             _spriteBatch.Draw(_renderTarget, rect, Color.White);

@@ -55,7 +55,7 @@ namespace FerretEngine.Sandbox.Player
         {
             base.DrawGUI(deltaTime);
 
-            FeDraw.Rect(0, 0, FeGame.Width, FeGame.Height, true);
+            //FeDraw.Rect(0, 0, FeGame.Width, FeGame.Height, true);
             
             FeDraw.SetHAlign(FeDraw.HAlign.Left);
             FeDraw.SetVAlign(FeDraw.VAlign.Top);
@@ -64,7 +64,7 @@ namespace FerretEngine.Sandbox.Player
             
             FeDraw.SetHAlign(FeDraw.HAlign.Centre);
             FeDraw.SetVAlign(FeDraw.VAlign.Centre);
-            FeDraw.Text("Hi there :D", new Vector2(0, 24));
+            FeDraw.Text("Hi there :D", new Vector2(96, 24));
         }
     }
 }
