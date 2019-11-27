@@ -4,6 +4,7 @@ using System.Linq;
 using FerretEngine.Content.Dto;
 using FerretEngine.Graphics;
 using FerretEngine.Graphics.Fonts;
+using FerretEngine.Logging;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Newtonsoft.Json;
@@ -122,7 +123,16 @@ namespace FerretEngine.Content
 
         public static Effect LoadEffect(string path)
         {
-            path = CheckFilename(path, ".fxb");
+            try
+            {
+                path = CheckFilename(path, ".fxb");
+            }
+            catch (Exception e)
+            {
+                FeLog.Error($"Loading effect '{path}' resulted on an exception:\n{e}");
+                path = CheckFilename("Ferret/Effects/error.fxb", ".fxb");
+            }
+
             byte[] bytes = GetFileResourceBytes(path);
             return new Effect(FeGame.Instance.GraphicsDevice, bytes);
         }

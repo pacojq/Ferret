@@ -8,6 +8,7 @@ using FerretEngine.Graphics;
 using FerretEngine.GUI;
 using FerretEngine.Input;
 using FerretEngine.Logging;
+using FerretEngine.Utils;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 
@@ -35,10 +36,6 @@ namespace FerretEngine
 		/// The time (in seconds) since the last update tick.
 		/// </summary>
 		public static float DeltaTime { get; private set; }
-		
-		
-		public static Random Random { get; private set; }
-		
 		
 		public static string ContentDirectory
 		{
@@ -96,6 +93,7 @@ namespace FerretEngine
 			Height = height;
 
 			FeLog.Initialize();
+			FeRandom.Initialize();
 			FeGraphics.Initialize(this, width, height, windowWidth, windowHeight, fullscreen);
 
 			Content.RootDirectory = @"Content";
@@ -104,8 +102,6 @@ namespace FerretEngine
 			IsFixedTimeStep = false;
 
 			ClearColor = Color.CornflowerBlue;
-			
-			Random = new Random();
 			
 			_gui = new FeGUI();
 			_debugLayout = new DebugLayout();
@@ -209,7 +205,9 @@ namespace FerretEngine
 	        // TODO Game Update
 	        if (Scene != null)
 	        {
+		        Scene.BeforeUpdate();
 		        Scene.Update(DeltaTime);
+		        Scene.AfterUpdate();
 	        }
 	        
 	        

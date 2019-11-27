@@ -82,7 +82,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="src\Components\Collider.cs" />
+    <Compile Include="src\Components\AnimationComponent.cs" />
     <Compile Include="src\Components\Colliders\BoxCollider.cs" />
     <Compile Include="src\Components\Colliders\CircleCollider.cs" />
     <Compile Include="src\Components\Colliders\PointCollider.cs" />
@@ -93,12 +93,18 @@
     <Compile Include="src\Content\FeContent.cs" />
     <Compile Include="src\Core\Component.cs" />
     <Compile Include="src\Core\Entity.cs" />
+    <Compile Include="src\Core\Layer.cs" />
     <Compile Include="src\Core\Scene.cs" />
     <Compile Include="src\Coroutines\CoroutineHandle.cs" />
     <Compile Include="src\Coroutines\FeCoroutines.cs" />
     <Compile Include="src\Debug\DebugLayout.cs" />
     <Compile Include="src\FeGame.cs" />
+    <Compile Include="src\Graphics\Animation.cs" />
+    <Compile Include="src\Graphics\AnimationController.cs" />
     <Compile Include="src\Graphics\Camera.cs" />
+    <Compile Include="src\Graphics\Effects\Material.cs" />
+    <Compile Include="src\Graphics\Effects\MaterialLibrary.cs" />
+    <Compile Include="src\Graphics\Effects\Shader.cs" />
     <Compile Include="src\Graphics\FeDraw.cs" />
     <Compile Include="src\Graphics\FeGraphics.cs" />
     <Compile Include="src\Graphics\Fonts\Font.cs" />
@@ -107,7 +113,8 @@
     <Compile Include="src\Graphics\Fonts\GlyphInfo.cs" />
     <Compile Include="src\Graphics\Fonts\GlyphPage.cs" />
     <Compile Include="src\Graphics\Fonts\Text.cs" />
-    <Compile Include="src\Graphics\Material.cs" />
+    <Compile Include="src\Graphics\PostProcessing\PostProcessingLayer.cs" />
+    <Compile Include="src\Graphics\PostProcessing\PostProcessingStack.cs" />
     <Compile Include="src\Graphics\Renderers\DebugRenderer.cs" />
     <Compile Include="src\Graphics\Renderers\DefaultRenderer.cs" />
     <Compile Include="src\Graphics\Renderers\GuiRenderer.cs" />
@@ -134,10 +141,12 @@
     <Compile Include="src\Particles\ParticleEmitter.cs" />
     <Compile Include="src\Particles\ParticleSystem.cs" />
     <Compile Include="src\Particles\ParticleType.cs" />
+    <Compile Include="src\Physics\Collider.cs" />
     <Compile Include="src\Physics\CollisionCheck.cs" />
     <Compile Include="src\Physics\Space.cs" />
     <Compile Include="src\Utils\Assert.cs" />
     <Compile Include="src\Utils\FeMath.cs" />
+    <Compile Include="src\Utils\FeRandom.cs" />
     <Compile Include="src\Utils\MinMax.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
@@ -190,6 +199,9 @@
     <Content Include="Content\**\*">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Content\Ferret\Effects\Res" />
   </ItemGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
          Other similar extension points exist, see Microsoft.Common.targets.

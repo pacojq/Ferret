@@ -4,8 +4,10 @@ using System.Collections.Generic;
 using System.Linq;
 using FerretEngine.Components;
 using FerretEngine.Graphics;
+using FerretEngine.Logging;
 using FerretEngine.Physics;
 using Microsoft.Xna.Framework;
+using NLog.Fluent;
 
 namespace FerretEngine.Core
 {
@@ -17,10 +19,28 @@ namespace FerretEngine.Core
 
         public Color BackgroundColor { get; set; }
 
-        public IEnumerable<Entity> Entities => _entities;
-        private readonly List<Entity> _entities;
+
         
         public Camera MainCamera { get; set; }
+        
+        
+        
+        public Layer DefaultLayer { get; }
+
+
+        public IEnumerable<Layer> Layers => _layers;
+        private readonly List<Layer> _layers;
+
+
+        public IEnumerable<Entity> Entities
+        {
+            get
+            {
+                foreach (Layer layer in _layers)
+                    foreach (Entity e in layer.Entities)
+                        yield return e;
+            }
+        }
         
         
         /// <summary>
@@ -35,87 +55,121 @@ namespace FerretEngine.Core
         }
         
         
-        public bool Paused;
+        public bool Paused { get; set; }
         
 
 
         public Scene()
         {
-            _entities = new List<Entity>();
             Space = new Space();
+            
+            _layers = new List<Layer>();
+            DefaultLayer = CreateLayer("default");
 
             BackgroundColor = Color.CornflowerBlue;
             MainCamera = new Camera(Vector2.Zero);
         }
 
 
+        public Layer CreateLayer(string id)
+        {
+            Layer layer = new Layer(id, this);
+            _layers.Add(layer);
+            return layer;
+        }
 
 
+        
+        internal void SortLayers()
+        {
+            _layers.Sort((l1, l2) =>
+            {
+                if (l1.Depth == l2.Depth)
+                    return l1.CreationId.CompareTo(l2.CreationId);
+                return l1.Depth.CompareTo(l2.Depth);
+            });
+        }
+        
+        
+        
+        
+
+        /// <summary>
+        /// Called when the Scene starts after calling <see cref="FeGame.SetScene"/>.
+        /// </summary>
         public virtual void Begin()
         {
-            foreach (var entity in Entities)
-                entity.OnSceneBegin(this);
+            foreach (Layer layer in _layers)
+                layer.Begin();
         }
 
+        /// <summary>
+        /// Called when the Scene ends and a new Scene begins.
+        /// </summary>
         public virtual void End()
         {
-            foreach (var entity in Entities)
-                entity.OnSceneEnd(this);
+            foreach (Layer layer in _layers)
+                layer.End();
         }
 
-        public virtual void BeforeUpdate()
+        
+        
+        
+        
+        
+        
+        
+        protected internal virtual void BeforeUpdate()
         {
             if (!Paused)
                 TimeActive += FeGame.DeltaTime;
+            
+            foreach (Layer layer in _layers)
+                layer.BeforeUpdate();
         }
         
-        
-        
 
-        public virtual void Update(float deltaTime)
+        protected internal virtual void Update(float deltaTime)
         {
             if (Paused)
                 return;
             
-            foreach (Entity e in Entities)
-            {
-                if (!e.IsActive)
-                    continue;
-                e.Update(deltaTime);
-            }
+            foreach (Layer layer in _layers)
+                layer.Update(deltaTime);
 
             MainCamera.Update();
             Space.Update();
         }
 
-        public virtual void AfterUpdate()
+        protected internal virtual void AfterUpdate()
         {
-            
+            foreach (Layer layer in _layers)
+                layer.AfterUpdate();
         }
 
         
         
         
         
-        public virtual void BeforeRender()
-        {
-            // To be implemented by child classes
-        }
-
-
-        public virtual void AfterRender()
+        protected internal virtual void BeforeRender()
         {
             // To be implemented by child classes
         }
 
 
+        protected internal virtual void AfterRender()
+        {
+            // To be implemented by child classes
+        }
 
-        public virtual void OnFocusGained()
+
+
+        protected internal virtual void OnFocusGained()
         {
             // To be implemented by child classes
         }
         
-        public virtual void OnFocusLost()
+        protected internal virtual void OnFocusLost()
         {
             // To be implemented by child classes
         }
@@ -126,38 +180,35 @@ namespace FerretEngine.Core
 
         #region // - - - - - Entity Management - - - - - //
 
-
-        public void AddEntity(Entity entity)
+        public void Create(Entity entity, string layerId)
         {
-            entity.Scene = this;
-            _entities.Add(entity);
-
-            foreach (Collider col in entity.Colliders)
-                Space.Add(col);
+            Layer layer = _layers.FirstOrDefault(l => l.Id.Equals(layerId));
+            if (layer == null)
+            {
+                FeLog.Warning($"Could not find layer with id '{layerId}'. Creating entity in default layer instead.");
+                layer = DefaultLayer;
+            }
+            Create(entity, layer);
         }
         
-
-        public void RemoveEntity(Entity entity)
+        public void Create(Entity entity, Layer layer)
         {
-            if (_entities.Remove(entity))
-            {
-                entity.Scene = null;
-                foreach (Collider col in entity.Colliders)
-                    Space.Add(col);
-            }
+            layer.Create(entity);
         }
 
-        public void AddEntities(params Entity[] entities)
+        public void Create(Entity entity)
         {
-            foreach (var e in entities)
-                AddEntity(e);
+            DefaultLayer.Create(entity);
+        }
+        
+        public void Destroy(Entity entity)
+        {
+            entity.Layer.Destroy(entity);
         }
 
-        public void RemoveEntities(params Entity[] entities)
-        {
-            foreach (var e in entities)
-                RemoveEntity(e);   
-        }
+        
+        
+        
         
         
         
@@ -165,7 +216,7 @@ namespace FerretEngine.Core
         
         public T FindEntity<T>() where T : Entity
         {
-            return (T) _entities.FirstOrDefault(e => e is T);
+            return (T) Entities.FirstOrDefault(e => e is T);
         }
         
         public Entity FindEntity(string tag)
@@ -173,18 +224,18 @@ namespace FerretEngine.Core
             if (tag == null)
                 throw new ArgumentNullException(nameof(tag));
             
-            return _entities.FirstOrDefault(e => tag.Equals(e.Tag));
+            return Entities.FirstOrDefault(e => tag.Equals(e.Tag));
         }
         
         public T FindEntity<T>(string tag) where T : Entity
         {
-            return (T) _entities.FirstOrDefault(e => tag.Equals(e.Tag) && e is T);
+            return (T) Entities.FirstOrDefault(e => tag.Equals(e.Tag) && e is T);
         }
         
         public T[] FindEntities<T>() where T : Entity
         {
-            return (T[]) _entities
-                .Where(e => e is T)
+            return Entities
+                .OfType<T>()
                 .ToArray();
         }
         
@@ -193,14 +244,14 @@ namespace FerretEngine.Core
             if (tag == null)
                 throw new ArgumentNullException(nameof(tag));
             
-            return _entities
+            return Entities
                 .Where(e => tag.Equals(e.Tag))
                 .ToArray();
         }
         
         public T[] FindEntities<T>(string tag) where T : Entity
         {
-            return (T[]) _entities
+            return (T[]) Entities
                 .Where(e => tag.Equals(e.Tag) && e is T)
                 .ToArray();
         }

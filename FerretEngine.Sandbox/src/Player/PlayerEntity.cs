@@ -3,6 +3,7 @@ using FerretEngine.Components.Colliders;
 using FerretEngine.Content;
 using FerretEngine.Core;
 using FerretEngine.Graphics;
+using FerretEngine.Graphics.Effects;
 using FerretEngine.Logging;
 using FerretEngine.Particles;
 using FerretEngine.Particles.ParticleAttributes;
@@ -12,16 +13,27 @@ namespace FerretEngine.Sandbox.Player
 {
     public class PlayerEntity : Entity
     {
+        public SpriteRenderer Renderer { get; }
+        
         public PlayerEntity()
         {
-            Sprite sprite = FeContent.LoadSpriteSheet("character/charAtlas.feAsset")[0];
-            SpriteRenderer renderer = new SpriteRenderer(sprite);
+            Sprite[] sprites = FeContent.LoadSpriteSheet("character/charAtlas.feAsset");
             
-            renderer.Material = new Material(SandboxGame.TestEffect);
+            Animation anim = new Animation(sprites, "walk", .1f);
+            AnimationController contr = new AnimationController(anim);
             
-            Bind(renderer);
+            Renderer = new SpriteRenderer(sprites[0]);
+            Renderer.Material = new Material(SandboxGame.TestEffect);
+            
+            AnimationComponent animComponent = new AnimationComponent(Renderer, contr);
 
-            BoxCollider col = new BoxCollider(sprite.Width, sprite.Height, Vector2.Zero);
+            Bind(Renderer);
+            Bind(animComponent);
+            
+            
+            
+
+            BoxCollider col = new BoxCollider(sprites[0].Width, sprites[0].Height, Vector2.Zero);
             Bind(col);
 
             col.OnCollisionEnter += o => FeLog.Debug($"PLAYER ENTER: {this}");
@@ -50,6 +62,7 @@ namespace FerretEngine.Sandbox.Player
             
             
             Bind(new PlayerComponent());
+            //Bind(new PlayerComponentGamepad());
         }
     }
 }

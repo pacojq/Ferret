@@ -44,8 +44,6 @@ namespace FerretEngine.Physics
                 if (!entity.IsActive || !entity.IsCollidable)
                     continue;
                 
-                List<Collider> entityColliders = new List<Collider>(entity.Colliders);
-                
                 // Diagonal check
                 for (int j = i + 1; j < _entities.Count; j++)
                 {

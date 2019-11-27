@@ -36,9 +36,22 @@ namespace FerretEngine.Utils
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static float Direction(Vector2 p)
+        {
+            return Direction(Vector2.Zero, p);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static float Distance(Vector2 p0, Vector2 p1)
         {
             return Vector2.Distance(p0, p1);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static float AngleDif(float a0, float a1)
+        {
+            float dif = (float)Math.Abs(a0 - a1) % 360;
+            return dif > 180 ? 360 - dif : dif;
         }
         
         

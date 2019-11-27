@@ -2,6 +2,7 @@ using System;
 using System.Runtime.CompilerServices;
 using FerretEngine.Core;
 using FerretEngine.Graphics;
+using FerretEngine.Graphics.Effects;
 using FerretEngine.Logging;
 using FerretEngine.Utils;
 using Microsoft.Xna.Framework;

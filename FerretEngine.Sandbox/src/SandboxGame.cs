@@ -1,5 +1,6 @@
 using FerretEngine.Content;
 using FerretEngine.Graphics;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
 namespace FerretEngine.Sandbox
@@ -18,7 +19,7 @@ namespace FerretEngine.Sandbox
 		public SandboxGame() : base(Width, Height, WindowWidth, WindowHeight, 
 				"Ferret Sandbox", false)
 		{
-            
+            ClearColor = Color.Black;
 		}
 
 		protected override void Initialize()
@@ -32,6 +33,7 @@ namespace FerretEngine.Sandbox
 			base.LoadContent();
 
 			TestEffect = FeContent.LoadEffect("Ferret/Effects/test.fxb");
+			//TestEffect = FeContent.LoadEffect("Ferret/Effects/colorPalette.fxb");
 		}
 	}
 }

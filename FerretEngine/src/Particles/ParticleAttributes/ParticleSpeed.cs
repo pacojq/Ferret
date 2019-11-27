@@ -1,3 +1,5 @@
+using FerretEngine.Utils;
+
 namespace FerretEngine.Particles.ParticleAttributes
 {
     public class ParticleSpeed
@@ -13,7 +15,7 @@ namespace FerretEngine.Particles.ParticleAttributes
         }
         
         
-        internal float Value => _min + (float) FeGame.Random.NextDouble() * (_max - _min);
+        internal float Value => FeRandom.Range(_min, _max);
         
         private readonly float _min;
         private readonly float _max;

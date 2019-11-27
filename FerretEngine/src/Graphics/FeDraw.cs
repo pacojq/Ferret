@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Runtime.CompilerServices;
+using FerretEngine.Graphics.Effects;
 using FerretEngine.Graphics.Fonts;
 using FerretEngine.Utils;
 using Microsoft.Xna.Framework;
@@ -87,6 +88,8 @@ namespace FerretEngine.Graphics
             if (!WillRender(sprite, position, Vector2.One))
                 return;
             
+            FeGraphics.BindMaterial();
+            
             FeGraphics.SpriteBatch.Draw(
                     sprite.Texture,
                     position - sprite.Origin,
@@ -113,6 +116,8 @@ namespace FerretEngine.Graphics
             Assert.IsTrue(FeGraphics.IsRendering);
             if (!WillRender(sprite, position, scale))
                 return;
+
+            FeGraphics.BindMaterial();
             
             FeGraphics.SpriteBatch.Draw(
                     sprite.Texture,
@@ -182,27 +187,27 @@ namespace FerretEngine.Graphics
         
         
         
-        public static void Rect(float x, float y, float width, float height, bool outline)
+        public static void Rect(float x, float y, float width, float height, bool outline, int borderWidth = 1)
         {
             Rectangle rect = new Rectangle((int)x, (int)y, (int)width, (int)height);
-            RectExt(rect, Color, outline);
+            RectExt(rect, Color, outline, borderWidth);
         }
         
-        public static void Rect(Rectangle rect, bool outline)
+        public static void Rect(Rectangle rect, bool outline, int borderWidth = 1)
         {
-            RectExt(rect, Color, outline);
+            RectExt(rect, Color, outline, borderWidth);
         }
         
-        public static void RectExt(float x, float y, float width, float height, Color color, bool outline)
+        public static void RectExt(float x, float y, float width, float height, Color color, bool outline, int borderWidth = 1)
         {
             Rectangle rect = new Rectangle((int)x, (int)y, (int)width, (int)height);
-            RectExt(rect, color, outline);
+            RectExt(rect, color, outline, borderWidth);
         }
         
-        public static void RectExt(Rectangle rect, Color color, bool outline)
+        public static void RectExt(Rectangle rect, Color color, bool outline, int borderWidth = 1)
         {
             Assert.IsTrue(FeGraphics.IsRendering);
-            if (outline) RectOutline(rect, color, 1);
+            if (outline) RectOutline(rect, color, borderWidth);
             else RectFilled(rect, color);
         }
 

@@ -3,6 +3,7 @@ using FerretEngine.Components.Colliders;
 using FerretEngine.Content;
 using FerretEngine.Core;
 using FerretEngine.Graphics;
+using FerretEngine.Graphics.Effects;
 using FerretEngine.Logging;
 using FerretEngine.Particles;
 using Microsoft.Xna.Framework;
@@ -12,10 +13,16 @@ namespace FerretEngine.Sandbox.Box
 {
     public class BoxEntity : Entity
     {
-        public BoxEntity()
+        public BoxEntity(Material mat = null)
         {
+            if (mat == null)
+                mat = Material.Default;
+            
             Sprite sprite = FeContent.LoadSprite("box.png");
-            Bind(new SpriteRenderer(sprite));
+            Bind(new SpriteRenderer(sprite)
+            {
+                Material = mat
+            });
 
 
             for (int i = 0; i < 8; i++)

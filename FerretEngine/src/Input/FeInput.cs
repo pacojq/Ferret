@@ -1,5 +1,6 @@
 using System;
 using FerretEngine.Logging;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 
 namespace FerretEngine.Input
@@ -9,10 +10,12 @@ namespace FerretEngine.Input
 
 		public static KeyboardInput Keyboard { get; private set; }
 		
+		public static GamepadInput Gamepad { get; private set; }
+		
 		internal static void Initialize()
 		{
 			Keyboard = new KeyboardInput();
-			
+			Gamepad = new GamepadInput(PlayerIndex.One);
 			
 			FeLog.Info("FerretInput initialized!");
 		}
@@ -22,6 +25,7 @@ namespace FerretEngine.Input
 		public static void Update()
 		{
 			Keyboard.Update();
+			Gamepad.Update();
 		}
 		
 		public static bool IsKeyPressed(Keys key)

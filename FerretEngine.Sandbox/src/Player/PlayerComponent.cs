@@ -2,6 +2,7 @@
 using FerretEngine.Graphics;
 using FerretEngine.Input;
 using FerretEngine.Particles;
+using FerretEngine.Utils;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 
@@ -47,7 +48,13 @@ namespace FerretEngine.Sandbox.Player
             this.Entity.Scene.MainCamera.Position = pos;
 
             if (_input.IsKeyPressed(Keys.Space))
-                _emitter.Emit();
+            {
+                PlayerEntity p = (PlayerEntity) this.Entity;
+                int r = FeRandom.RangeInt(0, 255);
+                int g = FeRandom.RangeInt(0, 255);
+                int b = FeRandom.RangeInt(0, 255);
+                p.Renderer.Material.SetColor("_Color", new Color(r, g, b));
+            }
         }
 
 
@@ -55,7 +62,7 @@ namespace FerretEngine.Sandbox.Player
         {
             base.DrawGUI(deltaTime);
 
-            FeDraw.Rect(0, 0, FeGame.Width, FeGame.Height, true);
+            //FeDraw.Rect(0, 0, FeGame.Width, FeGame.Height, true);
             
             FeDraw.SetHAlign(FeDraw.HAlign.Left);
             FeDraw.SetVAlign(FeDraw.VAlign.Top);
@@ -64,7 +71,7 @@ namespace FerretEngine.Sandbox.Player
             
             FeDraw.SetHAlign(FeDraw.HAlign.Centre);
             FeDraw.SetVAlign(FeDraw.VAlign.Centre);
-            FeDraw.Text("Hi there :D", new Vector2(0, 24));
+            FeDraw.Text("Hi there :D", new Vector2(96, 24));
         }
     }
 }
