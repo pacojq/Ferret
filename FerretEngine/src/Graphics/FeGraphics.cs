@@ -53,7 +53,7 @@ namespace FerretEngine.Graphics
         
         internal static ResolutionManager Resolution { get; private set; }
 
-        internal static PostProcessingStack PostProcessing { get; private set; }
+        public static PostProcessingStack PostProcessing { get; private set; }
         
         private static FeGame _game;
         
@@ -122,22 +122,6 @@ namespace FerretEngine.Graphics
 
             FeDraw.Font = DefaultFont;
             FeDraw.Color = Color.White;
-
-            
-            
-            // Effect testPostPro = FeContent.LoadEffect("Ferret/Effects/Surface/plain.fxb");
-            
-            // Effect testPostPro = FeContent.LoadEffect("Ferret/Effects/Surface/colored.fxb");
-            //testPostPro.Parameters["Color"].SetValue(new Vector4(1, 0, 0, 1));
-            
-            
-            //_testPostPro = FeContent.LoadEffect("Ferret/Effects/Surface/distortion.fxb");
-            //_testPostPro.Parameters["_MaskTexture"]
-            //    .SetValue(FeContent.LoadTexture("Ferret/Effects/Res/scanline.png"));
-            
-            Material postPro = new Material("Ferret/Effects/Surface/distortion.fxb");
-            postPro.SetTexture("_MaskTexture", FeContent.LoadTexture("Ferret/Effects/Res/scanline.png"));
-            PostProcessing.PushLayer(postPro);
         }
 
 

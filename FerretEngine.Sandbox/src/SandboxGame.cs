@@ -1,5 +1,6 @@
 using FerretEngine.Content;
 using FerretEngine.Graphics;
+using FerretEngine.Graphics.Effects;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
@@ -34,6 +35,10 @@ namespace FerretEngine.Sandbox
 
 			TestEffect = FeContent.LoadEffect("Ferret/Effects/test.fxb");
 			//TestEffect = FeContent.LoadEffect("Ferret/Effects/colorPalette.fxb");
+		
+			Material postPro = new Material("Ferret/Effects/Surface/distortion.fxb");
+			postPro.SetTexture("_MaskTexture", FeContent.LoadTexture("Ferret/Effects/Res/scanline.png"));
+			FeGraphics.PostProcessing.PushLayer(postPro);
 		}
 	}
 }
