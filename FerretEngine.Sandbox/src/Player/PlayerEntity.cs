@@ -13,6 +13,8 @@ namespace FerretEngine.Sandbox.Player
 {
     public class PlayerEntity : Entity
     {
+        public SpriteRenderer Renderer { get; }
+        
         public PlayerEntity()
         {
             Sprite[] sprites = FeContent.LoadSpriteSheet("character/charAtlas.feAsset");
@@ -20,12 +22,12 @@ namespace FerretEngine.Sandbox.Player
             Animation anim = new Animation(sprites, "walk", .1f);
             AnimationController contr = new AnimationController(anim);
             
-            SpriteRenderer renderer = new SpriteRenderer(sprites[0]);
-            renderer.Material = new Material(SandboxGame.TestEffect);
+            Renderer = new SpriteRenderer(sprites[0]);
+            Renderer.Material = new Material(SandboxGame.TestEffect);
             
-            AnimationComponent animComponent = new AnimationComponent(renderer, contr);
+            AnimationComponent animComponent = new AnimationComponent(Renderer, contr);
 
-            Bind(renderer);
+            Bind(Renderer);
             Bind(animComponent);
             
             

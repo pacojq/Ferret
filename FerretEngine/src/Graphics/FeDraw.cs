@@ -88,6 +88,8 @@ namespace FerretEngine.Graphics
             if (!WillRender(sprite, position, Vector2.One))
                 return;
             
+            FeGraphics.BindMaterial();
+            
             FeGraphics.SpriteBatch.Draw(
                     sprite.Texture,
                     position - sprite.Origin,
@@ -114,6 +116,8 @@ namespace FerretEngine.Graphics
             Assert.IsTrue(FeGraphics.IsRendering);
             if (!WillRender(sprite, position, scale))
                 return;
+
+            FeGraphics.BindMaterial();
             
             FeGraphics.SpriteBatch.Draw(
                     sprite.Texture,

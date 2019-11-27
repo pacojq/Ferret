@@ -22,9 +22,10 @@ namespace FerretEngine.Sandbox
                 AddEntity(e);
             }
             */
-            Create(new PlayerEntity());
+            PlayerEntity p = new PlayerEntity();
+            Create(p);
             
-            BoxEntity box = new BoxEntity();
+            BoxEntity box = new BoxEntity(p.Renderer.Material);
             box.Position = new Vector2(64, 64);
             Create(box);
         }

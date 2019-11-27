@@ -6,6 +6,7 @@ using FerretEngine.Content;
 using FerretEngine.Core;
 using FerretEngine.Graphics.Effects;
 using FerretEngine.Graphics.Fonts;
+using FerretEngine.Graphics.PostProcessing;
 using FerretEngine.Graphics.Renderers;
 using FerretEngine.Logging;
 using FerretEngine.Utils;
@@ -29,6 +30,10 @@ namespace FerretEngine.Graphics
         public static Font DefaultFont { get; private set; }
         
         
+        public static MaterialLibrary Materials { get; private set; }
+        
+        
+        
         
         
         public static GraphicsDevice GraphicsDevice => _graphicsDevice;
@@ -48,6 +53,8 @@ namespace FerretEngine.Graphics
         
         internal static ResolutionManager Resolution { get; private set; }
 
+        internal static PostProcessingStack PostProcessing { get; private set; }
+        
         private static FeGame _game;
         
         
@@ -61,15 +68,11 @@ namespace FerretEngine.Graphics
         /// Whether the <see cref="_spriteBatch"/> has already called Begin()
         /// </summary>
         private static bool _isOpen;
-        
-        
+
         private static Material _currentMaterial;
 
         private static RenderTarget2D _renderTarget;
 
-
-        // TODO remove this
-        private static Effect _testPostPro;
         
         
         internal static void Initialize(FeGame game, int width, int height, int windowWidth, int windowHeight, bool fullscreen)
@@ -78,6 +81,7 @@ namespace FerretEngine.Graphics
 
             GraphicsManager = new GraphicsDeviceManager(game);
             Resolution = new ResolutionManager(GraphicsManager, width, height);
+            PostProcessing = new PostProcessingStack();
             
             Resolution.SetVirtualResolution(width, height); // Game Resolution
             Resolution.SetResolution(windowWidth, windowHeight, fullscreen); // Window resolution
@@ -111,6 +115,7 @@ namespace FerretEngine.Graphics
             _renderTarget = new RenderTarget2D(GraphicsDevice, Resolution.WindowWidth, Resolution.WindowHeight);
             
             _currentMaterial = Material.Default;
+            Materials = new MaterialLibrary();
             
             Pixel = Sprite.PlainColor(1, 1, Color.White);
             DefaultFont = FeContent.LoadFont("Ferret/Fonts/MatchupPro.ttf", 12);
@@ -118,15 +123,21 @@ namespace FerretEngine.Graphics
             FeDraw.Font = DefaultFont;
             FeDraw.Color = Color.White;
 
-            //_testPostPro = FeContent.LoadEffect("Ferret/Effects/Surface/plain.fxb");
-            
-            //_testPostPro = FeContent.LoadEffect("Ferret/Effects/Surface/colored.fxb");
-            //_testPostPro.Parameters["Color"].SetValue(new Vector4(1, 0, 0, 1));
             
             
-            _testPostPro = FeContent.LoadEffect("Ferret/Effects/Surface/distortion.fxb");
-            _testPostPro.Parameters["_MaskTexture"]
-                .SetValue(FeContent.LoadTexture("Ferret/Effects/Res/scanline.png"));
+            // Effect testPostPro = FeContent.LoadEffect("Ferret/Effects/Surface/plain.fxb");
+            
+            // Effect testPostPro = FeContent.LoadEffect("Ferret/Effects/Surface/colored.fxb");
+            //testPostPro.Parameters["Color"].SetValue(new Vector4(1, 0, 0, 1));
+            
+            
+            //_testPostPro = FeContent.LoadEffect("Ferret/Effects/Surface/distortion.fxb");
+            //_testPostPro.Parameters["_MaskTexture"]
+            //    .SetValue(FeContent.LoadTexture("Ferret/Effects/Res/scanline.png"));
+            
+            Material postPro = new Material("Ferret/Effects/Surface/distortion.fxb");
+            postPro.SetTexture("_MaskTexture", FeContent.LoadTexture("Ferret/Effects/Res/scanline.png"));
+            PostProcessing.PushLayer(postPro);
         }
 
 
@@ -215,6 +226,11 @@ namespace FerretEngine.Graphics
                 SpriteBatchBegin(CurrentRenderer.Camera.TransformMatrix, CurrentRenderer.SortMode, material.Effect);
             }
         }
+
+        internal static void BindMaterial()
+        {
+            _currentMaterial.Bind();
+        }
         
         
         
@@ -246,29 +262,33 @@ namespace FerretEngine.Graphics
             }
             
             
+            // Once we got the whole game rendered, let's add postprocessing
+
+            RenderTarget2D target = PostProcessing.Render(_renderTarget, _spriteBatch);
+            
+            
+            
+            
             // Now let's go to the default RenderTarget and render the target we've painted before
             
             GraphicsDevice.SetRenderTarget(null);
             GraphicsDevice.Clear(clearColor);
-            
-            
+
+
             Resolution.BeginDraw();
-           
-            
-            
-            
+
+
             _spriteBatch.Begin(
                 SpriteSortMode.Texture, 
                 BlendState.NonPremultiplied,//BlendState.AlphaBlend, 
                 SamplerState.PointClamp, 
                 DepthStencilState.Default,
-                RasterizerState.CullNone,
-                _testPostPro
+                RasterizerState.CullNone
             );
             
             
             Rectangle rect = new Rectangle(0, 0, Resolution.WindowWidth, Resolution.WindowHeight);
-            _spriteBatch.Draw(_renderTarget, rect, Color.White);
+            _spriteBatch.Draw(target, rect, Color.White);
             
             _spriteBatch.End();
             

@@ -103,8 +103,8 @@
     <Compile Include="src\Graphics\AnimationController.cs" />
     <Compile Include="src\Graphics\Camera.cs" />
     <Compile Include="src\Graphics\Effects\Material.cs" />
+    <Compile Include="src\Graphics\Effects\MaterialLibrary.cs" />
     <Compile Include="src\Graphics\Effects\Shader.cs" />
-    <Compile Include="src\Graphics\Effects\ShaderProperties.cs" />
     <Compile Include="src\Graphics\FeDraw.cs" />
     <Compile Include="src\Graphics\FeGraphics.cs" />
     <Compile Include="src\Graphics\Fonts\Font.cs" />
@@ -113,13 +113,14 @@
     <Compile Include="src\Graphics\Fonts\GlyphInfo.cs" />
     <Compile Include="src\Graphics\Fonts\GlyphPage.cs" />
     <Compile Include="src\Graphics\Fonts\Text.cs" />
+    <Compile Include="src\Graphics\PostProcessing\PostProcessingLayer.cs" />
+    <Compile Include="src\Graphics\PostProcessing\PostProcessingStack.cs" />
     <Compile Include="src\Graphics\Renderers\DebugRenderer.cs" />
     <Compile Include="src\Graphics\Renderers\DefaultRenderer.cs" />
     <Compile Include="src\Graphics\Renderers\GuiRenderer.cs" />
     <Compile Include="src\Graphics\Renderers\Renderer.cs" />
     <Compile Include="src\Graphics\RenderSurface.cs" />
     <Compile Include="src\Graphics\ResolutionManager.cs" />
-    <Compile Include="src\Graphics\Effects\FeShaders.cs" />
     <Compile Include="src\Graphics\Sprite.cs" />
     <Compile Include="src\Graphics\SpriteSheet.cs" />
     <Compile Include="src\Graphics\TileMap.cs" />
