@@ -220,18 +220,21 @@ namespace FerretEngine.Graphics
             rect.X = (int) rel.X;
             rect.Y = (int) rel.Y;
             
-            FeGraphics.SpriteBatch.Draw(px.Texture, rect, px.ClipRect, _color);
+            FeGraphics.SpriteBatch.Draw(px.Texture, rect, px.ClipRect, color);
         }
         
         private static void RectOutline(Rectangle rect, Color color, int border)
         {
             Sprite px = FeGraphics.Pixel;
             Vector2 rel = FeMath.Floor(new Vector2(rect.X, rect.Y));
+
+            int xx = FeMath.FloorToInt(rel.X - border / 2f);
+            int yy = FeMath.FloorToInt(rel.Y - border / 2f);
             
-            var top = new Rectangle((int)rel.X, (int)rel.Y, rect.Width, border);
-            var bot = new Rectangle((int)rel.X, (int)rel.Y + rect.Height - border, rect.Width, border);
-            var right = new Rectangle((int)rel.X + rect.Width - border, (int)rel.Y, border, rect.Height);
-            var left = new Rectangle((int)rel.X, (int)rel.Y, border, rect.Height);
+            var top = new Rectangle(xx, yy, rect.Width + border, border);
+            var bot = new Rectangle(xx, yy + rect.Height, rect.Width + border, border);
+            var right = new Rectangle(xx + rect.Width, yy, border, rect.Height + border);
+            var left = new Rectangle(xx, yy, border, rect.Height + border);
             
             FeGraphics.SpriteBatch.Draw(px.Texture, top, px.ClipRect, color);
             FeGraphics.SpriteBatch.Draw(px.Texture, bot, px.ClipRect, color);

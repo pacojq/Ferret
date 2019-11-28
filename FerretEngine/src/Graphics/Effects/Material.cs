@@ -87,6 +87,11 @@ namespace FerretEngine.Graphics.Effects
                                 BindVector4(p);
                             else goto default;
                         }
+                        else if (p.ParameterClass == EffectParameterClass.Scalar)
+                            BindFloat(p);
+                        
+                        // TODO matrices, etc
+                        // else UnknownEffectParameter(p);
                         break;
                     
                     default:
@@ -121,6 +126,13 @@ namespace FerretEngine.Graphics.Effects
         {
             bool value = false;
             if(GetBool(p.Name, ref value) || Shader.GetGlobalBool(p.Name, ref value))
+                p.SetValue(value);
+        }
+        
+        private void BindFloat(EffectParameter p)
+        {
+            float value = 0;
+            if(GetFloat(p.Name, ref value) || Shader.GetGlobalFloat(p.Name, ref value))
                 p.SetValue(value);
         }
         

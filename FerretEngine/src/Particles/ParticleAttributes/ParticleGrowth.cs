@@ -4,9 +4,9 @@ namespace FerretEngine.Particles.ParticleAttributes
 {
     public class ParticleGrowth
     {
-        public static ParticleGrowth Fixed(float lifetime)
+        public static ParticleGrowth Fixed(float growth)
         {
-            return new ParticleGrowth(lifetime, lifetime);
+            return new ParticleGrowth(growth, growth);
         }
 
         public static ParticleGrowth RandomRange(float min, float max)

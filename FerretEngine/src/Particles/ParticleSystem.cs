@@ -10,18 +10,22 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace FerretEngine.Particles
 {
-    internal class ParticleSystem
+    public class ParticleSystem
     {
 
         public int MaxParticles
         {
             get => _maxParticles;
-            set => SetMaxParticles(value);
+            internal set => SetMaxParticles(value);
         }
         private int _maxParticles;
         
-        public ParticleType ParticleType { get; set; }
-        
+        public ParticleType ParticleType { get; internal set; }
+
+        /// <summary>
+        /// Origin of the particle system.
+        /// </summary>
+        public Vector2 Origin { get; set; }
 
         private Particle[] _particles;
         
@@ -38,6 +42,7 @@ namespace FerretEngine.Particles
         public ParticleSystem(ParticleType particleType, int maxParticles)
         {
             ParticleType = particleType;
+            Origin = Vector2.Zero;
             _particles = new Particle[maxParticles];
             _maxParticles = maxParticles;
             _seek = 0;
@@ -112,7 +117,7 @@ namespace FerretEngine.Particles
             FeDraw.SetMaterial(Material.Default);
             FeDraw.SpriteExt(
                     ParticleType.Sprite,
-                    part.Position,
+                    Origin + part.Position,
                     part.Color,
                     part.Angle,
                     Vector2.One * part.Size,

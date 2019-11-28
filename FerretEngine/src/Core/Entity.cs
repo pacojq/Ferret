@@ -51,6 +51,9 @@ namespace FerretEngine.Core
         
         
         public Vector2 Position { get; set; }
+        
+        
+        public float Rotation { get; set; }
 
 
         // Left as a property just in case we want to

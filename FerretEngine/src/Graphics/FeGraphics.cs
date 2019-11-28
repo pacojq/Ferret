@@ -52,6 +52,29 @@ namespace FerretEngine.Graphics
 
         
         internal static ResolutionManager Resolution { get; private set; }
+        
+        /// <summary>
+        /// The width of the game window.
+        /// </summary>
+        public static int WindowWidth => Resolution.WindowWidth;
+        
+        /// <summary>
+        /// The height of the game window.
+        /// </summary>
+        public static int WindowHeight => Resolution.WindowHeight;
+        
+        /// <summary>
+        /// The width of the monitor display the game is running on.
+        /// </summary>
+        public static int DisplayWidth => Resolution.DisplayWidth;
+        
+        /// <summary>
+        /// The height of the monitor display the game is running on.
+        /// </summary>
+        public static int DisplayHeight => Resolution.DisplayHeight;
+
+        
+        
 
         public static PostProcessingStack PostProcessing { get; private set; }
         

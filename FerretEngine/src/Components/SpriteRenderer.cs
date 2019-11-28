@@ -1,6 +1,7 @@
 ﻿using FerretEngine.Core;
 using FerretEngine.Graphics;
 using FerretEngine.Graphics.Effects;
+using FerretEngine.Utils;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
@@ -28,7 +29,18 @@ namespace FerretEngine.Components
 
         public Rectangle ClipRect { get; set; }
 
-        public float Rotation { get; set; }
+        public float LocalRotation { get; set; }
+
+        public float Rotation
+        {
+            get
+            {
+                Assert.IsNotNull(Entity, "Cannot calculate a SpriteRenderer Rotation when its Entity is null.");
+                if (Entity != null)
+                    return Entity.Rotation + LocalRotation;
+                return LocalRotation;
+            }
+        }
 
         public Vector2 Scale { get; set; }
 
@@ -43,7 +55,7 @@ namespace FerretEngine.Components
             Alpha = 1f;
             BlendColor = Color.White;
             Scale = Vector2.One;
-            Rotation = 0;
+            LocalRotation = 0;
             Flip = SpriteEffects.None;
             Material = Material.Default;
         }

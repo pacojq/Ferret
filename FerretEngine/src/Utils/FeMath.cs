@@ -145,6 +145,25 @@ namespace FerretEngine.Utils
         
         
         
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static int Abs(int value)
+        {
+            return Math.Abs(value);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static float Abs(float value)
+        {
+            return Math.Abs(value);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Vector2 Abs(Vector2 value)
+        {
+            return new Vector2(Math.Abs(value.X), Math.Abs(value.Y));
+        }
+        
+        
         
         
         
@@ -167,7 +186,8 @@ namespace FerretEngine.Utils
         {
             return new Vector2(FeMath.Floor(vec.X), FeMath.Floor(vec.Y));
         }
-        
+
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static float Ceil(float f)
         {
@@ -243,7 +263,5 @@ namespace FerretEngine.Utils
                 Lerp(a.A, b.A, percent)
             );
         }
-
-        
     }
 }
