@@ -249,15 +249,21 @@ namespace FerretEngine.Graphics
         
         
         
+        /// <summary>
+        /// Draws a string and returns its width and height.
+        /// </summary>
+        /// <param name="text"></param>
+        /// <param name="position"></param>
+        /// <returns></returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static void Text(string text, Vector2 position)
+        public static Vector2 Text(string text, Vector2 position)
         {
-            TextExt(text, position, Color);
+            return TextExt(text, position, Color);
         }
         
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static void TextExt(string text, Vector2 position, Color color)
+        public static Vector2 TextExt(string text, Vector2 position, Color color)
         {
             Assert.IsTrue(FeGraphics.IsRendering);
             
@@ -278,6 +284,8 @@ namespace FerretEngine.Graphics
                 offset.Y = -tx.Height;
             
             tx.Draw(FeGraphics.SpriteBatch, position + offset, color);
+            
+            return new Vector2(tx.Width, tx.Height);
         }
         
     }
