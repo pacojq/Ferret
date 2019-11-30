@@ -1,5 +1,6 @@
 ﻿using System.Runtime.CompilerServices;
 using NLog;
+using NLog.Config;
 using NLog.Layouts;
 using NLog.Targets;
 
@@ -11,31 +12,37 @@ namespace FerretEngine.Logging
     public static class FeLog
     {
         private static Logger _logger;
+        private static Logger _ferretLogger;
         
         internal static void Initialize()
         {
-            var config = new NLog.Config.LoggingConfiguration();
-
             // Targets where to log to: File and Console
             //var logfile = new FileTarget("logfile") { FileName = "file.txt" };
-            var logconsole = new ColoredConsoleTarget("logconsole");
             
-            //logfile.Layout = Layout.FromString("${longdate}| ${level:uppercase=true}\t${message}");
-            logconsole.Header = Layout.FromString("${longdate} | Welcome to FerretEngine");
-            logconsole.Layout = Layout.FromString("${date} | [${level:uppercase=true}]\t${message}");
+            // Application logger
+            ColoredConsoleTarget appConsole = new ColoredConsoleTarget("logconsole");
+            appConsole.Header = Layout.FromString("${date} | Welcome to FerretEngine\n");
+            appConsole.Layout = Layout.FromString("${date} | App    [${level:uppercase=true}]\t${message}");
             
-            // Rules for mapping loggers to targets   
+            
+            // Internal Logger
+            ColoredConsoleTarget internalConsole = new ColoredConsoleTarget("internalConsole");
+            internalConsole.Layout = Layout.FromString("${date} | Ferret [${level:uppercase=true}]\t${message}");
+            
+            
+            
+            LoggingConfiguration config = new NLog.Config.LoggingConfiguration();
 #if DEBUG
-            config.AddRule(LogLevel.Debug, LogLevel.Fatal, logconsole);
+            config.AddRule(LogLevel.Debug, LogLevel.Fatal, appConsole, "Application");
+            config.AddRule(LogLevel.Debug, LogLevel.Fatal, internalConsole, "Ferret");
 #else
             config.AddRule(LogLevel.Info, LogLevel.Fatal, logconsole);
 #endif
-            //config.AddRule(LogLevel.Debug, LogLevel.Fatal, logfile);
+            //config.AddRule(LogLevel.Debug, LogLevel.Fatal, logfile); LOG TO FILE
             
-            // Apply config           
-            LogManager.Configuration = config;
-			
-            _logger = LogManager.GetCurrentClassLogger();
+            LogManager.Configuration = config;// Apply config 
+            _logger = LogManager.GetLogger("Application");
+            _ferretLogger = LogManager.GetLogger("Ferret");
         }
         
         
@@ -46,11 +53,23 @@ namespace FerretEngine.Logging
             _logger.Debug(msg);
         }
         
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static void FerretDebug(string msg)
+        {
+            _ferretLogger.Debug(msg);
+        }
+        
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static void Info(string msg)
         {
             _logger.Info(msg);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static void FerretInfo(string msg)
+        {
+            _ferretLogger.Info(msg);
         }
         
         

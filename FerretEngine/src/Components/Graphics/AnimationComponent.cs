@@ -2,7 +2,7 @@
 using FerretEngine.Core;
 using FerretEngine.Graphics;
 
-namespace FerretEngine.Components
+namespace FerretEngine.Components.Graphics
 {
     public class AnimationComponent : Component
     {

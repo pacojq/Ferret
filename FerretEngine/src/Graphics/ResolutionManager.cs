@@ -1,4 +1,8 @@
-﻿using Microsoft.Xna.Framework;
+﻿using System;
+using System.Text;
+using FerretEngine.Logging;
+using FerretEngine.Utils;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
 namespace FerretEngine.Graphics
@@ -52,6 +56,15 @@ namespace FerretEngine.Graphics
         
         public ResolutionManager(GraphicsDeviceManager graphicsDevice, int width, int height)
         {
+            FeLog.FerretInfo("Initializing Resolution Manager.");
+            
+            StringBuilder str = new StringBuilder();
+            str.AppendLine("Available resolutions:");
+            foreach (DisplayMode dm in GraphicsAdapter.DefaultAdapter.SupportedDisplayModes)
+                str.AppendLine($"{dm.Width}x{dm.Height}");
+            
+            FeLog.FerretInfo(str.ToString());
+            
             _graphicsDevice = graphicsDevice;
             _width = _graphicsDevice.PreferredBackBufferWidth;
             _height = _graphicsDevice.PreferredBackBufferHeight;
@@ -85,31 +98,44 @@ namespace FerretEngine.Graphics
        {
 
 #if XBOX360
-           _FullScreen = true;
+           _fullscreen = true;
 #endif
 
            // If we aren't using a full screen mode, the height and width of the window can
            // be set to anything equal to or smaller than the actual screen size.
            if (_fullscreen == false)
            {
-               if ((_width <= GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width)
-                   && (_height <= GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height))
+               if (_width > DisplayWidth || _height > DisplayHeight)
                {
-                   _graphicsDevice.PreferredBackBufferWidth = _width;
-                   _graphicsDevice.PreferredBackBufferHeight = _height;
-                   _graphicsDevice.IsFullScreen = _fullscreen;
-                   _graphicsDevice.PreferMultiSampling = true;
-                   _graphicsDevice.ApplyChanges();
+                   float scaling = Math.Min(DisplayWidth / (float)_width, DisplayHeight / (float)_height);
+
+                   _width = FeMath.FloorToInt(_width * scaling);
+                   _height = FeMath.FloorToInt(_height * scaling);
                }
+               
+               _graphicsDevice.PreferredBackBufferWidth = _width;
+               _graphicsDevice.PreferredBackBufferHeight = _height;
+               _graphicsDevice.IsFullScreen = _fullscreen;
+               _graphicsDevice.PreferMultiSampling = true;
+               _graphicsDevice.ApplyChanges();
            }
            else
            {
+               float ratio = _width / (float) _height;
+               
+               float scale = 1f; // The scale we're going to set.
+               float closerDif = float.MaxValue;
+               
                // If we are using full screen mode, we should check to make sure that the display
                // adapter can handle the video mode we are trying to set.  To do this, we will
                // iterate through the display modes supported by the adapter and check them against
                // the mode we want to set.
+               bool success = false;
                foreach (DisplayMode dm in GraphicsAdapter.DefaultAdapter.SupportedDisplayModes)
                {
+                   if (success)
+                       break;
+                   
                    // Check the width and height of each mode against the passed values
                    if ((dm.Width == _width) && (dm.Height == _height))
                    {
@@ -119,7 +145,46 @@ namespace FerretEngine.Graphics
                        _graphicsDevice.IsFullScreen = _fullscreen;
                        _graphicsDevice.PreferMultiSampling = true;
                        _graphicsDevice.ApplyChanges();
+
+                       success = true;
                    }
+                   else
+                   {
+                       float adjustedWidth = _width;
+                       float adjustedHeight = _height;
+                       
+                       if (adjustedWidth > dm.Width || adjustedHeight > DisplayHeight)
+                       {
+                           float scaling = FeMath.FloorToInt(Math.Min(DisplayWidth / (float)adjustedWidth, DisplayHeight / (float)adjustedHeight));
+
+                           adjustedWidth = FeMath.FloorToInt(adjustedWidth * scaling);
+                           adjustedHeight = FeMath.FloorToInt(adjustedHeight * scaling);
+                       }
+                       
+                       float displayRatio = dm.Width / (float) dm.Height;
+                       float dif = Math.Abs(ratio - displayRatio);
+
+                       if (dif < closerDif)
+                       {
+                           closerDif = dif;
+                           scale = Math.Min(dm.Width / (float)adjustedWidth, dm.Height / (float)_height);
+                       }
+                   }
+               }
+
+               if (!success)
+               {
+                   // Adjust to closest ratio
+                   //scale = FeMath.FloorToInt(scale);
+                       
+                   _width = FeMath.FloorToInt(_width * scale);
+                   _height = FeMath.FloorToInt(_height * scale);
+                   
+                   _graphicsDevice.PreferredBackBufferWidth = _width;
+                   _graphicsDevice.PreferredBackBufferHeight = _height;
+                   _graphicsDevice.IsFullScreen = _fullscreen;
+                   _graphicsDevice.PreferMultiSampling = true;
+                   _graphicsDevice.ApplyChanges();
                }
            }
 
@@ -128,6 +193,10 @@ namespace FerretEngine.Graphics
            _width =   _graphicsDevice.PreferredBackBufferWidth;
            _height = _graphicsDevice.PreferredBackBufferHeight;
        }
+        
+        
+        
+        
 
         /// <summary>
         /// Sets the device to use the draw pump

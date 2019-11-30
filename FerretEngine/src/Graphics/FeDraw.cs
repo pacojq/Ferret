@@ -266,9 +266,7 @@ namespace FerretEngine.Graphics
         public static Vector2 TextExt(string text, Vector2 position, Color color)
         {
             Assert.IsTrue(FeGraphics.IsRendering);
-            
-            //SetMaterial(Material.Default);
-            
+
             Text tx = Font.MakeText(text);
             
             Vector2 offset = Vector2.Zero;
@@ -282,6 +280,9 @@ namespace FerretEngine.Graphics
                 offset.Y = -tx.Height / 2f;
             else if (_vAlign == VAlign.Bottom)
                 offset.Y = -tx.Height;
+
+            //Vector2 pos = position + offset;
+            // TODO split \n and draw different texts
             
             tx.Draw(FeGraphics.SpriteBatch, position + offset, color);
             

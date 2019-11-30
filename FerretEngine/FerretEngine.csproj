@@ -82,12 +82,15 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="src\Components\AnimationComponent.cs" />
     <Compile Include="src\Components\Colliders\BoxCollider.cs" />
     <Compile Include="src\Components\Colliders\CircleCollider.cs" />
     <Compile Include="src\Components\Colliders\PointCollider.cs" />
-    <Compile Include="src\Components\SpriteRenderer.cs" />
-    <Compile Include="src\Components\TileMapRenderer.cs" />
+    <Compile Include="src\Components\Graphics\AnimationComponent.cs" />
+    <Compile Include="src\Components\Graphics\GuiSpriteRenderer.cs" />
+    <Compile Include="src\Components\Graphics\GuiTextRenderer.cs" />
+    <Compile Include="src\Components\Graphics\SpriteRenderer.cs" />
+    <Compile Include="src\Components\Graphics\TextRenderer.cs" />
+    <Compile Include="src\Components\Graphics\TileMapRenderer.cs" />
     <Compile Include="src\Content\Dto\SpriteDto.cs" />
     <Compile Include="src\Content\Dto\SpriteSheetDto.cs" />
     <Compile Include="src\Content\FeContent.cs" />

@@ -3,7 +3,7 @@ using FerretEngine.Graphics;
 using FerretEngine.Graphics.Effects;
 using Microsoft.Xna.Framework;
 
-namespace FerretEngine.Components
+namespace FerretEngine.Components.Graphics
 {
     public class TileMapRenderer : Component
     {

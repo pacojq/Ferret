@@ -5,9 +5,9 @@ using FerretEngine.Utils;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
-namespace FerretEngine.Components
+namespace FerretEngine.Components.Graphics
 {
-    public class SpriteRenderer : Component
+    public class GuiSpriteRenderer : Component
     {
         public Sprite Sprite
         {
@@ -49,7 +49,7 @@ namespace FerretEngine.Components
         
         public Material Material { get; set; }
 
-        public SpriteRenderer(Sprite sprite)
+        public GuiSpriteRenderer(Sprite sprite)
         {
             Sprite = sprite;
             Alpha = 1f;
@@ -61,13 +61,15 @@ namespace FerretEngine.Components
         }
 
 
-        public override void Draw(float deltaTime)
+        public override void DrawGUI(float deltaTime)
         {
             if (Sprite == null)
                 return;
 
+            Vector2 pos = Position - Entity.Scene.MainCamera.Position;
+            
             FeDraw.SetMaterial(Material);
-            FeDraw.SpriteExt(Sprite, Position, new Color(BlendColor, Alpha), Rotation, Scale, Flip, 0);
+            FeDraw.SpriteExt(Sprite, pos, new Color(BlendColor, Alpha), Rotation, Scale, Flip, 0);
         }
     }
 }
