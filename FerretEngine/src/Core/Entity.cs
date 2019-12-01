@@ -133,7 +133,14 @@ namespace FerretEngine.Core
         }
         
         
-        
+        private void UpdateQueues()
+        {
+            while (_createQueue.Count > 0)
+                AddComponent(_createQueue.Dequeue());
+            
+            while (_destroyQueue.Count > 0)
+                RemoveComponent(_destroyQueue.Dequeue());
+        }
         
         
 
@@ -146,16 +153,14 @@ namespace FerretEngine.Core
         /// </summary>
         internal void Update(float deltaTime)
         {
-            while (_createQueue.Count > 0)
-                AddComponent(_createQueue.Dequeue());
+            UpdateQueues();
             
             foreach (Component c in Components)
             {
                 c.Update(deltaTime);
             }
-            
-            while (_destroyQueue.Count > 0)
-                RemoveComponent(_destroyQueue.Dequeue());
+
+            UpdateQueues();
 
             OnUpdate(deltaTime);
         }
@@ -282,10 +287,11 @@ namespace FerretEngine.Core
                 if (c is T)
                     return c as T;
             
+            /*
             foreach (var c in _createQueue)
                 if (c is T)
                     return c as T;
-            
+            */
             return null;
         }
 

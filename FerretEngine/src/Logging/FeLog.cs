@@ -36,7 +36,8 @@ namespace FerretEngine.Logging
             config.AddRule(LogLevel.Debug, LogLevel.Fatal, appConsole, "Application");
             config.AddRule(LogLevel.Debug, LogLevel.Fatal, internalConsole, "Ferret");
 #else
-            config.AddRule(LogLevel.Info, LogLevel.Fatal, logconsole);
+            config.AddRule(LogLevel.Info, LogLevel.Fatal, appConsole, "Application");
+            config.AddRule(LogLevel.Info, LogLevel.Fatal, internalConsole, "Ferret");
 #endif
             //config.AddRule(LogLevel.Debug, LogLevel.Fatal, logfile); LOG TO FILE
             
@@ -54,7 +55,7 @@ namespace FerretEngine.Logging
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static void FerretDebug(string msg)
+        internal static void FerretDebug(string msg)
         {
             _ferretLogger.Debug(msg);
         }
@@ -67,7 +68,7 @@ namespace FerretEngine.Logging
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static void FerretInfo(string msg)
+        internal static void FerretInfo(string msg)
         {
             _ferretLogger.Info(msg);
         }
@@ -79,11 +80,23 @@ namespace FerretEngine.Logging
             _logger.Warn(msg);
         }
         
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        internal static void FerretWarning(string msg)
+        {
+            _ferretLogger.Warn(msg);
+        }
+        
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static void Error(string msg)
         {
             _logger.Error(msg);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        internal static void FerretError(string msg)
+        {
+            _ferretLogger.Error(msg);
         }
     }
 }

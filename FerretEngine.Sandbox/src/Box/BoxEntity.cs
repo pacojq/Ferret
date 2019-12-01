@@ -1,5 +1,6 @@
 ﻿using FerretEngine.Components;
 using FerretEngine.Components.Colliders;
+using FerretEngine.Components.Graphics;
 using FerretEngine.Content;
 using FerretEngine.Core;
 using FerretEngine.Graphics;

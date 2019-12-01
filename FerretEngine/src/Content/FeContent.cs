@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using FerretEngine.Content.Dto;
 using FerretEngine.Graphics;
 using FerretEngine.Graphics.Fonts;
@@ -17,6 +18,12 @@ namespace FerretEngine.Content
         private static string FileNotFound(string path)
         {
             return $"Failed to find file at: {path}. Did you add it to the Content folder and copied it to the output directory?";
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static string GetPathInContent(string path)
+        {
+            return Path.Combine(FeGame.ContentDirectory, path);
         }
         
         
@@ -74,14 +81,15 @@ namespace FerretEngine.Content
         /// </summary>
         /// <param name="path">Path to a TTF font</param>
         /// <param name="size">Size of the font</param>
-        public static Font LoadFont(string path, int size)
+        public static Font LoadFont(string path, int size, char defaultChar = '_')
         {
             // TODO try/catch FileNotFoundException and look for the font in the system
             
             path = CheckFilename(path, ".ttf");
             FontLibrary lib = new FontLibrary(File.OpenRead(path), FeGame.Instance.GraphicsDevice);
             Font fnt = lib.CreateFont(size);
-            //fnt.PreheatCache("asdfghjklñqwertyuiopzxcvbnm");
+            fnt.DefaultCharacter = defaultChar;
+            fnt.PreheatCache("asdfghjklñqwertyuiopzxcvbnm");
             return fnt;
         }
         
@@ -129,7 +137,7 @@ namespace FerretEngine.Content
             }
             catch (Exception e)
             {
-                FeLog.Error($"Loading effect '{path}' resulted on an exception:\n{e}");
+                FeLog.FerretError($"Loading effect '{path}' resulted on an exception:\n{e}");
                 path = CheckFilename("Ferret/Effects/error.fxb", ".fxb");
             }
 

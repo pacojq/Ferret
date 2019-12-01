@@ -100,7 +100,7 @@ namespace FerretEngine.Physics
 
         public void Add(Collider collider)
         {
-            FeLog.Debug($"Adding collider to space: {collider}");
+            FeLog.FerretDebug($"Adding collider to space: {collider}");
             int index = _entities.IndexOf(collider.Entity);
             if (index < 0)
             {

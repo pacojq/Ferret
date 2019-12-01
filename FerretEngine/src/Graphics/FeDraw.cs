@@ -261,9 +261,24 @@ namespace FerretEngine.Graphics
             return TextExt(text, position, Color);
         }
         
-        
+        /// <summary>
+        /// Draws a colored string and returns its width and height.
+        /// </summary>
+        /// <param name="text"></param>
+        /// <param name="position"></param>
+        /// <returns></returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Vector2 TextExt(string text, Vector2 position, Color color)
+        {
+            if (text == null)
+                throw new ArgumentNullException(nameof(text));
+            if (text.Contains("\n"))
+                return DrawTextMultiLine(text, position, color);
+            return DrawTextSingleLine(text, position, color);
+        }
+
+
+        private static  Vector2 DrawTextSingleLine(string text, Vector2 position, Color color)
         {
             Assert.IsTrue(FeGraphics.IsRendering);
 
@@ -281,12 +296,49 @@ namespace FerretEngine.Graphics
             else if (_vAlign == VAlign.Bottom)
                 offset.Y = -tx.Height;
 
-            //Vector2 pos = position + offset;
-            // TODO split \n and draw different texts
-            
             tx.Draw(FeGraphics.SpriteBatch, position + offset, color);
             
             return new Vector2(tx.Width, tx.Height);
+        }
+        
+        private static  Vector2 DrawTextMultiLine(string text, Vector2 position, Color color)
+        {
+            Assert.IsTrue(FeGraphics.IsRendering);
+
+            string[] split = text.Split('\n');
+            Text[] texts = new Text[split.Length];
+
+            Vector2 size = Vector2.Zero;
+            
+            for (int i = 0; i < split.Length; i++)
+            {
+                texts[i] = Font.MakeText(split[i]);
+                
+                if (texts[i].Width > size.X)
+                    size.X = texts[i].Width;
+                
+                size.Y += texts[i].Height;
+            }
+            
+            
+            Vector2 offset = Vector2.Zero;
+            if (_vAlign == VAlign.Centre)
+                offset.Y = -size.Y / 2f;
+            else if (_vAlign == VAlign.Bottom)
+                offset.Y = -size.Y;
+
+            for (int i = 0; i < split.Length; i++)
+            {
+                if (_hAlign == HAlign.Centre)
+                    offset.X = -texts[i].Width / 2f;
+                else if (_hAlign == HAlign.Right)
+                    offset.X = -texts[i].Width;
+                
+                texts[i].Draw(FeGraphics.SpriteBatch, position + offset, color);
+                offset.Y += texts[i].Height;
+            }
+            
+            return new Vector2(size.X, size.Y);
         }
         
     }

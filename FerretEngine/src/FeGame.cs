@@ -163,7 +163,7 @@ namespace FerretEngine
             // Create a new SpriteBatch, which can be used to draw textures.
             //spriteBatch = new SpriteBatch(GraphicsDevice);
 
-            FeLog.Info("Content: " + this.Content.RootDirectory);
+            FeLog.FerretInfo("Content: " + this.Content.RootDirectory);
             
             // TODO: use this.Content to load your game content here
         }
@@ -174,7 +174,7 @@ namespace FerretEngine
         /// </summary>
         protected override void UnloadContent()
         {
-	        FeLog.Warning("Ferret unloading content");
+	        FeLog.FerretWarning("Ferret unloading content");
             // TODO: Unload any non ContentManager content here
         }
 
@@ -254,7 +254,7 @@ namespace FerretEngine
         protected override void OnExiting(object sender, EventArgs args)
         {
 	        base.OnExiting(sender, args);
-	        FeLog.Info("Exiting game");
+	        FeLog.FerretInfo("Exiting game");
         }
         
         

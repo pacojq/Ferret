@@ -137,9 +137,6 @@ namespace FerretEngine.Core
             if (!Paused)
                 TimeActive += FeGame.DeltaTime;
             
-            while (_createQueue.Count > 0)
-                AddLayer(_createQueue.Dequeue());
-            
             foreach (Layer layer in _layers)
                 layer.BeforeUpdate();
         }
@@ -150,8 +147,14 @@ namespace FerretEngine.Core
             if (Paused)
                 return;
             
+            while (_createQueue.Count > 0)
+                AddLayer(_createQueue.Dequeue());
+            
             foreach (Layer layer in _layers)
                 layer.Update(deltaTime);
+            
+            while (_createQueue.Count > 0)
+                AddLayer(_createQueue.Dequeue());
 
             MainCamera.Update();
             Space.Update();
@@ -204,7 +207,7 @@ namespace FerretEngine.Core
             Layer layer = _layers.FirstOrDefault(l => l.Id.Equals(layerId));
             if (layer == null)
             {
-                FeLog.Warning($"Could not find layer with id '{layerId}'. Creating entity in default layer instead.");
+                FeLog.FerretWarning($"Could not find layer with id '{layerId}'. Creating entity in default layer instead.");
                 layer = DefaultLayer;
             }
             Create(entity, layer);

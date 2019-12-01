@@ -74,7 +74,7 @@ namespace FerretEngine.Graphics
             _spritesWide = (_textureWidth - beginX) / (spriteWidth + offsetX) + 1;
             _spritesHigh = (_textureHeight - beginY) / (spriteHeight + offsetY) + 1;
             
-            FeLog.Warning($"SpriteSheet created [{_spritesWide}x{_spritesHigh}]");
+            FeLog.FerretWarning($"SpriteSheet created [{_spritesWide}x{_spritesHigh}]");
         }
         
         

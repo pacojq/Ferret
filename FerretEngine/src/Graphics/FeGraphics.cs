@@ -134,7 +134,7 @@ namespace FerretEngine.Graphics
             
             _spriteBatch = new SpriteBatch(_game.GraphicsDevice);
             
-            FeLog.Debug($"Creating Render Target. Size = {Resolution.WindowWidth}x{Resolution.WindowHeight}");
+            FeLog.FerretDebug($"Creating Render Target. Size = {Resolution.WindowWidth}x{Resolution.WindowHeight}");
             _renderTarget = new RenderTarget2D(GraphicsDevice, Resolution.WindowWidth, Resolution.WindowHeight);
             
             _currentMaterial = Material.Default;
