@@ -77,7 +77,7 @@
             <CompiledHlsl Include="Content\**\*.fxb" />
         </ItemGroup>
         
-        <Warning Text="Hi" />
+        <Message Text=".fxb files successfully copied to Content output." />
         <!--
         <Copy SourceFiles="@(CompiledHlsl)" DestinationFolder="@(CompiledHlsl -> '$(OutputPath)%(RelativeDir)%(Filename).fxb' )" />
         -->
