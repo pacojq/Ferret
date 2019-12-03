@@ -226,7 +226,7 @@ namespace FerretEngine.Graphics
         internal static void SetMaterial(Material material)
         {
             Assert.IsNotNull(CurrentRenderer);
-            if (material != _currentMaterial)
+            if (!material.AreEqual(_currentMaterial))
             {
                 SpriteBatchEnd();
                 _currentMaterial = material;

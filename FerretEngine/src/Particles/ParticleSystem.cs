@@ -26,6 +26,10 @@ namespace FerretEngine.Particles
         /// Origin of the particle system.
         /// </summary>
         public Vector2 Origin { get; set; }
+        
+        
+        public Material Material { get; set; }
+        
 
         private Particle[] _particles;
         
@@ -43,6 +47,7 @@ namespace FerretEngine.Particles
         {
             ParticleType = particleType;
             Origin = Vector2.Zero;
+            Material = Material.Default;
             _particles = new Particle[maxParticles];
             _maxParticles = maxParticles;
             _seek = 0;
@@ -114,7 +119,7 @@ namespace FerretEngine.Particles
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private void Draw(Particle part, float deltaTime)
         {
-            FeDraw.SetMaterial(Material.Default);
+            FeDraw.SetMaterial(Material);
             FeDraw.SpriteExt(
                     ParticleType.Sprite,
                     Origin + part.Position,
@@ -124,6 +129,7 @@ namespace FerretEngine.Particles
                     SpriteEffects.None,
                     1
                 );
+            FeDraw.SetMaterial(Material.Default);
         }
         
         

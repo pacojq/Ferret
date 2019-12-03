@@ -48,6 +48,17 @@ namespace FerretEngine.Graphics.Effects
         }
 
 
+        public bool AreEqual(Material other)
+        {
+            if (other == null)
+                return false;
+
+            if (this.Effect == null)
+                return other.Effect == null;
+            
+            return Effect.Equals(other.Effect);
+        }
+
 
         /// <summary>
         /// Used before each render call.

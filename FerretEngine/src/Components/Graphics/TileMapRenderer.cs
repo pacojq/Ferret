@@ -9,9 +9,12 @@ namespace FerretEngine.Components.Graphics
     {
         private TileMap _tileMap;
         
+        public Material Material { get; set; }
+        
         public TileMapRenderer(TileMap tileMap)
         {
             _tileMap = tileMap;
+            Material = Material.Default;
         }
         
         public override void Draw(float deltaTime)
@@ -19,7 +22,7 @@ namespace FerretEngine.Components.Graphics
             if (_tileMap == null)
                 return;
 
-            FeDraw.SetMaterial(Material.Default);
+            FeDraw.SetMaterial(Material);
             
             for (int i = 0; i < _tileMap.Width; i++)
             {
@@ -31,6 +34,8 @@ namespace FerretEngine.Components.Graphics
                     pos.Y += _tileMap.SpriteSheet.SpriteHeight;
                 }
             }
+            
+            FeDraw.SetMaterial(Material.Default);
         }
     }
 }
