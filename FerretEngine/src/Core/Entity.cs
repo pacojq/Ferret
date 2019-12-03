@@ -287,11 +287,11 @@ namespace FerretEngine.Core
                 if (c is T)
                     return c as T;
             
-            /*
+            
             foreach (var c in _createQueue)
                 if (c is T)
                     return c as T;
-            */
+            
             return null;
         }
 
