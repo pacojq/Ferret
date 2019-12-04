@@ -155,28 +155,19 @@ namespace FerretEngine.Graphics
             // Fullscreen
             
             float ratio = _width / (float) _height;
-            DisplayMode fitDisplayMode = ChooseBestFitDisplayMode(out float dmScale);
+            DisplayMode fitDisplayMode = ChooseBestFitDisplayMode();
 
             if (fitDisplayMode != null)
             {
-                _width = FeMath.FloorToInt(_width * dmScale);
-                _height = FeMath.FloorToInt(_height * dmScale);
+                FeLog.Debug($"Found fitting display mode: {fitDisplayMode}");
+                
+                _width = fitDisplayMode.Width;
+                _height = fitDisplayMode.Height;
             }
             else
             {
-                float wScale = DisplayWidth / (float) _width;
-                float hScale = DisplayHeight / (float) _height;
-
-                if (wScale < hScale)
-                {
-                    _width = FeMath.FloorToInt(_width * wScale);
-                    _height = FeMath.FloorToInt(_height * wScale);
-                }
-                else
-                {
-                    _width = FeMath.FloorToInt(_width * hScale);
-                    _height = FeMath.FloorToInt(_height * hScale);
-                }
+                _width = DisplayWidth;
+                _height = DisplayHeight;
             }
             ApplyResolutionToGraphicsDevice();
             
@@ -186,10 +177,10 @@ namespace FerretEngine.Graphics
         }
 
 
-        private DisplayMode ChooseBestFitDisplayMode(out float scale)
+        private DisplayMode ChooseBestFitDisplayMode()
         {
             DisplayMode fitDisplayMode = null;
-            scale = 0f;
+            float scale = 0f;
             
             foreach (DisplayMode dm in GraphicsAdapter.DefaultAdapter.SupportedDisplayModes)
             {
