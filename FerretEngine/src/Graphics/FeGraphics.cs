@@ -103,11 +103,8 @@ namespace FerretEngine.Graphics
             _game = game;
 
             GraphicsManager = new GraphicsDeviceManager(game);
-            Resolution = new ResolutionManager(GraphicsManager, width, height);
+            Resolution = new ResolutionManager(GraphicsManager, width, height, windowWidth, windowHeight, fullscreen);
             PostProcessing = new PostProcessingStack();
-            
-            Resolution.SetVirtualResolution(width, height); // Game Resolution
-            Resolution.SetResolution(windowWidth, windowHeight, fullscreen); // Window resolution
             
             // TODO allow changing borderless and resizing
             game.Window.IsBorderlessEXT = false;
