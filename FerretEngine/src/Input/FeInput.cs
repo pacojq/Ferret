@@ -17,7 +17,7 @@ namespace FerretEngine.Input
 			Keyboard = new KeyboardInput();
 			Gamepad = new GamepadInput(PlayerIndex.One);
 			
-			FeLog.Info("FerretInput initialized!");
+			FeLog.FerretInfo("FerretInput initialized!");
 		}
 		
 		

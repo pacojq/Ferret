@@ -99,6 +99,8 @@ namespace FerretEngine.Core
         
         internal int _depth = 0;
         
+        private readonly Queue<Component> _createQueue;
+        private readonly Queue<Component> _destroyQueue;
         
         #endregion
         
@@ -111,8 +113,12 @@ namespace FerretEngine.Core
 
             Tag = tag;
             Position = position;
+            
             _components = new List<Component>();
             _colliders = new List<Collider>();
+            
+            _createQueue= new Queue<Component>();
+            _destroyQueue = new Queue<Component>();
         }
 
         
@@ -127,7 +133,14 @@ namespace FerretEngine.Core
         }
         
         
-        
+        private void UpdateQueues()
+        {
+            while (_createQueue.Count > 0)
+                AddComponent(_createQueue.Dequeue());
+            
+            while (_destroyQueue.Count > 0)
+                RemoveComponent(_destroyQueue.Dequeue());
+        }
         
         
 
@@ -140,10 +153,14 @@ namespace FerretEngine.Core
         /// </summary>
         internal void Update(float deltaTime)
         {
+            UpdateQueues();
+            
             foreach (Component c in Components)
             {
                 c.Update(deltaTime);
             }
+
+            UpdateQueues();
 
             OnUpdate(deltaTime);
         }
@@ -190,13 +207,28 @@ namespace FerretEngine.Core
         
         #region // - - - - - Component Management - - - - - //
 
+        
+        /// <summary>
+        /// Binds a Component to the Entity.
+        /// </summary>
+        /// <param name="component"></param>
+        /// <exception cref="InvalidOperationException"></exception>
         public void Bind(Component component)
         {
             if (component.Entity != null)
                 throw new InvalidOperationException("Cannot add a component that is already bound to an entity.");
-            
-            _components.Add(component);
+
             component.Bind(this);
+            _createQueue.Enqueue(component);
+        }
+
+        /// <summary>
+        /// Actually adds a component dequeued from the <see cref="_createQueue"/>.
+        /// </summary>
+        /// <param name="component"></param>
+        private void AddComponent(Component component)
+        {
+            _components.Add(component);
 
             if (component is Collider)
             {
@@ -212,8 +244,17 @@ namespace FerretEngine.Core
         {
             if (component.Entity != this)
                 throw new ArgumentException("An Entity can only unbind components which are bound to it.");
-            
+
             component.Unbind();
+            _destroyQueue.Enqueue(component);
+        }
+
+        /// <summary>
+        /// Actually adds a component dequeued from the <see cref="_destroyQueue"/>.
+        /// </summary>
+        /// <param name="component"></param>
+        private void RemoveComponent(Component component)
+        {
             _components.Remove(component);
             
             if (component is Collider)
@@ -224,7 +265,10 @@ namespace FerretEngine.Core
                     this.Scene.Space.Remove(col);
             }
         }
-
+        
+        
+        
+        
         public void Bind(params Component[] components)
         {
             foreach (var c in components)
@@ -242,6 +286,12 @@ namespace FerretEngine.Core
             foreach (var c in Components)
                 if (c is T)
                     return c as T;
+            
+            
+            foreach (var c in _createQueue)
+                if (c is T)
+                    return c as T;
+            
             return null;
         }
 

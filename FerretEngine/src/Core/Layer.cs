@@ -1,6 +1,8 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using FerretEngine.Components;
+using FerretEngine.Logging;
 using FerretEngine.Physics;
 
 namespace FerretEngine.Core
@@ -8,23 +10,23 @@ namespace FerretEngine.Core
     public class Layer : IEnumerable<Entity>, IEnumerable
     {
         internal static int CreationIdCount = 0;
-        
+
         public string Id { get; }
-        
+
         public Scene Scene { get; }
-        
+
         /// <summary>
         /// Used to check if a Layer was created before another.
         /// </summary>
         internal int CreationId { get; }
-        
-        
-        
+
+
+
         /// <summary>
         /// Whether the Layer will update.
         /// </summary>
         public bool IsEnabled { get; set; }
-        
+
         /// <summary>
         /// Whether the Layer will render.
         /// </summary>
@@ -40,9 +42,10 @@ namespace FerretEngine.Core
                 Scene.SortLayers();
             }
         }
+
         private int _depth;
-        
-        
+
+
         public IEnumerable<Entity> Entities => _entities;
         private readonly List<Entity> _entities;
         
@@ -62,6 +65,15 @@ namespace FerretEngine.Core
             
             _createQueue= new Queue<Entity>();
             _destroyQueue = new Queue<Entity>();
+        }
+
+        private void UpdateQueues()
+        {
+            while (_createQueue.Count > 0)
+                AddEntity(_createQueue.Dequeue());
+            
+            while (_destroyQueue.Count > 0)
+                RemoveEntity(_destroyQueue.Dequeue());
         }
         
         
@@ -92,8 +104,7 @@ namespace FerretEngine.Core
             if (!IsEnabled)
                 return;
             
-            while (_createQueue.Count > 0)
-                AddEntity(_createQueue.Dequeue());
+            UpdateQueues();
         }
         
 
@@ -116,8 +127,7 @@ namespace FerretEngine.Core
             if (!IsEnabled)
                 return;
             
-            while (_destroyQueue.Count > 0)
-                RemoveEntity(_destroyQueue.Dequeue());
+            UpdateQueues();
         }
         
         
@@ -156,6 +166,8 @@ namespace FerretEngine.Core
                 entity.Scene = null;
                 foreach (Collider col in entity.Colliders)
                     Scene.Space.Remove(col);
+                
+                FeLog.FerretDebug("Entity destroyed");
             }
         }
         

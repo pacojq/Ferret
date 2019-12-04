@@ -31,6 +31,7 @@ namespace FerretEngine.Core
         public IEnumerable<Layer> Layers => _layers;
         private readonly List<Layer> _layers;
 
+        private readonly Queue<Layer> _createQueue;
 
         public IEnumerable<Entity> Entities
         {
@@ -63,9 +64,12 @@ namespace FerretEngine.Core
         {
             Space = new Space();
             
+            _createQueue = new Queue<Layer>();
+            
             _layers = new List<Layer>();
             DefaultLayer = CreateLayer("default");
 
+            
             BackgroundColor = Color.CornflowerBlue;
             MainCamera = new Camera(Vector2.Zero);
         }
@@ -74,8 +78,17 @@ namespace FerretEngine.Core
         public Layer CreateLayer(string id)
         {
             Layer layer = new Layer(id, this);
-            _layers.Add(layer);
+            _createQueue.Enqueue(layer);
             return layer;
+        }
+
+        /// <summary>
+        /// Actually add a Layer dequeued from <see cref="_createQueue"/>.
+        /// </summary>
+        /// <param name="layer"></param>
+        private void AddLayer(Layer layer)
+        {
+            _layers.Add(layer);
         }
 
 
@@ -134,8 +147,14 @@ namespace FerretEngine.Core
             if (Paused)
                 return;
             
+            while (_createQueue.Count > 0)
+                AddLayer(_createQueue.Dequeue());
+            
             foreach (Layer layer in _layers)
                 layer.Update(deltaTime);
+            
+            while (_createQueue.Count > 0)
+                AddLayer(_createQueue.Dequeue());
 
             MainCamera.Update();
             Space.Update();
@@ -182,10 +201,13 @@ namespace FerretEngine.Core
 
         public void Create(Entity entity, string layerId)
         {
+            if (entity == null)
+                throw new ArgumentNullException(nameof(entity));
+            
             Layer layer = _layers.FirstOrDefault(l => l.Id.Equals(layerId));
             if (layer == null)
             {
-                FeLog.Warning($"Could not find layer with id '{layerId}'. Creating entity in default layer instead.");
+                FeLog.FerretWarning($"Could not find layer with id '{layerId}'. Creating entity in default layer instead.");
                 layer = DefaultLayer;
             }
             Create(entity, layer);
@@ -193,16 +215,26 @@ namespace FerretEngine.Core
         
         public void Create(Entity entity, Layer layer)
         {
+            if (entity == null)
+                throw new ArgumentNullException(nameof(entity));
+            
+            if (layer == null)
+                throw new ArgumentNullException(nameof(layer));
+            
             layer.Create(entity);
         }
 
         public void Create(Entity entity)
         {
+            if (entity == null)
+                throw new ArgumentNullException(nameof(entity));
             DefaultLayer.Create(entity);
         }
         
         public void Destroy(Entity entity)
         {
+            if (entity == null)
+                throw new ArgumentNullException(nameof(entity));
             entity.Layer.Destroy(entity);
         }
 

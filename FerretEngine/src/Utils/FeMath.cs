@@ -228,6 +228,7 @@ namespace FerretEngine.Utils
         /// <param name="xPercent"></param>
         /// <param name="yPercent"></param>
         /// <returns></returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static float Blerp(float botLeft, float botRight, float topLeft, float topRight, float xPercent, float yPercent) {
             return Lerp(
                 Lerp(botLeft, botRight, xPercent), 
@@ -243,6 +244,7 @@ namespace FerretEngine.Utils
         /// <param name="b"></param>
         /// <param name="percent"></param>
         /// <returns></returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static float Lerp(float a, float b, float percent) {
             return a + (b - a) * percent;
         }
@@ -254,6 +256,7 @@ namespace FerretEngine.Utils
         /// <param name="b"></param>
         /// <param name="percent"></param>
         /// <returns></returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Color Lerp(Color a, Color b, float percent)
         {
             return new Color(
@@ -262,6 +265,21 @@ namespace FerretEngine.Utils
                 Lerp(a.B, b.B, percent), 
                 Lerp(a.A, b.A, percent)
             );
+        }
+
+        
+        /// <summary>
+        /// Gets a length and a direction, and returns the point
+        /// where x is cos(direction) * length and y is sin(direction) * length.
+        /// </summary>
+        /// <param name="length"></param>
+        /// <param name="dir"></param>
+        /// <returns></returns>
+        /// <exception cref="NotImplementedException"></exception>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Vector2 LenDir(float length, float dir)
+        {
+            return new Vector2(FeMath.Cos(dir), FeMath.Sin(dir)) * length;
         }
     }
 }

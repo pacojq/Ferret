@@ -5,7 +5,7 @@ using FerretEngine.Utils;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
-namespace FerretEngine.Components
+namespace FerretEngine.Components.Graphics
 {
     public class SpriteRenderer : Component
     {
@@ -68,6 +68,7 @@ namespace FerretEngine.Components
 
             FeDraw.SetMaterial(Material);
             FeDraw.SpriteExt(Sprite, Position, new Color(BlendColor, Alpha), Rotation, Scale, Flip, 0);
+            FeDraw.SetMaterial(Material.Default);
         }
     }
 }

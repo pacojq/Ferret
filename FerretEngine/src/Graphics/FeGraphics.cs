@@ -103,11 +103,8 @@ namespace FerretEngine.Graphics
             _game = game;
 
             GraphicsManager = new GraphicsDeviceManager(game);
-            Resolution = new ResolutionManager(GraphicsManager, width, height);
+            Resolution = new ResolutionManager(GraphicsManager, width, height, windowWidth, windowHeight, fullscreen);
             PostProcessing = new PostProcessingStack();
-            
-            Resolution.SetVirtualResolution(width, height); // Game Resolution
-            Resolution.SetResolution(windowWidth, windowHeight, fullscreen); // Window resolution
             
             // TODO allow changing borderless and resizing
             game.Window.IsBorderlessEXT = false;
@@ -134,7 +131,7 @@ namespace FerretEngine.Graphics
             
             _spriteBatch = new SpriteBatch(_game.GraphicsDevice);
             
-            FeLog.Debug($"Creating Render Target. Size = {Resolution.WindowWidth}x{Resolution.WindowHeight}");
+            FeLog.FerretDebug($"Creating Render Target. Size = {Resolution.WindowWidth}x{Resolution.WindowHeight}");
             _renderTarget = new RenderTarget2D(GraphicsDevice, Resolution.WindowWidth, Resolution.WindowHeight);
             
             _currentMaterial = Material.Default;
@@ -226,7 +223,7 @@ namespace FerretEngine.Graphics
         internal static void SetMaterial(Material material)
         {
             Assert.IsNotNull(CurrentRenderer);
-            if (material != _currentMaterial)
+            if (!material.AreEqual(_currentMaterial))
             {
                 SpriteBatchEnd();
                 _currentMaterial = material;
