@@ -147,9 +147,8 @@ namespace FerretEngine.Graphics
 
         internal static void OnWindowResize()
         {
-            
+            // TODO
         }
-        
         
         
 
@@ -165,6 +164,17 @@ namespace FerretEngine.Graphics
                     renderer.Camera = scene.MainCamera;
             }
         }
+        
+        
+        
+        
+        public static void SetResolution(int width, int height, bool fullScreen)
+        { 
+            Resolution.SetResolution(width, height, fullScreen);
+        }
+        
+        
+        
 
         public static void AddRenderer(Renderer renderer)
         {
