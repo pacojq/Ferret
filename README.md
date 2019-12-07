@@ -40,9 +40,12 @@ If you are using Ferret as a **git submodule**, execute: `git submodule update -
 
 Also, you may need the following:
 
+- **MonoGame**, required to build content with its Pipeline tool. You can get it from its 
+[website](http://www.monogame.net/downloads/).
+
 - **DirectX SDK (June 2010)** for building shaders.
-  - **On Windows** : Download from https://www.microsoft.com/en-us/download/details.aspx?id=6812
-  - **On Linux/macOS:** Install using Wine and winetricks
+  - **On Windows** : Download it [here](https://www.microsoft.com/en-us/download/details.aspx?id=6812).
+  - **On Linux/macOS:** Install using Wine and winetricks.
 
 - **FNA Dependencies**, already added as a submodule of Ferret
 
@@ -66,7 +69,6 @@ In short term, the objective of the project is to create an engine capable of bu
 These are the most important features planned for the Ferret engine:
 
  - [ ] Audio support
- - [ ] Shader library
  - [ ] Wider font format support
  - [ ] Entities serialization
  - [ ] Pathfinding module
@@ -78,6 +80,8 @@ In long term, the Ferret Engine will grow with more functionality and quality-of
 Some examples are listed below:
 
  - [ ] UI library
+ - [ ] Shader library
+ - [ ] Lighting
  - [ ] [Premake](https://premake.github.io) to generate Ferret projects
  - [ ] Multi-threading
  - [ ] Editor: Scene editor
