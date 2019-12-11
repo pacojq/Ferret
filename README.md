@@ -1,6 +1,8 @@
 <p align="center">
   <img src="https://img.shields.io/github/license/pacojq/Ferret.svg?color=green" />
   <img src="https://img.shields.io/badge/version-0.0.1-blue.svg" />
+  <a href="https://www.codacy.com/manual/pacojq/Ferret?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=pacojq/Ferret&amp;utm_campaign=Badge_Grade"><img src="https://api.codacy.com/project/badge/Grade/a66f3bafd7644eab9c934b309ed57dff"/>
+  </a>
 </p>
 
 # Ferret Engine
