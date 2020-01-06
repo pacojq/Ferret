@@ -1,11 +1,17 @@
 ﻿using System;
 using System.IO;
 using System.Linq;
+using System.Runtime.CompilerServices;
+using FerretEngine.Audio;
 using FerretEngine.Content.Dto;
 using FerretEngine.Graphics;
 using FerretEngine.Graphics.Fonts;
+using FerretEngine.Logging;
+using FerretEngine.Utils;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Media;
 using Newtonsoft.Json;
 
 namespace FerretEngine.Content
@@ -16,6 +22,12 @@ namespace FerretEngine.Content
         private static string FileNotFound(string path)
         {
             return $"Failed to find file at: {path}. Did you add it to the Content folder and copied it to the output directory?";
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static string GetPathInContent(string path)
+        {
+            return Path.Combine(FeGame.ContentDirectory, path);
         }
         
         
@@ -73,14 +85,15 @@ namespace FerretEngine.Content
         /// </summary>
         /// <param name="path">Path to a TTF font</param>
         /// <param name="size">Size of the font</param>
-        public static Font LoadFont(string path, int size)
+        public static Font LoadFont(string path, int size, char defaultChar = '_')
         {
             // TODO try/catch FileNotFoundException and look for the font in the system
             
             path = CheckFilename(path, ".ttf");
             FontLibrary lib = new FontLibrary(File.OpenRead(path), FeGame.Instance.GraphicsDevice);
             Font fnt = lib.CreateFont(size);
-            //fnt.PreheatCache("asdfghjklñqwertyuiopzxcvbnm");
+            fnt.DefaultCharacter = defaultChar;
+            fnt.PreheatCache("asdfghjklñqwertyuiopzxcvbnm");
             return fnt;
         }
         
@@ -122,7 +135,16 @@ namespace FerretEngine.Content
 
         public static Effect LoadEffect(string path)
         {
-            path = CheckFilename(path, ".fxb");
+            try
+            {
+                path = CheckFilename(path, ".fxb");
+            }
+            catch (Exception e)
+            {
+                FeLog.FerretError($"Loading effect '{path}' resulted on an exception:\n{e}");
+                path = CheckFilename("Ferret/Effects/error.fxb", ".fxb");
+            }
+
             byte[] bytes = GetFileResourceBytes(path);
             return new Effect(FeGame.Instance.GraphicsDevice, bytes);
         }
@@ -149,8 +171,28 @@ namespace FerretEngine.Content
                 })
                 .ToArray();
         }
+
+
+
+        public static Music LoadMusic(string path)
+        {
+            path = CheckFilename(path, ".wav");
+            Song song = FeGame.Instance.Content.Load<Song>(path);
+
+            Assert.IsNotNull(song, "Could not load song: " + path);
+            
+            return new Music(song);
+        }
         
         
-        
+        public static Sound LoadSound(string path)
+        {
+            path = CheckFilename(path, ".wav");
+            SoundEffect sfx = FeGame.Instance.Content.Load<SoundEffect>(path);
+
+            Assert.IsNotNull(sfx, "Could not load sound: " + path);
+            
+            return new Sound(sfx.CreateInstance(), sfx.Duration);
+        }
     }
 }

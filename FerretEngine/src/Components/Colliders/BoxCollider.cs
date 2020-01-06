@@ -1,6 +1,4 @@
-﻿
-using FerretEngine.Core;
-using FerretEngine.Graphics;
+﻿using FerretEngine.Graphics;
 using FerretEngine.Physics;
 using FerretEngine.Utils;
 using Microsoft.Xna.Framework;
@@ -25,8 +23,9 @@ namespace FerretEngine.Components.Colliders
             Height = height;
             Center = center;
         }
-        
-        
+
+
+
         internal override void DebugDraw(float deltaTime)
         {
             FeDraw.Color = Color.Red;

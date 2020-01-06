@@ -34,12 +34,13 @@ namespace FerretEngine.Graphics
             : this(texture, clipRect, Vector2.Zero)
         {
         }
-        
-        
-        
-        
-        
-        
+
+        public Sprite(Sprite sprite) 
+            : this(sprite.Texture, sprite.ClipRect, sprite.Origin)
+        {
+        }
+
+
         public static Sprite PlainColor(int width, int height, Color color)
         {
             GraphicsDevice gd = FeGraphics.GraphicsDevice;

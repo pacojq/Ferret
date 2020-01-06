@@ -1,7 +1,5 @@
-﻿
-using FerretEngine.Graphics;
+﻿using FerretEngine.Graphics;
 using FerretEngine.Physics;
-using FerretEngine.Utils;
 using Microsoft.Xna.Framework;
 
 namespace FerretEngine.Components.Colliders
@@ -21,7 +19,6 @@ namespace FerretEngine.Components.Colliders
             Height = 1;
             Center = center;
         }
-        
         
         internal override void DebugDraw(float deltaTime)
         {

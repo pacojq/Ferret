@@ -44,8 +44,6 @@ namespace FerretEngine.Physics
                 if (!entity.IsActive || !entity.IsCollidable)
                     continue;
                 
-                List<Collider> entityColliders = new List<Collider>(entity.Colliders);
-                
                 // Diagonal check
                 for (int j = i + 1; j < _entities.Count; j++)
                 {
@@ -102,7 +100,7 @@ namespace FerretEngine.Physics
 
         public void Add(Collider collider)
         {
-            FeLog.Debug($"Adding collider to space: {collider}");
+            FeLog.FerretDebug($"Adding collider to space: {collider}");
             int index = _entities.IndexOf(collider.Entity);
             if (index < 0)
             {

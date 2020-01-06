@@ -1,16 +1,20 @@
 ﻿using FerretEngine.Core;
 using FerretEngine.Graphics;
+using FerretEngine.Graphics.Effects;
 using Microsoft.Xna.Framework;
 
-namespace FerretEngine.Components
+namespace FerretEngine.Components.Graphics
 {
     public class TileMapRenderer : Component
     {
         private TileMap _tileMap;
         
+        public Material Material { get; set; }
+        
         public TileMapRenderer(TileMap tileMap)
         {
             _tileMap = tileMap;
+            Material = Material.Default;
         }
         
         public override void Draw(float deltaTime)
@@ -18,7 +22,7 @@ namespace FerretEngine.Components
             if (_tileMap == null)
                 return;
 
-            FeDraw.SetMaterial(Material.Default);
+            FeDraw.SetMaterial(Material);
             
             for (int i = 0; i < _tileMap.Width; i++)
             {
@@ -30,6 +34,8 @@ namespace FerretEngine.Components
                     pos.Y += _tileMap.SpriteSheet.SpriteHeight;
                 }
             }
+            
+            FeDraw.SetMaterial(Material.Default);
         }
     }
 }

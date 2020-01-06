@@ -1,4 +1,8 @@
-﻿using Microsoft.Xna.Framework;
+﻿using System;
+using System.Text;
+using FerretEngine.Logging;
+using FerretEngine.Utils;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
 namespace FerretEngine.Graphics
@@ -11,8 +15,13 @@ namespace FerretEngine.Graphics
         public int VirtualWidth => _VWidth;
         public int VirtualHeight => _VHeight;
 
-        public int WindowWidth => GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width;
-        public int WindowHeight => GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height;
+        
+        public int WindowWidth => _graphicsDevice.PreferredBackBufferWidth;
+        public int WindowHeight => _graphicsDevice.PreferredBackBufferHeight;
+        
+        
+        public int DisplayWidth => GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width;
+        public int DisplayHeight => GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height;
         
         
         
@@ -28,12 +37,11 @@ namespace FerretEngine.Graphics
         
         
         private readonly GraphicsDeviceManager _graphicsDevice;
-
         
         private int _width;
         private int _height;
-        private int _VWidth = 1024;
-        private int _VHeight = 768;
+        private int _VWidth;
+        private int _VHeight;
         
         private bool _fullscreen = false;
         
@@ -45,84 +53,168 @@ namespace FerretEngine.Graphics
     	private int virtualViewportY;
 
         
-        public ResolutionManager(GraphicsDeviceManager graphicsDevice, int width, int height)
+        public ResolutionManager(GraphicsDeviceManager graphicsDevice, int vWidth, int vHeight, int windowWidth, int windowHeight, bool fullscreen)
         {
+            FeLog.FerretInfo("Initializing Resolution Manager.");
+            
+            StringBuilder str = new StringBuilder();
+            str.Append("Available resolutions: ");
+            foreach (DisplayMode dm in GraphicsAdapter.DefaultAdapter.SupportedDisplayModes)
+                str.Append($"{dm.Width}x{dm.Height} ");
+            
+            FeLog.FerretInfo(str.ToString());
+            
             _graphicsDevice = graphicsDevice;
-            _width = _graphicsDevice.PreferredBackBufferWidth;
-            _height = _graphicsDevice.PreferredBackBufferHeight;
-            
-            _dirtyMatrix = true;
-            
+            SetVirtualResolution(vWidth, vHeight);
+            SetResolution(windowWidth, windowHeight, fullscreen);
+        }
+
+
+
+
+        public void SetResolution(int width, int height, bool fullScreen)
+        {
+            FeLog.FerretWarning($"Setting resolution: {width}x{height}. Fullscreen: {fullScreen}.");
+            SetResolutionImpl(width, height, fullScreen);
+        }
+        
+        
+        private void SetResolutionImpl(int width, int height, bool fullScreen)
+        {
+            _width = width;
+            _height = height;
+            _fullscreen = fullScreen;
+
+            if (_width > DisplayWidth || _height > DisplayHeight)
+            {
+                if (_width > DisplayWidth)
+                {
+                    float scale = (float) DisplayWidth / (float) _width;
+                    SetResolutionImpl(DisplayWidth, FeMath.FloorToInt(scale * _height), _fullscreen);
+                    return;
+                }
+                if (_height > DisplayHeight)
+                {
+                    float scale = (float) DisplayHeight / (float) _height;
+                    SetResolutionImpl(FeMath.FloorToInt(scale * _width), DisplayHeight, _fullscreen);
+                    return;
+                }
+            }
+
             ApplyResolutionSettings();
         }
 
-        
-
-        public void SetResolution(int Width, int Height, bool FullScreen)
+        public void SetVirtualResolution(int vWidth, int vHeight)
         {
-            _width = Width;
-            _height = Height;
-
-            _fullscreen = FullScreen;
-
-           ApplyResolutionSettings();
-        }
-
-        public void SetVirtualResolution(int Width, int Height)
-        {
-            _VWidth = Width;
-            _VHeight = Height;
+            FeLog.FerretWarning($"Setting virtual resolution: {vWidth}x{vHeight}");
+            
+            _VWidth = vWidth;
+            _VHeight = vHeight;
 
             _dirtyMatrix = true;
         }
 
+
+
+        private void ApplyResolutionToGraphicsDevice()
+        {
+            FeLog.FerretInfo($"Applying resolution settings. Preferred Back Buffer Size: {_width}x{_height}. Fullscreen: {_fullscreen}.");
+            
+            _graphicsDevice.PreferredBackBufferWidth = _width;
+            _graphicsDevice.PreferredBackBufferHeight = _height;
+            _graphicsDevice.IsFullScreen = _fullscreen;
+            _graphicsDevice.PreferMultiSampling = true;
+            _graphicsDevice.ApplyChanges();
+        }
+        
+        
         private void ApplyResolutionSettings()
-       {
+        {
 
 #if XBOX360
-           _FullScreen = true;
+            _fullscreen = true;
 #endif
 
-           // If we aren't using a full screen mode, the height and width of the window can
-           // be set to anything equal to or smaller than the actual screen size.
-           if (_fullscreen == false)
-           {
-               if ((_width <= GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width)
-                   && (_height <= GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height))
-               {
-                   _graphicsDevice.PreferredBackBufferWidth = _width;
-                   _graphicsDevice.PreferredBackBufferHeight = _height;
-                   _graphicsDevice.IsFullScreen = _fullscreen;
-                   _graphicsDevice.PreferMultiSampling = true;
-                   _graphicsDevice.ApplyChanges();
-               }
-           }
-           else
-           {
-               // If we are using full screen mode, we should check to make sure that the display
-               // adapter can handle the video mode we are trying to set.  To do this, we will
-               // iterate through the display modes supported by the adapter and check them against
-               // the mode we want to set.
-               foreach (DisplayMode dm in GraphicsAdapter.DefaultAdapter.SupportedDisplayModes)
-               {
-                   // Check the width and height of each mode against the passed values
-                   if ((dm.Width == _width) && (dm.Height == _height))
-                   {
-                       // The mode is supported, so set the buffer formats, apply changes and return
-                       _graphicsDevice.PreferredBackBufferWidth = _width;
-                       _graphicsDevice.PreferredBackBufferHeight = _height;
-                       _graphicsDevice.IsFullScreen = _fullscreen;
-                       _graphicsDevice.PreferMultiSampling = true;
-                       _graphicsDevice.ApplyChanges();
-                   }
-               }
-           }
+            // If we aren't using a full screen mode, the height and width of the window can
+            // be set to anything equal to or smaller than the actual screen size.
+            if (!_fullscreen)
+            {
+                if (_width > DisplayWidth || _height > DisplayHeight)
+                    Assert.Fail("We should not reach this point.");
+               
+                ApplyResolutionToGraphicsDevice();
+                
+                _dirtyMatrix = true;
+                _width =  _graphicsDevice.PreferredBackBufferWidth;
+                _height = _graphicsDevice.PreferredBackBufferHeight;
+                
+                return;
+            }
+            
+            
+            // Fullscreen
+            
+            float ratio = _width / (float) _height;
+            DisplayMode fitDisplayMode = ChooseBestFitDisplayMode();
 
-           _dirtyMatrix = true;
+            if (fitDisplayMode != null)
+            {
+                FeLog.Debug($"Found fitting display mode: {fitDisplayMode}");
+                
+                _width = fitDisplayMode.Width;
+                _height = fitDisplayMode.Height;
+            }
+            else
+            {
+                _width = DisplayWidth;
+                _height = DisplayHeight;
+            }
+            ApplyResolutionToGraphicsDevice();
+            
+            _dirtyMatrix = true;
+            _width =  _graphicsDevice.PreferredBackBufferWidth;
+            _height = _graphicsDevice.PreferredBackBufferHeight;
+        }
 
-           _width =   _graphicsDevice.PreferredBackBufferWidth;
-           _height = _graphicsDevice.PreferredBackBufferHeight;
-       }
+
+        private DisplayMode ChooseBestFitDisplayMode()
+        {
+            DisplayMode fitDisplayMode = null;
+            float scale = 0f;
+            
+            foreach (DisplayMode dm in GraphicsAdapter.DefaultAdapter.SupportedDisplayModes)
+            {
+                if (_width > dm.Width || _height > dm.Height)
+                    continue;
+
+                int wScale = FeMath.FloorToInt(dm.Width / (float) _width);
+                int hScale = FeMath.FloorToInt(dm.Width / (float) _height);
+                   
+                // Check the width and height of each mode against the passed values
+                if (dm.Width == _width * wScale && dm.Height >= _height * wScale)
+                {
+                    if (wScale > scale)
+                    {
+                        scale = wScale;
+                        fitDisplayMode = dm;
+                    }
+                }
+                else if (dm.Width >= _width * hScale && dm.Height == _height * hScale)
+                {
+                    if (hScale > scale)
+                    {
+                        scale = hScale;
+                        fitDisplayMode = dm;
+                    }
+                }
+            }
+
+            return fitDisplayMode;
+        }
+        
+        
+        
+        
 
         /// <summary>
         /// Sets the device to use the draw pump
@@ -145,10 +237,9 @@ namespace FerretEngine.Graphics
         private void RecreateScaleMatrix()
         {
             _dirtyMatrix = false;
-            _transformMatrix = Matrix.CreateScale(
-                           (float)_graphicsDevice.GraphicsDevice.Viewport.Width / _VWidth,
-                           (float)_graphicsDevice.GraphicsDevice.Viewport.Width / _VWidth,
-                           1f);
+            float wScale = (float) _graphicsDevice.GraphicsDevice.Viewport.Width / _VWidth;
+            
+            _transformMatrix = Matrix.CreateScale(wScale, wScale, 1f);
         }
 
 

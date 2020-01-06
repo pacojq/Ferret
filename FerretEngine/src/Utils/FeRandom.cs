@@ -45,6 +45,12 @@ namespace FerretEngine.Utils
         {
             return _rand.Next();
         }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static int NextInt(int max)
+        {
+            return _rand.Next(max);
+        }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static float Next(float max)

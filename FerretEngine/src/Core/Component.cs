@@ -12,16 +12,38 @@ namespace FerretEngine.Core
 		private Entity _entity;
 		public Entity Entity => _entity;
 
+		/// <summary>
+		/// A tag that identifies the componen.
+		/// If not set, it will return null.
+		/// </summary>
+		public string Tag { get; set; }
+		
 
+		/// <summary>
+		/// Position of the component relative to its <see cref="Entity"/>.
+		/// </summary>
 		public Vector2 LocalPosition = Vector2.Zero;
 		
+		
+		/// <summary>
+		/// World position of the component.
+		/// </summary>
 		public Vector2 Position
 		{
 			get
 			{
-				Assert.IsNotNull(Entity, "La chingamos");
+				Assert.IsNotNull(Entity, "Cannot calculate a Component position when its Entity is null.");
 				if (Entity != null)
-					return Entity.Position + LocalPosition;
+				{
+					Vector2 offset = Vector2.Zero;
+					
+					offset.X = FeMath.Cos(Entity.Rotation) * LocalPosition.X +
+					           FeMath.Sin(Entity.Rotation) * LocalPosition.Y;
+					offset.Y = FeMath.Cos(Entity.Rotation) * LocalPosition.Y +
+					           FeMath.Sin(Entity.Rotation) * LocalPosition.X;
+					
+					return Entity.Position + offset;
+				}
 				return LocalPosition;
 			}
 		}

@@ -49,5 +49,6 @@ Global
 		{44A694C1-6489-40EC-8BCD-53B23D793B0D}.Debug|x64.Build.0 = Debug|x64
 		{44A694C1-6489-40EC-8BCD-53B23D793B0D}.Debug|x86.ActiveCfg = Debug|x64
 		{44A694C1-6489-40EC-8BCD-53B23D793B0D}.Release|x86.ActiveCfg = Release|x64
+		{44A694C1-6489-40EC-8BCD-53B23D793B0D}.Release|x64.ActiveCfg = Release|x64
 	EndGlobalSection
 EndGlobal

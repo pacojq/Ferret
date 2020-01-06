@@ -2,22 +2,21 @@
 using FerretEngine.Graphics;
 using FerretEngine.Input;
 using FerretEngine.Particles;
-using FerretEngine.Utils;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 
 namespace FerretEngine.Sandbox.Player
 {
-    public class PlayerComponent : Component
+    public class PlayerComponentGamepad : Component
     {
         private ParticleEmitter _emitter;
-        private KeyboardInput _input;
+        private GamepadInput _input;
 
         private float _pxPerSecond = 96;
         
-        public PlayerComponent()
+        public PlayerComponentGamepad()
         {
-            _input = FeInput.Keyboard;
+            _input = FeInput.Gamepad;
         }
 
 
@@ -32,29 +31,17 @@ namespace FerretEngine.Sandbox.Player
             Vector2 pos = this.Entity.Position;
 
 
-            int xSpd = 0;
-            int ySpd = 0;
+            float xSpd = _input.GetLeftStick().X;
+            float ySpd = _input.GetLeftStick().Y;
             
-            if (_input.IsKeyHeld(Keys.Right)) xSpd++;
-            if (_input.IsKeyHeld(Keys.Left))  xSpd--;
-            
-            if (_input.IsKeyHeld(Keys.Down))  ySpd++;
-            if (_input.IsKeyHeld(Keys.Up))    ySpd--;
-
             pos.X += xSpd * (_pxPerSecond * deltaTime);
             pos.Y += ySpd * (_pxPerSecond * deltaTime);
 
             this.Entity.Position = pos;
             this.Entity.Scene.MainCamera.Position = pos;
 
-            if (_input.IsKeyPressed(Keys.Space))
-            {
-                PlayerEntity p = (PlayerEntity) this.Entity;
-                int r = FeRandom.RangeInt(0, 255);
-                int g = FeRandom.RangeInt(0, 255);
-                int b = FeRandom.RangeInt(0, 255);
-                p.Renderer.Material.SetColor("_Color", new Color(r, g, b));
-            }
+            if (_input.IsButtonPressed(Buttons.A))
+                _emitter.Emit();
         }
 
 
@@ -62,7 +49,7 @@ namespace FerretEngine.Sandbox.Player
         {
             base.DrawGUI(deltaTime);
 
-            //FeDraw.Rect(0, 0, FeGame.Width, FeGame.Height, true);
+            FeDraw.Rect(0, 0, FeGame.Width, FeGame.Height, true);
             
             FeDraw.SetHAlign(FeDraw.HAlign.Left);
             FeDraw.SetVAlign(FeDraw.VAlign.Top);
@@ -71,7 +58,7 @@ namespace FerretEngine.Sandbox.Player
             
             FeDraw.SetHAlign(FeDraw.HAlign.Centre);
             FeDraw.SetVAlign(FeDraw.VAlign.Centre);
-            FeDraw.Text("Hi there :D", new Vector2(96, 24));
+            FeDraw.Text("Hi there :D", new Vector2(0, 24));
         }
     }
 }

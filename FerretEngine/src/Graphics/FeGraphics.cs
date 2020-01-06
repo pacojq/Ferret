@@ -4,8 +4,11 @@ using System.IO;
 using System.Runtime.CompilerServices;
 using FerretEngine.Content;
 using FerretEngine.Core;
+using FerretEngine.Graphics.Effects;
 using FerretEngine.Graphics.Fonts;
+using FerretEngine.Graphics.PostProcessing;
 using FerretEngine.Graphics.Renderers;
+using FerretEngine.Logging;
 using FerretEngine.Utils;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -25,7 +28,11 @@ namespace FerretEngine.Graphics
         /// Default font for the Ferret Engine.
         /// </summary>
         public static Font DefaultFont { get; private set; }
-
+        
+        
+        public static MaterialLibrary Materials { get; private set; }
+        
+        
         
         
         
@@ -45,7 +52,32 @@ namespace FerretEngine.Graphics
 
         
         internal static ResolutionManager Resolution { get; private set; }
+        
+        /// <summary>
+        /// The width of the game window.
+        /// </summary>
+        public static int WindowWidth => Resolution.WindowWidth;
+        
+        /// <summary>
+        /// The height of the game window.
+        /// </summary>
+        public static int WindowHeight => Resolution.WindowHeight;
+        
+        /// <summary>
+        /// The width of the monitor display the game is running on.
+        /// </summary>
+        public static int DisplayWidth => Resolution.DisplayWidth;
+        
+        /// <summary>
+        /// The height of the monitor display the game is running on.
+        /// </summary>
+        public static int DisplayHeight => Resolution.DisplayHeight;
 
+        
+        
+
+        public static PostProcessingStack PostProcessing { get; private set; }
+        
         private static FeGame _game;
         
         
@@ -59,11 +91,11 @@ namespace FerretEngine.Graphics
         /// Whether the <see cref="_spriteBatch"/> has already called Begin()
         /// </summary>
         private static bool _isOpen;
-        
-        
+
         private static Material _currentMaterial;
 
         private static RenderTarget2D _renderTarget;
+
         
         
         internal static void Initialize(FeGame game, int width, int height, int windowWidth, int windowHeight, bool fullscreen)
@@ -71,10 +103,8 @@ namespace FerretEngine.Graphics
             _game = game;
 
             GraphicsManager = new GraphicsDeviceManager(game);
-            Resolution = new ResolutionManager(GraphicsManager, width, height);
-            
-            Resolution.SetVirtualResolution(width, height); // Game Resolution
-            Resolution.SetResolution(windowWidth, windowHeight, fullscreen); // Window resolution
+            Resolution = new ResolutionManager(GraphicsManager, width, height, windowWidth, windowHeight, fullscreen);
+            PostProcessing = new PostProcessingStack();
             
             // TODO allow changing borderless and resizing
             game.Window.IsBorderlessEXT = false;
@@ -100,9 +130,12 @@ namespace FerretEngine.Graphics
             _graphicsDevice = _game.GraphicsDevice;
             
             _spriteBatch = new SpriteBatch(_game.GraphicsDevice);
+            
+            FeLog.FerretDebug($"Creating Render Target. Size = {Resolution.WindowWidth}x{Resolution.WindowHeight}");
             _renderTarget = new RenderTarget2D(GraphicsDevice, Resolution.WindowWidth, Resolution.WindowHeight);
             
             _currentMaterial = Material.Default;
+            Materials = new MaterialLibrary();
             
             Pixel = Sprite.PlainColor(1, 1, Color.White);
             DefaultFont = FeContent.LoadFont("Ferret/Fonts/MatchupPro.ttf", 12);
@@ -114,9 +147,8 @@ namespace FerretEngine.Graphics
 
         internal static void OnWindowResize()
         {
-            
+            // TODO
         }
-        
         
         
 
@@ -132,6 +164,17 @@ namespace FerretEngine.Graphics
                     renderer.Camera = scene.MainCamera;
             }
         }
+        
+        
+        
+        
+        public static void SetResolution(int width, int height, bool fullScreen)
+        { 
+            Resolution.SetResolution(width, height, fullScreen);
+        }
+        
+        
+        
 
         public static void AddRenderer(Renderer renderer)
         {
@@ -190,12 +233,17 @@ namespace FerretEngine.Graphics
         internal static void SetMaterial(Material material)
         {
             Assert.IsNotNull(CurrentRenderer);
-            if (material != _currentMaterial)
+            if (!material.AreEqual(_currentMaterial))
             {
                 SpriteBatchEnd();
                 _currentMaterial = material;
                 SpriteBatchBegin(CurrentRenderer.Camera.TransformMatrix, CurrentRenderer.SortMode, material.Effect);
             }
+        }
+
+        internal static void BindMaterial()
+        {
+            _currentMaterial.Bind();
         }
         
         
@@ -228,17 +276,22 @@ namespace FerretEngine.Graphics
             }
             
             
+            // Once we got the whole game rendered, let's add postprocessing
+
+            RenderTarget2D target = PostProcessing.Render(_renderTarget, _spriteBatch);
+            
+            
+            
+            
             // Now let's go to the default RenderTarget and render the target we've painted before
             
             GraphicsDevice.SetRenderTarget(null);
             GraphicsDevice.Clear(clearColor);
-            
-            
+
+
             Resolution.BeginDraw();
-           
-            
-            
-            
+
+
             _spriteBatch.Begin(
                 SpriteSortMode.Texture, 
                 BlendState.NonPremultiplied,//BlendState.AlphaBlend, 
@@ -247,8 +300,9 @@ namespace FerretEngine.Graphics
                 RasterizerState.CullNone
             );
             
+            
             Rectangle rect = new Rectangle(0, 0, Resolution.WindowWidth, Resolution.WindowHeight);
-            _spriteBatch.Draw(_renderTarget, rect, Color.White);
+            _spriteBatch.Draw(target, rect, Color.White);
             
             _spriteBatch.End();
             

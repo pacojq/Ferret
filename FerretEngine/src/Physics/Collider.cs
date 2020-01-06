@@ -4,7 +4,7 @@ using FerretEngine.Components.Colliders;
 using FerretEngine.Core;
 using Microsoft.Xna.Framework;
 
-namespace FerretEngine.Components
+namespace FerretEngine.Physics
 {
     public abstract class Collider : Component
     {
@@ -21,8 +21,7 @@ namespace FerretEngine.Components
         public virtual float Bottom { get; }
         public virtual float Left { get; }
         public virtual float Right { get; }
-        
-        
+
         
         
         public delegate void CollisionEvent(Collider other);
@@ -34,12 +33,14 @@ namespace FerretEngine.Components
         private HashSet<Collider> _collisionCache;
         private HashSet<Collider> _newCollisions;
 
-        public Collider()
+        internal Collider()
         {
             _collisionCache = new HashSet<Collider>();
             _newCollisions = new HashSet<Collider>();
         }
-        
+
+
+
         internal void Collide(Collider other)
         {
             if (!_collisionCache.Contains(other))

@@ -3,6 +3,8 @@ using System.Collections;
 using System.Collections.Generic;
 using FerretEngine.Core;
 using FerretEngine.Logging;
+using FerretEngine.Utils;
+using Microsoft.Xna.Framework;
 
 namespace FerretEngine.Particles
 {
@@ -55,11 +57,15 @@ namespace FerretEngine.Particles
         /// The number of emitted particles in a burst emission.
         /// </summary>
         public int BurstCunt { get; set; }
+
+        /// <summary>
+        /// The max distance from the origin where particles can spawn.
+        /// </summary>
+        public int EmissionRadius { get; set; }
+
         
-        
-        
-        
-        
+        public ParticleSystem System => _system;
+
         private readonly ParticleSystem _system;
 
         private float _emitCountdown;
@@ -87,7 +93,7 @@ namespace FerretEngine.Particles
 
         
         /// <summary>
-        /// Emits a single burst of particles.
+        /// Emits a burst of particles.
         /// If this method is called, it's recommendable to set
         /// <see cref="AutoEmit"/> to false.
         /// </summary>
@@ -95,6 +101,15 @@ namespace FerretEngine.Particles
         {
             _emitCountdown = EmitDelay;
             _coroutine = Burst();
+        }
+        
+        /// <summary>
+        /// Emits instantly one single burst of particles.
+        /// Does not have into account <see cref="BurstSteps"/>.
+        /// </summary>
+        public void InstantEmit()
+        {
+            CreateParticles();
         }
 
         private IEnumerator Burst()
@@ -111,7 +126,10 @@ namespace FerretEngine.Particles
         {
             for (int i = 0; i < BurstCunt; i++)
             {
-                _system.CreateParticle(Position);
+                float dist = FeRandom.Next(EmissionRadius);
+                float angle = FeRandom.Next(360f);
+                Vector2 offset = new Vector2(FeMath.Cos(angle), FeMath.Sin(angle)) * dist;
+                _system.CreateParticle(Position + offset);
             }
         }
         

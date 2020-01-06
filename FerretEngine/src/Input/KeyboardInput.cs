@@ -1,3 +1,4 @@
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 
 namespace FerretEngine.Input
@@ -7,6 +8,8 @@ namespace FerretEngine.Input
         private KeyboardState _previous;
         private KeyboardState _current;
 
+        private MouseState _mousePrevious;
+        private MouseState _mouseCurrent;
 
         internal KeyboardInput()
         {
@@ -17,6 +20,9 @@ namespace FerretEngine.Input
         {
             _previous = _current;
             _current = Keyboard.GetState();
+
+            _mousePrevious = _mouseCurrent;
+            _mouseCurrent = Mouse.GetState();
         }
         
         
@@ -36,6 +42,11 @@ namespace FerretEngine.Input
         {
             return !_current.IsKeyDown(key) && _previous.IsKeyDown(key);
         }
-        
+
+
+        public Vector2 GetMousePosition()
+        {
+            return new Vector2(_mouseCurrent.X, _mouseCurrent.Y);
+        }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Runtime.CompilerServices;
+using FerretEngine.Graphics.Effects;
 using FerretEngine.Graphics.Fonts;
 using FerretEngine.Utils;
 using Microsoft.Xna.Framework;
@@ -87,6 +88,8 @@ namespace FerretEngine.Graphics
             if (!WillRender(sprite, position, Vector2.One))
                 return;
             
+            FeGraphics.BindMaterial();
+            
             FeGraphics.SpriteBatch.Draw(
                     sprite.Texture,
                     position - sprite.Origin,
@@ -113,6 +116,8 @@ namespace FerretEngine.Graphics
             Assert.IsTrue(FeGraphics.IsRendering);
             if (!WillRender(sprite, position, scale))
                 return;
+
+            FeGraphics.BindMaterial();
             
             FeGraphics.SpriteBatch.Draw(
                     sprite.Texture,
@@ -182,27 +187,27 @@ namespace FerretEngine.Graphics
         
         
         
-        public static void Rect(float x, float y, float width, float height, bool outline)
+        public static void Rect(float x, float y, float width, float height, bool outline, int borderWidth = 1)
         {
             Rectangle rect = new Rectangle((int)x, (int)y, (int)width, (int)height);
-            RectExt(rect, Color, outline);
+            RectExt(rect, Color, outline, borderWidth);
         }
         
-        public static void Rect(Rectangle rect, bool outline)
+        public static void Rect(Rectangle rect, bool outline, int borderWidth = 1)
         {
-            RectExt(rect, Color, outline);
+            RectExt(rect, Color, outline, borderWidth);
         }
         
-        public static void RectExt(float x, float y, float width, float height, Color color, bool outline)
+        public static void RectExt(float x, float y, float width, float height, Color color, bool outline, int borderWidth = 1)
         {
             Rectangle rect = new Rectangle((int)x, (int)y, (int)width, (int)height);
-            RectExt(rect, color, outline);
+            RectExt(rect, color, outline, borderWidth);
         }
         
-        public static void RectExt(Rectangle rect, Color color, bool outline)
+        public static void RectExt(Rectangle rect, Color color, bool outline, int borderWidth = 1)
         {
             Assert.IsTrue(FeGraphics.IsRendering);
-            if (outline) RectOutline(rect, color, 1);
+            if (outline) RectOutline(rect, color, borderWidth);
             else RectFilled(rect, color);
         }
 
@@ -215,18 +220,21 @@ namespace FerretEngine.Graphics
             rect.X = (int) rel.X;
             rect.Y = (int) rel.Y;
             
-            FeGraphics.SpriteBatch.Draw(px.Texture, rect, px.ClipRect, _color);
+            FeGraphics.SpriteBatch.Draw(px.Texture, rect, px.ClipRect, color);
         }
         
         private static void RectOutline(Rectangle rect, Color color, int border)
         {
             Sprite px = FeGraphics.Pixel;
             Vector2 rel = FeMath.Floor(new Vector2(rect.X, rect.Y));
+
+            int xx = FeMath.FloorToInt(rel.X - border / 2f);
+            int yy = FeMath.FloorToInt(rel.Y - border / 2f);
             
-            var top = new Rectangle((int)rel.X, (int)rel.Y, rect.Width, border);
-            var bot = new Rectangle((int)rel.X, (int)rel.Y + rect.Height - border, rect.Width, border);
-            var right = new Rectangle((int)rel.X + rect.Width - border, (int)rel.Y, border, rect.Height);
-            var left = new Rectangle((int)rel.X, (int)rel.Y, border, rect.Height);
+            var top = new Rectangle(xx, yy, rect.Width + border, border);
+            var bot = new Rectangle(xx, yy + rect.Height, rect.Width + border, border);
+            var right = new Rectangle(xx + rect.Width, yy, border, rect.Height + border);
+            var left = new Rectangle(xx, yy, border, rect.Height + border);
             
             FeGraphics.SpriteBatch.Draw(px.Texture, top, px.ClipRect, color);
             FeGraphics.SpriteBatch.Draw(px.Texture, bot, px.ClipRect, color);
@@ -241,20 +249,39 @@ namespace FerretEngine.Graphics
         
         
         
+        /// <summary>
+        /// Draws a string and returns its width and height.
+        /// </summary>
+        /// <param name="text"></param>
+        /// <param name="position"></param>
+        /// <returns></returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static void Text(string text, Vector2 position)
+        public static Vector2 Text(string text, Vector2 position)
         {
-            TextExt(text, position, Color);
+            return TextExt(text, position, Color);
         }
         
-        
+        /// <summary>
+        /// Draws a colored string and returns its width and height.
+        /// </summary>
+        /// <param name="text"></param>
+        /// <param name="position"></param>
+        /// <returns></returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static void TextExt(string text, Vector2 position, Color color)
+        public static Vector2 TextExt(string text, Vector2 position, Color color)
+        {
+            if (text == null)
+                throw new ArgumentNullException(nameof(text));
+            if (text.Contains("\n"))
+                return DrawTextMultiLine(text, position, color);
+            return DrawTextSingleLine(text, position, color);
+        }
+
+
+        private static  Vector2 DrawTextSingleLine(string text, Vector2 position, Color color)
         {
             Assert.IsTrue(FeGraphics.IsRendering);
-            
-            //SetMaterial(Material.Default);
-            
+
             Text tx = Font.MakeText(text);
             
             Vector2 offset = Vector2.Zero;
@@ -268,8 +295,50 @@ namespace FerretEngine.Graphics
                 offset.Y = -tx.Height / 2f;
             else if (_vAlign == VAlign.Bottom)
                 offset.Y = -tx.Height;
-            
+
             tx.Draw(FeGraphics.SpriteBatch, position + offset, color);
+            
+            return new Vector2(tx.Width, tx.Height);
+        }
+        
+        private static  Vector2 DrawTextMultiLine(string text, Vector2 position, Color color)
+        {
+            Assert.IsTrue(FeGraphics.IsRendering);
+
+            string[] split = text.Split('\n');
+            Text[] texts = new Text[split.Length];
+
+            Vector2 size = Vector2.Zero;
+            
+            for (int i = 0; i < split.Length; i++)
+            {
+                texts[i] = Font.MakeText(split[i]);
+                
+                if (texts[i].Width > size.X)
+                    size.X = texts[i].Width;
+                
+                size.Y += texts[i].Height;
+            }
+            
+            
+            Vector2 offset = Vector2.Zero;
+            if (_vAlign == VAlign.Centre)
+                offset.Y = -size.Y / 2f;
+            else if (_vAlign == VAlign.Bottom)
+                offset.Y = -size.Y;
+
+            for (int i = 0; i < split.Length; i++)
+            {
+                if (_hAlign == HAlign.Centre)
+                    offset.X = -texts[i].Width / 2f;
+                else if (_hAlign == HAlign.Right)
+                    offset.X = -texts[i].Width;
+                
+                texts[i].Draw(FeGraphics.SpriteBatch, position + offset, color);
+                offset.Y += texts[i].Height;
+            }
+            
+            return new Vector2(size.X, size.Y);
         }
         
     }
