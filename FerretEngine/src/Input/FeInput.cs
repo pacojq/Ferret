@@ -10,12 +10,31 @@ namespace FerretEngine.Input
 
 		public static KeyboardInput Keyboard { get; private set; }
 		
-		public static GamepadInput Gamepad { get; private set; }
+		public static GamepadInput[] Gamepads { get; private set; }
+
+		private static bool[] _gamepadConneced;
+
+
+		public delegate void GamepadEvent(int index);
+
+		public static GamepadEvent OnGamepadConnected { get; set; }
+		public static GamepadEvent OnGamepadDisconnected { get; set; }
+		
 		
 		internal static void Initialize()
 		{
 			Keyboard = new KeyboardInput();
-			Gamepad = new GamepadInput(PlayerIndex.One);
+			Gamepads = new[]
+			{
+				new GamepadInput(PlayerIndex.One),
+				new GamepadInput(PlayerIndex.Two),
+				new GamepadInput(PlayerIndex.Three),
+				new GamepadInput(PlayerIndex.Four)
+			};
+			_gamepadConneced = new bool[4];
+
+			OnGamepadConnected += index => FeLog.FerretInfo("Gamepad connected: " + index);
+			OnGamepadDisconnected += index => FeLog.FerretInfo("Gamepad disconnected: " + index);
 			
 			FeLog.FerretInfo("FerretInput initialized!");
 		}
@@ -25,7 +44,25 @@ namespace FerretEngine.Input
 		public static void Update()
 		{
 			Keyboard.Update();
-			Gamepad.Update();
+
+			for (int i = 0; i < 4; i++)
+			{
+				GamepadInput gp = Gamepads[i];
+				gp.Update();
+				bool connected = gp.IsConnected;
+				
+				if (!_gamepadConneced[i] && connected)
+				{
+					OnGamepadConnected(i);
+				}
+				else if (!connected && _gamepadConneced[i])
+				{
+					OnGamepadDisconnected(i);
+				}
+
+				_gamepadConneced[i] = connected;
+			}
+			
 		}
 		
 		public static bool IsKeyPressed(Keys key)

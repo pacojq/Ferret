@@ -6,6 +6,9 @@ sampler TextureSampler = sampler_state { Texture = <ScreenTexture>; };
 texture _MaskTexture;
 sampler MaskSampler = sampler_state { Texture = <_MaskTexture>; };
 
+float _Border = 0.05f;
+float _Curve = 6.0f;
+
 float _MaskBlend = 0.1f;
 float _MaskSize = 1;
 
@@ -17,7 +20,7 @@ float2 CRTCurveUV( float2 coord, float str )
     // put in symmetrical coords
     coord = (coord - 0.5) * 2.0;
 
-    coord *= 1.05;	
+    coord *= (1 + _Border);	
 
     // deform coords
     coord.x *= 1.0 + pow((abs(coord.y) / str), 2.0);
@@ -34,7 +37,7 @@ float2 CRTCurveUV( float2 coord, float str )
 // requested point
 float4 PixelShaderFunction(float2 TextureCoordinate : TEXCOORD0) : COLOR0
 {        
-    TextureCoordinate = CRTCurveUV(TextureCoordinate, 6);
+    TextureCoordinate = CRTCurveUV(TextureCoordinate, _Curve);
     
     if (TextureCoordinate.x < 0 || TextureCoordinate.x > 1)
             return float4(0, 0, 0, 1);
